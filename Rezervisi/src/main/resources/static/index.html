@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>System Administrator Panel</title>
+	<script src="js/jquery.min.js"></script>
+	<script>
+
+//---------------------------------HOTEL-------------------------------------//
+
+		$(document).ready(function(){
+			$("#addHotelButton").click(function(){
+				if(
+						$("#hotelName").val() ==("") ||
+						$("#hotelAddress").val() ==("") ||
+						$("#hotelDesc").val() ==("") ||
+						$("#hotelGrade").val() == ("") ||
+						$("#roomConfig").val() == ("") ||
+						$("#hotelEarning").val() ==("") 
+						
+					   )
+					{
+						alert("Please fill all fields!");
+						return;
+					}
+				
+				var hotel={};
+				hotel.hotelName = $("#hotelName").val();
+				hotel.hotelAddress = $("#hotelAddress").val();
+				hotel.hotelDescription = $("#hotelDesc").val();
+				hotel.roomConfig = $("#roomConfig").val();
+				hotel.hotelAverageGrade = $("#hotelGrade").val();
+				hotel.hotelEarning = $("#hotelEarning").val();
+				
+				var hotelObj = JSON.stringify(hotel);
+				console.log(hotelObj);
+				$.ajax({
+					method:"POST",
+					url:'app/hotels/addHotel',	
+					data: hotelObj,
+					contentType:"application/json; charset=utf-8",
+					success:function(data){
+						alert("Hotel added.");
+						showHotels(data);	
+					},
+					error: function(error)
+					{
+						$(document.documentElement).html("<p>"+error+"</p>");
+					}
+				})
+			})
+		})
+
+
+		$(document).ready(function(){
+			$.ajax({
+				url: 'app/hotels/showHotels',
+				method: 'GET',
+				data: {},
+				contentType: 'application/json; charset=utf-8',
+				success: function(data) { 
+					if (data != null) {
+						showHotels(data);
+					} else {
+						alert("Error!");
+					}	
+				},
+				error: function(error) {
+					console.log(error);
+					$(document.documentElement).html("<p>"+error+"</p>");
+					return;
+				}
+			})	
+		})
+		
+		
+		function showHotels(hotel)
+		{
+			$("#hotelTable").find("tr:gt(0)").remove();
+			$.each(hotel,function(index,hotel){ 
+				var tr = $("<tr></tr>");
+				tr.append(
+					"<td>" + hotel.hotelName + "</td>" +	
+					"<td>" + hotel.hotelAddress + "</td>" +
+					"<td>" + hotel.hotelAverageGrade + "</td>" +
+					"<td>" + hotel.hotelEarning + "</td>" 
+				);
+				$("#hotelTable").append(tr);
+			})	
+		}
+//---------------------------------AIRLINE-------------------------------------//
+	
+		$(document).ready(function(){
+			$("#addAirLineButton").click(function(){
+				if(
+						$("#airlineName").val() ==("") ||
+						$("#airlineAddress").val() ==("") ||
+						$("#airlineDesc").val() ==("") ||
+						$("#airlineGrade").val() ==("") ||
+						$("#airlineEarning").val() ==("") 
+					   )
+					{
+						alert("Please fill all fields!");
+						return;
+					}
+				var airline={};
+				airline.airLineName = $("#airlineName").val();
+				airline.airLineAddress = $("#airlineAddress").val();
+				airline.airLineDescription = $("#airlineDesc").val();
+				airline.airLineAverageGrade = $("#airlineGrade").val();
+				airline.airlineEarning = $("#airlineEarning").val();
+				
+				
+				var airlineObj = JSON.stringify(airline);
+				console.log(airlineObj);
+				$.ajax({
+					method:"POST",
+					url:'app/airlines/addAirline',	
+					data: airlineObj,
+					contentType:"application/json; charset=utf-8",
+					success:function(data){
+						console.log(airlineObj);
+						showAirLines(data);
+						alert("Airline added.")
+					},
+					error: function(error)
+					{
+						$(document.documentElement).html("<p>"+error+"</p>");
+					}
+				})
+			})
+		})
+
+
+		$(document).ready(function(){
+			$.ajax({
+				url: 'app/airlines/showAirLines',
+				method: 'GET',
+				data: {},
+				contentType: 'application/json; charset=utf-8',
+				success: function(data) { 
+					if (data != null) {
+						showAirLines(data);
+					} else {
+						alert("Error!");
+					}	
+				},
+				error: function(error) {
+					console.log(error);
+					$(document.documentElement).html("<p>"+error+"</p>");
+					return;
+				}
+			})	
+		})
+		
+		
+		function showAirLines(airline)
+		{
+		//	$("#airlineTable").empty();
+			$.each(airline,function(index,airline){ 
+				var tr = $("<tr></tr>");
+				tr.append(
+					"<td>" + airline.airLineName + "</td>" +	
+					"<td>" + airline.airLineAddress + "</td>" +
+					"<td>" + airline.airLineDescription + "</td>" +
+					"<td>" + airline.airLineAverageGrade + "</td>" +
+					"<td>" + airline.airlineEarning + "</td>" 
+				);
+				$("#airlineTable").append(tr);
+			})	
+		}
+		
+		
+		//---------------------------------RENT-A-CAR-------------------------------------//
+		
+		$(document).ready(function(){
+			$("#addRentButton").click(function(){
+				if(
+						$("#rentName").val() ==("") ||
+						$("#rentAddress").val() ==("") ||
+						$("#rentDesc").val() ==("") ||
+						$("#rentGrade").val() ==("") ||
+						$("#rentEarning").val() ==("") 
+						
+					   )
+					{
+						alert("Please fill all fields!");
+						return;
+					}
+				var rent={};
+				rent.rentACarName = $("#rentName").val();
+				rent.rentACarAddress = $("#rentAddress").val();
+				rent.rentACarDescription = $("#rentDesc").val();
+				rent.rentACarAverageGrade = $("#rentGrade").val();
+				rent.rentACarEarning = $("#rentEarning").val();
+				
+				var rentObj = JSON.stringify(rent);
+				$.ajax({
+					method:"POST",
+					url:'app/rentacar/addRentACar',	
+					data: rentObj,
+					contentType:"application/json; charset=utf-8",
+					success:function(data){
+						alert("Rent-a-Car added.")
+						showRentACars(data);
+					},
+					error: function(error)
+					{
+						$(document.documentElement).html("<p>"+error+"</p>");
+					}
+				})
+			})
+		})
+
+
+		$(document).ready(function(){
+			$.ajax({
+				url: 'app/rentacar/showRentACars',
+				method: 'GET',
+				data: {},
+				contentType: 'application/json; charset=utf-8',
+				success: function(data) { 
+					if (data != null) {
+						showRentACars(data);
+					} else {
+						alert("Error!");
+					}	
+				},
+				error: function(error) {
+					console.log(error);
+					$(document.documentElement).html("<p>"+error+"</p>");
+					return;
+				}
+			})	
+		})
+		
+		function showRentACars(rent)
+		{
+			//$("#rentTable").empty();
+			$.each(rent,function(index,rent){ 
+				var tr = $("<tr></tr>");
+				tr.append(
+					"<td>" + rent.rentACarName + "</td>" +	
+					"<td>" + rent.rentACarAddress + "</td>" +
+					"<td>" + rent.rentACarDescription + "</td>" +
+					"<td>" + rent.rentACarAverageGrade + "</td>" +
+					"<td>" + rent.rentACarEarning + "</td>" 
+				);
+				$("#rentTable").append(tr);
+			})	
+		}
+		
+	</script>
+</head>
+
+<body>
+	<h1>Add new hotel:</h1>
+
+	<form>
+		Hotel name: <input type="text" id="hotelName"><br><br>
+		Hotel address: <input type="text" id="hotelAddress"><br><br>
+		Hotel description: <input type="text" id="hotelDesc"><br><br>
+		Average grade: <input type="number" id="hotelGrade"><br><br>
+		Room configuration : <input type="text" id="roomConfig"><br><br>
+		Hotel earning: <input type="number" id="hotelEarning"><br><br>
+	
+		<input type="submit" id=addHotelButton value="Add hotel"><br><br>
+    </form><br>
+    	Hotels:
+    	<table border="1px solid black" style="width:100%" id="hotelTable">
+ 		 <tr>
+   			 <th>Name</th>
+    		 <th>Address</th>
+    		 <th>Average grade</th>
+    		 <th>Hotel earning</th>      
+         </tr>
+		</table>
+		
+		<br>
+		Offer prices:
+		<table border="1px solid black" style="width:100%" id="offerTable">
+ 		 <tr>
+   			 <th>Offer</th>
+    		 <th>Price</th>      
+         </tr>
+		</table>
+		<br>
+		<input type="button" id="addPriceButton" value="Add Offer">
+		
+	
+		<h1>Add new Airline:</h1>
+
+	<form>
+		Airline name: <input type="text" id="airlineName"><br><br>
+		Airline address: <input type="text" id="airlineAddress"><br><br>
+		Airline description: <input type="text" id="airlineDesc"><br><br>
+		Average grade: <input type="number" id="airlineGrade"><br><br>
+		Airline earning: <input type="number" id="airlineEarning"><br><br>
+		<input type="submit" id="addAirLineButton" value="Add airline"><br><br>
+	</form>
+	Airlines:
+    	<table border="1px solid black" style="width:100%" id="airlineTable">
+ 		 <tr>
+   			 <th>Name</th>
+    		 <th>Address</th>
+    		 <th>Description</th>
+    		 <th>Average grade</th>      
+    		 <th>Airline earning</th>   
+         </tr>
+		</table>
+		
+		<br>
+	
+	Airline destinations:
+		<table border="1px solid black" style="width:100%" id="destinationTable">
+ 		 <tr>
+   			 <th>Destination</th>
+    		 <th>Description</th>      
+         </tr>
+		</table>
+		<br>
+		<input type="button" id="addDestinationButton" value="Add destination">
+	<br><br>
+	Airline tickets:
+		<table border="1px solid black" style="width:100%" id="ticketsTable">
+ 		 <tr>
+   			 <th>Ticket ID</th>
+    		 <th>Ticket price</th>     
+    		 <th>Flight</th>   
+         </tr>
+		</table>
+		<br>
+		<input type="button" id="addTicketButton" value="Add ticket">
+		
+   <h1>Add rent-a-car</h1>
+   <form>
+		Rent-a-Car name: <input type="text" id="rentName"><br><br>
+		Rent-a-Car address: <input type="text" id="rentAddress"><br><br>
+		Rent-a-Car description: <input type="text" id="rentDesc"><br><br>
+		Rent-a-Car grade: <input type="number" id="rentGrade"><br><br>
+		Rent-a-Car earning: <input type="number" id="rentEarning"><br><br>
+		<input type="submit" id="addRentButton" value="Add rent-a-car"><br><br>
+	</form>
+
+	Rent-a-Cars:
+    	<table border="1px solid black" style="width:100%" id="rentTable">
+ 		 <tr>
+   			 <th>Name</th>
+    		 <th>Address</th>
+    		 <th>Description</th>
+    		 <th>Average grade</th>      
+    		 <th>Earning</th>   
+         </tr>
+		</table>
+		
+		<br><br>
+		
+		Rent-A-Car vehicles :
+		<table border="1px solid black" style="width:100%" id="vehicleTable">
+ 		 <tr>
+   			 <th>Vehicle name</th>
+    		 <th>Vehicle grade</th>      
+         </tr>
+		</table>
+		<br>
+		<input type="button" id="addVehicleButton" value="Add vehicle">
+	<br><br>
+	
+	Rent-A-Car offers:
+		<table border="1px solid black" style="width:100%" id="rentOffersTable">
+ 		 <tr>
+   			 <th>Offer name</th>
+    		 <th>Offer description</th>     
+    		 <th>Offer price</th>   
+         </tr>
+		</table>
+		<br>
+		<input type="button" id="addRentOfferButton" value="Add offer">
+		
+		<br><br>
+	Rent-A-Car branches:
+		<table border="1px solid black" style="width:100%" id="rentBranchesTable">
+ 		 <tr>
+   			 <th>Branch name</th>
+    		 <th>Branch address</th>     
+         </tr>
+		</table>
+		<br>
+		<input type="button" id="addRentOfferButton" value="Add offer">		
+	
+</body>
+</html>

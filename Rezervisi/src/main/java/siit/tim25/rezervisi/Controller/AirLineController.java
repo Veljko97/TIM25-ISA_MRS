@@ -2,6 +2,8 @@ package siit.tim25.rezervisi.Controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +46,32 @@ public class AirLineController {
 	{
 		ArrayList<AirLine> airlaneList = airLineServices.getAirLineList();
 		return airlaneList;
+	}
+	
+	@GetMapping(path="/getAirline", produces = MediaType.APPLICATION_JSON_VALUE)
+	public AirLine getAirline(HttpServletRequest request)
+	{
+		return airLineServices.getAirLine(Integer.parseInt(request.getParameter("index")));
+	}
+	
+	@PostMapping(path="/editAirline", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editAirline(HttpServletRequest request, @RequestBody AirLine modifiedAirline)
+	{
+		ArrayList<AirLine> airlineList = airLineServices.getAirLineList();
+		AirLine airline = null;
+		Integer airlineID = Integer.parseInt(request.getParameter("id"));
+		
+		for(AirLine a: airlineList) {
+			if (a.getAirLineID().equals(airlineID)) {
+				airline = a;
+			}
+		}
+		
+		if (airline != null) {
+			airline.setAirLineName(modifiedAirline.getAirLineName());
+			airline.setAirLineAddress(modifiedAirline.getAirLineAddress());
+			airline.setAirLineDescription(modifiedAirline.getAirLineDescription());
+		}
 	}
 	
 }

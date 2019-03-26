@@ -1,6 +1,6 @@
 package siit.tim25.rezervisi.Beans;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Flight {
 	
@@ -18,6 +18,7 @@ public class Flight {
 	public Flight() {
 		super();
 	}
+
 	public Flight(Destination startDestination, Destination finalDestination, Date takeOffDate, Date landingDate,
 			String flightLength, int numberOfStops, String stopLocation, Ticket flightTicket,Double flightAverageGrade) {
 		super();

@@ -27,8 +27,13 @@ public class RentACarRepository {
 		return rentACars.get(rentACarID);
 	}
 
-	public static RentACar get(Integer rentACarID) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean update(RentACar rentAcar) {
+		for(int i = 0; i < rentACars.size(); i++) {
+			if (rentACars.get(i).getRentACarID().equals(rentAcar.getRentACarID())) {
+				rentACars.set(i, rentAcar);
+				return true;
+			}
+		}
+		return false;
 	}
 }

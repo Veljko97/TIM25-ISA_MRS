@@ -26,4 +26,8 @@ public class RentACarServices {
 		return rentACarRepository.getRentACar(rentACarID);
 	}
 	
+	public boolean update(RentACar rent) {
+		return rentACarRepository.update(rent);
+	}
+	
 }

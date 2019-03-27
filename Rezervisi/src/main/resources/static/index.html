@@ -151,11 +151,30 @@
 				}
 			})	
 		})
+
+    $(document).ready(function() {
+      $.ajax({
+        url: 'app/flight/showFlights',
+				method: 'GET',
+				data: {},
+				contentType: 'application/json; charset=utf-8',
+				success: function(data) { 
+					if (data != null) {
+						showFlights(data);
+					} else {
+						alert("Error!");
+					}	
+				},
+				error: function(error) {
+					$(document.documentElement).html("<p>"+error+"</p>");
+					return;
+				}
+      })
+    });
 		
 		
 		function showAirLines(airline)
 		{
-		//	$("#airlineTable").empty();
 			$.each(airline,function(index,airline){ 
 				var tr = $("<tr></tr>");
 				tr.append(
@@ -163,12 +182,12 @@
 					"<td>" + airline.airLineAddress + "</td>" +
 					"<td>" + airline.airLineDescription + "</td>" +
 					"<td>" + airline.airLineAverageGrade + "</td>" +
-					"<td>" + airline.airlineEarning + "</td>" 
+					"<td>" + airline.airlineEarning + "</td>" +
+			        "<td><a href=\"adminEditAirline.html?id=" + index + "\">Edit</a></td>"
 				);
 				$("#airlineTable").append(tr);
 			})	
 		}
-		
 		
 		//---------------------------------RENT-A-CAR-------------------------------------//
 		
@@ -211,6 +230,51 @@
 			})
 		})
 
+    $(document).ready(function() {
+      $(document).on('submit', '#addFlightForm', function(e) {
+        e.preventDefault();
+				if(
+						$("#startDestinationName").val() ==("") ||
+						$("#finalDestinationName").val() ==("") ||
+						$("#takeOffDate").val() ==("") ||
+						$("#landingDate").val() ==("") ||
+						$("#flightLength").val() ==("") ||
+						$("#numberOfStops").val() ==("") ||
+						$("#stopLocation").val() ==("") ||
+						$("#flightTicketPrice").val() ==("")
+					)
+					{
+						alert("Please fill all fields!");
+						return;
+					}
+				var flight={};
+				flight.startDestinationName = $("#startDestinationName").val();
+				flight.finalDestinationName = $("#finalDestinationName").val();
+				flight.takeOffDate = $("#takeOffDate").val();
+				flight.landingDate = $("#landingDate").val();
+				flight.flightLength = $("#flightLength").val();
+        flight.numberOfStops = $("#numberOfStops").val();
+        flight.stopLocation = $("#stopLocation").val();
+        flight.flightTicketPrice = $("#flightTicketPrice").val();
+				
+				var flightObj = JSON.stringify(flight);
+				$.ajax({
+					method:"POST",
+					url:'app/flight/addFlight',	
+					data: flightObj,
+          dataType: "json",
+					contentType:"application/json; charset=utf-8",
+					success:function(data){
+						showFlights(data);
+					},
+					error: function(error)
+					{
+						$(document.documentElement).html("<p>"+error+"</p>");
+					}
+				});
+			});
+    });
+
 
 		$(document).ready(function(){
 			$.ajax({
@@ -248,6 +312,20 @@
 				$("#rentTable").append(tr);
 			})	
 		}
+
+    function showFlights(flights) {
+      $.each(flights, function(index, flight) {
+        var tr = $("<tr></tr>");
+        tr.append(
+          "<td>" + flight.startDestination.destinationName + "</td>" +
+          "<td>" + flight.finalDestination.destinationName + "</td>" +
+          "<td>" + flight.takeOffDate + "</td>" +
+          "<td>" + flight.landingDate + "</td>" +
+          "<td>" + flight.flightLength + "</td>"
+        );
+        $("#flightTable").append(tr);
+      })
+    }
 		
 	</script>
 </head>
@@ -271,7 +349,7 @@
    			 <th>Name</th>
     		 <th>Address</th>
     		 <th>Average grade</th>
-    		 <th>Hotel earning</th>      
+         <th>Hotel earning</th>
          </tr>
 		</table>
 		
@@ -304,7 +382,8 @@
     		 <th>Address</th>
     		 <th>Description</th>
     		 <th>Average grade</th>      
-    		 <th>Airline earning</th>   
+         <th>Airline earning</th>
+         <th>Options</th>   
          </tr>
 		</table>
 		
@@ -329,7 +408,33 @@
          </tr>
 		</table>
 		<br>
-		<input type="button" id="addTicketButton" value="Add ticket">
+    <input type="button" id="addTicketButton" value="Add ticket">
+    
+   <h1>Add new Flight</h1>
+   <form id="addFlightForm">
+     Start Destination: <input type="text" id="startDestinationName"><br><br>
+     Final Destination: <input type="text" id="finalDestinationName"><br><br>
+     Take off date: <input type="text" id="takeOffDate"><br><br>
+     Landing date: <input type="text" id="landingDate"><br><br>
+     Flight length: <input type="text" id="flightLength"><br><br>
+     Number of stops: <input type="number" id="numberOfStops"><br><br>
+     Stop location: <input type="text" id="stopLocation"><br><br>
+     Ticket price: <input type="number" id="ticketPrice"><br><br>
+     <input type="submit" id="addFlightButton" value="Add flight"><br><br>
+   </form>
+
+   Flights:
+    	<table border="1px solid black" style="width:100%" id="flightTable">
+ 		 <tr>
+   			 <th>Start Destination</th>
+    		 <th>End Destination</th>
+    		 <th>Take off date</th>
+    		 <th>Landing date</th>      
+    		 <th>Flight length</th>   
+         </tr>
+		</table>
+		
+		<br><br>
 		
    <h1>Add rent-a-car</h1>
    <form>

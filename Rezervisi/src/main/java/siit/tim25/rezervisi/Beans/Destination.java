@@ -9,6 +9,11 @@ public class Destination {
 		super();
 	}
 	
+	public Destination (String destinationName) {
+		super();
+		this.destinationName = destinationName;
+	}
+	
 	public Destination(String destinationName, String destinationDescription) {
 		super();
 		this.destinationName = destinationName;

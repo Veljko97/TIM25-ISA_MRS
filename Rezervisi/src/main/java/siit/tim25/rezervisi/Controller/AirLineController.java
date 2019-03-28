@@ -1,15 +1,19 @@
 package siit.tim25.rezervisi.Controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import siit.tim25.rezervisi.Beans.AirLine;
@@ -22,56 +26,35 @@ public class AirLineController {
 	@Autowired
 	private AirLineServices airLineServices;
 	
-	@PostMapping(path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addAirline(@RequestBody AirLine airline)  {
+	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AirLine> addAirline(@RequestBody AirLine airline)  {
 		
-		ArrayList<AirLine> airlineList = airLineServices.getAirLineList();
-		boolean exists = false;
-		for(AirLine existingAirline : airlineList)
-		{
-			if(existingAirline.getAirLineID().equals(airline.getAirLineID()))
-			{
-				exists = true;
-				break;
-			}
+		if(airLineServices.findOneByAirLineName(airline.getAirLineName()) != null)	{
+			return new ResponseEntity<AirLine>(HttpStatus.BAD_REQUEST);
 		}
-		if(exists == false)
-		{
-			airLineServices.save(airline);
-		}
+		return new ResponseEntity<AirLine>(airLineServices.save(airline),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showAirLines", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ArrayList<AirLine> showAirLines()
+	public ResponseEntity<List<AirLine>> showAirLines()
 	{
-		ArrayList<AirLine> airlaneList = airLineServices.getAirLineList();
-		return airlaneList;
+		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/getAirline", produces = MediaType.APPLICATION_JSON_VALUE)
-	public AirLine getAirline(HttpServletRequest request)
+	public ResponseEntity<AirLine> getAirline(HttpServletRequest request)
 	{
-		return airLineServices.getAirLine(Integer.parseInt(request.getParameter("index")));
+		return new ResponseEntity<AirLine>(airLineServices.findOne(Integer.parseInt(request.getParameter("index"))),HttpStatus.OK);
 	}
 	
 	@PostMapping(path="/editAirline", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editAirline(HttpServletRequest request, @RequestBody AirLine modifiedAirline)
+	public ResponseEntity<AirLine> editAirline(HttpServletRequest request, @RequestBody AirLine modifiedAirline)
 	{
-		ArrayList<AirLine> airlineList = airLineServices.getAirLineList();
-		AirLine airline = null;
-		Integer airlineID = Integer.parseInt(request.getParameter("id"));
-		
-		for(AirLine a: airlineList) {
-			if (a.getAirLineID().equals(airlineID)) {
-				airline = a;
-			}
-		}
-		
-		if (airline != null) {
-			airline.setAirLineName(modifiedAirline.getAirLineName());
-			airline.setAirLineAddress(modifiedAirline.getAirLineAddress());
-			airline.setAirLineDescription(modifiedAirline.getAirLineDescription());
-		}
+		modifiedAirline.setAirLineID(Integer.parseInt(request.getParameter("id")));
+		AirLine air = airLineServices.findOne(Integer.parseInt(request.getParameter("id")));
+		modifiedAirline.setAirLineAverageGrade(air.getAirLineAverageGrade());
+		modifiedAirline.setAirlineEarning(air.getAirlineEarning());
+		return new ResponseEntity<AirLine>(airLineServices.save(modifiedAirline), HttpStatus.OK);
 	}
 	
 }

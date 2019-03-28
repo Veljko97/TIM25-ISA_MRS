@@ -90,7 +90,8 @@
 //---------------------------------AIRLINE-------------------------------------//
 	
 		$(document).ready(function(){
-			$("#addAirLineButton").click(function(){
+			$("#addAirLineButton").click(function(event){
+				event.preventDefault();
 				if(
 						$("#airlineName").val() ==("") ||
 						$("#airlineAddress").val() ==("") ||
@@ -111,7 +112,6 @@
 				
 				
 				var airlineObj = JSON.stringify(airline);
-				console.log(airlineObj);
 				$.ajax({
 					method:"POST",
 					url:'app/airlines/addAirline',	

@@ -1,11 +1,31 @@
 package siit.tim25.rezervisi.Beans;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class RentACarOffer {
 	
-	String offerName;
-	String offerDescription;
-	Double offerPrice;
+	@Id
+	@GeneratedValue
+	private Integer idOffer;
 	
+	@Column(nullable = false)
+	private String offerName;
+	
+	@Column
+	private String offerDescription;
+	
+	@Column
+	private Double offerPrice;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private RentACar service;
 	
 	public RentACarOffer(String offerName, String offerDescription, Double offerPrice) {
 		super();
@@ -18,6 +38,26 @@ public class RentACarOffer {
 	public RentACarOffer() {
 		super();
 	}
+	
+	public Integer getIdOffer() {
+		return idOffer;
+	}
+
+
+	public void setIdOffer(Integer idOffer) {
+		this.idOffer = idOffer;
+	}
+
+
+	public RentACar getService() {
+		return service;
+	}
+
+
+	public void setService(RentACar service) {
+		this.service = service;
+	}
+
 
 	public String getOfferName() {
 		return offerName;
@@ -42,6 +82,8 @@ public class RentACarOffer {
 	public void setOfferPrice(Double offerPrice) {
 		this.offerPrice = offerPrice;
 	}
+	
+	
 
 	@Override
 	public String toString() {

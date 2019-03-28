@@ -1,6 +1,7 @@
 package siit.tim25.rezervisi.Services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,17 +15,17 @@ public class HotelServices {
 	@Autowired
 	private HotelRepository hotelRepository;
 	
-	public boolean save(Hotel hotel) {
+	public Hotel save(Hotel hotel) {
 		return hotelRepository.save(hotel);
 	}
 	
-	public ArrayList<Hotel> getHotelList(){
-		return hotelRepository.getHotelList();
+	public List<Hotel> findAll(){
+		return hotelRepository.findAll();
 	}
 	
-	public Hotel getHotel(Integer hotelID)
+	public Hotel findOne(Integer hotelID)
 	{
-		return hotelRepository.getHotel(hotelID);
+		return hotelRepository.findOne(hotelID);
 	}
 	
 }

@@ -23,8 +23,9 @@ public class AirLineController {
 	private AirLineServices airLineServices;
 	
 	@PostMapping(path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addAirline(@RequestBody AirLine airline)  {
-		
+	public ArrayList<AirLine> addAirline(@RequestBody AirLine airline)  {
+		airline.setAirLineAverageGrade(0.0);
+		airline.setAirlineEarning(0.0);
 		ArrayList<AirLine> airlineList = airLineServices.getAirLineList();
 		boolean exists = false;
 		for(AirLine existingAirline : airlineList)
@@ -39,6 +40,8 @@ public class AirLineController {
 		{
 			airLineServices.save(airline);
 		}
+		
+		return airlineList;
 	}
 	
 	@GetMapping(path="/showAirLines", produces = MediaType.APPLICATION_JSON_VALUE)

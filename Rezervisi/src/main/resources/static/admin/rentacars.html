@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Manage RentACar Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../model/rentacars.js"></script>
+    <script>
+      rentacars.init();
+    </script>
+  </head>
+  <body>
+    <span id="message"></span>
+    <ul id="navigationBar">
+        <li><a href="/admin/airlines.html">Airlines</a></li>
+        <li><a href="/admin/hotels.html">Hotels</a></li>
+        <li><a href="/admin/rentacars.html">Rent a Car</a></li>
+        <li><a href="/admin/flights.html">Flights</a></li>
+    </ul>
+    <div class="container" style="max-width: 500px">
+      <h1>Add Rent-a-Car Service:</h1>
+      <form id="rentacarForm">
+        <div class="form-group">
+          <label for="rentACarName">Name:</label>
+          <input type="text" class="form-control" id="rentACarName">
+          <label for="rentACarAddress">Address:</label>
+          <input type="text" class="form-control" id="rentACarAddress">
+          <label for="rentACarDescription">Description:</label>
+          <input type="text" class="form-control" id="rentACarDescription">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Add Service"><br><br>
+      </form>
+    </div>
+    <div class="container">
+      <h2>Airlines:</h2>
+      <table class="table table-hover table-bordered" style="width:100%" id="rentTable">
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Description</th>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

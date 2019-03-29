@@ -26,6 +26,7 @@ public class AirLineController {
 	@Autowired
 	private AirLineServices airLineServices;
 	
+
 	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AirLine> addAirline(@RequestBody AirLine airline)  {
 		

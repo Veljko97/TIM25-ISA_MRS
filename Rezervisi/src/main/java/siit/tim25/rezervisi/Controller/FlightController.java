@@ -32,7 +32,6 @@ public class FlightController {
 	
 	@PostMapping(path="/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Flight> addFlight(@RequestBody NewFlight newFlight) throws ParseException  {
-		System.out.println(newFlight);
 		Flight f = new Flight();
 		f.setStartDestination(new Destination(newFlight.getStartDestinationName()));
 		f.setFinalDestination(new Destination(newFlight.getFinalDestinationName()));

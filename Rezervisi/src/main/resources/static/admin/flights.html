@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Manage Flights</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../model/flights.js"></script>
+    <script>
+      flights.init();
+    </script>
+  </head>
+  <body>
+    <span id="message"></span>
+    <ul id="navigationBar">
+        <li><a href="/admin/airlines.html">Airlines</a></li>
+        <li><a href="/admin/hotels.html">Hotels</a></li>
+        <li><a href="/admin/rentacars.html">Rent a Car</a></li>
+        <li><a href="/admin/flights.html">Flights</a></li>
+    </ul>
+    <div class="container" style="max-width: 500px">
+      <h1>Add Flight:</h1>
+      <form id="flightForm">
+        <div class="form-group">
+          <label for="startDestinationName">Start Destination:</label>
+          <input type="text" class="form-control" id="startDestinationName">
+          <label for="finalDestinationName">Final Destination:</label>
+          <input type="text" class="form-control" id="finalDestinationName">
+          <label for="takeOffDate">Take Off:</label>
+          <input type="text" class="form-control" id="takeOffDate">
+          <label for="landingDate">Landing Date:</label>
+          <input type="text" class="form-control" id="landingDate">
+          <label for="flightLength">Flight Length:</label>
+          <input type="number" class="form-control" id="flightLength">
+          <label for="numberOfStops">Number of Stops:</label>
+          <input type="number" class="form-control" id="numberOfStops">
+          <label for="stopLocation">Stop Location:</label>
+          <input type="text" class="form-control" id="stopLocation">
+          <label for="ticketPrice">Ticket Price:</label>
+          <input type="text" class="form-control" id="ticketPrice">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Add Flight"><br><br>
+      </form>
+    </div>
+    <div class="container">
+      <h2>Flights:</h2>
+      <table class="table table-hover table-bordered" style="width:100%" id="flightsTable">
+        <tr>
+          <th>Start Destination</th>
+          <th>End Destination</th>
+          <th>Take off date</th>
+          <th>Landing date</th>      
+          <th>Flight length</th>   
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

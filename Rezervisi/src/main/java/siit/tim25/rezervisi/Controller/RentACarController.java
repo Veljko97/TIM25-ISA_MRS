@@ -25,7 +25,7 @@ public class RentACarController {
 	private RentACarServices rentACarServices;
 	
 	@PostMapping(path="/addRentACar", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addHotel(@RequestBody RentACar rnt)  {
+	public ArrayList<RentACar> addRentACar(@RequestBody RentACar rnt)  {
 		
 		ArrayList<RentACar> rentACarList = rentACarServices.getRentACarList();
 		boolean exists = false;
@@ -41,6 +41,8 @@ public class RentACarController {
 		{
 			rentACarServices.save(rnt);
 		}
+		
+		return rentACarList;
 	}
 	
 	@GetMapping(path="/showRentACars", produces = MediaType.APPLICATION_JSON_VALUE)

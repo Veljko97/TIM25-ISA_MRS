@@ -25,8 +25,9 @@ public class HotelController {
 	private HotelServices hotelServices;
 	
 	@PostMapping(path="/addHotel", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addHotel(@RequestBody Hotel hotel)  {
-		
+	public ArrayList<Hotel> addHotel(@RequestBody Hotel hotel)  {
+		hotel.setHotelAverageGrade(0.0);
+		hotel.setHotelEarning(0.0);
 		ArrayList<Hotel> hotelList = hotelServices.getHotelList();
 		boolean exists = false;
 		for(Hotel existingHotel : hotelList)
@@ -41,6 +42,8 @@ public class HotelController {
 		{
 			hotelServices.save(hotel);
 		}
+		
+		return hotelList;
 	}
 	
 	@GetMapping(path="/showHotels", produces = MediaType.APPLICATION_JSON_VALUE)

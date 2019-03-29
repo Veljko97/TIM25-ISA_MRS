@@ -1,9 +1,10 @@
 package siit.tim25.rezervisi.Services;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Repository.RentACarRepository;
 
@@ -13,21 +14,25 @@ public class RentACarServices {
 	@Autowired
 	private RentACarRepository rentACarRepository;
 	
-	public boolean save(RentACar rnt) {
+	public RentACar save(RentACar rnt) {
 		return rentACarRepository.save(rnt);
 	}
 	
-	public ArrayList<RentACar> getRentACarList(){
-		return rentACarRepository.getRentACarList();
+	public List<RentACar> findAll(){
+		return rentACarRepository.findAll();
 	}
 	
-	public RentACar getRentACar(Integer rentACarID)
+	public RentACar findOneByRentACarName(String rentACarName) {
+		return rentACarRepository.findOneByRentACarName(rentACarName);
+	}
+	
+	public RentACar findOne(Integer rentACarID)
 	{
-		return rentACarRepository.getRentACar(rentACarID);
+		return rentACarRepository.findOne(rentACarID);
 	}
 	
-	public boolean update(RentACar rent) {
-		return rentACarRepository.update(rent);
+	public RentACar update(RentACar rent) {
+		return rentACarRepository.save(rent);
 	}
 	
 }

@@ -1,6 +1,7 @@
 package siit.tim25.rezervisi.Services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,11 @@ public class FlightServices {
 	@Autowired
 	private FlightRepository flightRepository;
 	
-	public boolean save(Flight flight) {
+	public Flight save(Flight flight) {
 		return flightRepository.save(flight);
 	}
 	
-	public ArrayList<Flight> getFlightList(){
-		return flightRepository.getFlightList();
+	public List<Flight> findAll(){
+		return flightRepository.findAll();
 	}
 }

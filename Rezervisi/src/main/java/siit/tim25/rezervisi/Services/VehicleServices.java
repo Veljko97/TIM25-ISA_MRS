@@ -1,6 +1,7 @@
 package siit.tim25.rezervisi.Services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,11 +15,11 @@ public class VehicleServices {
 	@Autowired
 	VehicleRepository vehicleRepository;
 	
-	public boolean save(Vehicle vehicle) {
+	public Vehicle save(Vehicle vehicle) {
 		return vehicleRepository.save(vehicle);
 	}
 	
-	public ArrayList<Vehicle> findAll(){
+	public List<Vehicle> findAll(){
 		return vehicleRepository.findAll();
 	}
 	

@@ -1,23 +1,10 @@
 package siit.tim25.rezervisi.Repository;
 
-import java.util.ArrayList;
-
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import siit.tim25.rezervisi.Beans.Vehicle;
 
-@Component
-public class VehicleRepository {
+
+public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
 	
-	private ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
-	
-	public boolean save(Vehicle vehicle) {
-		vehicle.setId(vehicles.size());
-		vehicles.add(vehicle);
-		return true;
-	}
-	
-	public ArrayList<Vehicle> findAll(){
-		return vehicles;
-	}
 }

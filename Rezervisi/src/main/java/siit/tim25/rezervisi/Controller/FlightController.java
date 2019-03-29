@@ -5,9 +5,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +31,7 @@ public class FlightController {
 	private FlightServices flightServices;
 	
 	@PostMapping(path="/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ArrayList<Flight> addFlight(@RequestBody NewFlight newFlight) throws ParseException  {
-		ArrayList<Flight> flightList = flightServices.getFlightList();
+	public ResponseEntity<Flight> addFlight(@RequestBody NewFlight newFlight) throws ParseException  {
 		Flight f = new Flight();
 		f.setStartDestination(new Destination(newFlight.getStartDestinationName()));
 		f.setFinalDestination(new Destination(newFlight.getFinalDestinationName()));
@@ -39,16 +41,13 @@ public class FlightController {
 		f.setFlightLength(newFlight.getFlightLength());
 		f.setNumberOfStops(newFlight.getNumberOfStops());
 		// f.setFlightTicket(new Ticket(newFlight.getFlightTicket(), f));
-		flightList.add(f);
-		
-		return flightList;
+		return new ResponseEntity<Flight>(flightServices.save(f),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showFlights", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ArrayList<Flight> showFlights()
+	public ResponseEntity<List<Flight>> showFlights()
 	{
-		ArrayList<Flight> flights = flightServices.getFlightList();
-		return flights;
+		return new ResponseEntity<List<Flight>>(flightServices.findAll(),HttpStatus.OK);
 	}
 	
 }

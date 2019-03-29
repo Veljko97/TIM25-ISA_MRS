@@ -1,20 +1,37 @@
 package siit.tim25.rezervisi.Beans;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Vehicle {
 	
-	private Integer id;
+	@Id
+	@GeneratedValue
+	private Integer idVehicle;
+
+	@Column(name = "vehicleName", nullable = false)
 	private String vehicleName;
+	
+	@Column(name = "vehicleGrade", nullable = false)
 	private String vehicleGrade;
 	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private RentACarBranch branch;
+
 	public Vehicle() {
-		this.id = -1;
 		this.vehicleName = "";
 		this.vehicleGrade = "";
 	}
 	
 	public Vehicle(Integer id, String vehicleName, String vehicleGrade) {
 		super();
-		this.id = id;
+		this.idVehicle = id;
 		this.vehicleName = vehicleName;
 		this.vehicleGrade = vehicleGrade;
 	}
@@ -36,14 +53,28 @@ public class Vehicle {
 	}
 
 	public Integer getId() {
-		return id;
+		return idVehicle;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.idVehicle = id;
 	}
 	
-	
-	
+
+	public Integer getIdVehicle() {
+		return idVehicle;
+	}
+
+	public void setIdVehicle(Integer idVehicle) {
+		this.idVehicle = idVehicle;
+	}
+
+	public RentACarBranch getBranch() {
+		return branch;
+	}
+
+	public void setBranch(RentACarBranch branch) {
+		this.branch = branch;
+	}
 	
 }

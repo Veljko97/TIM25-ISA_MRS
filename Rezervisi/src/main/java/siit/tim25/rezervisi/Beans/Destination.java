@@ -1,9 +1,29 @@
 package siit.tim25.rezervisi.Beans;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+@Entity
 public class Destination {
 	
-	String destinationName;
-	String destinationDescription;
+	@Id
+	@GeneratedValue
+	private Integer idDestination;
+	
+	@Column(name = "destinationName", nullable = false)
+	private String destinationName;
+	
+	@Column(name = "destinationDescription")
+	private String destinationDescription;
+	
+	@OneToMany(mappedBy = "destination", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AirLineDestination> airLineDestination; 
 
 	public Destination() {
 		super();
@@ -32,6 +52,14 @@ public class Destination {
 	}
 	public void setDestinationDescription(String destinationDescription) {
 		this.destinationDescription = destinationDescription;
+	}
+	
+	public Integer getIdDestination() {
+		return idDestination;
+	}
+
+	public void setIdDestination(Integer idDestination) {
+		this.idDestination = idDestination;
 	}
 
 	@Override

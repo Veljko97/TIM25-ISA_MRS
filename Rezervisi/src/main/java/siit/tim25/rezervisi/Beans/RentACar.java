@@ -1,32 +1,59 @@
 package siit.tim25.rezervisi.Beans;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class RentACar {
 	
-	Integer rentACarID;
-	String rentACarName;
-	String rentACarAddress;
-	String rentACarDescription;
-	ArrayList<RentACarOffer> offersPriceList;
-	ArrayList<Vehicle> vehiclesList;
-	ArrayList<RentACarBranch> rentACarBranches;
-	Double rentACarAverageGrade;
-	Double rentACarEarning;
+	@Id
+	@GeneratedValue
+	private Integer rentACarID;
+	
+	@Column(name = "rentACarName" , nullable = false)
+	private String rentACarName;
+	
+	@Column(name = "rentACarAddress")
+	private String rentACarAddress;
+	
+	@Column(name = "rentACarDescription")
+	private String rentACarDescription;
+	
+	@OneToMany(mappedBy = "service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RentACarOffer> offersPriceList = new HashSet<RentACarOffer>();
+	
+	@OneToMany(mappedBy = "service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RentACarBranch> rentACarBranches = new HashSet<RentACarBranch>();
+	
+	@Column(name = "rentACarAverageGrade")
+	private Double rentACarAverageGrade;
+	
+	@Column(name = "rentACarEarning")
+	private Double rentACarEarning;
 	
 	public RentACar() {
 		super();
+		this.rentACarAverageGrade = 0.0;
+		this.rentACarEarning = 0.0;
 	}
 	public RentACar(Integer rentACarID, String rentACarName, String rentACarAddress, String rentACarDescription,
-			ArrayList<RentACarOffer> offersPriceList, ArrayList<Vehicle> vehiclesList,
-			ArrayList<RentACarBranch> rentACarBranches, Double rentACarAverageGrade, Double rentACarEarning) {
+			Set<RentACarOffer> offersPriceList, Set<RentACarBranch> rentACarBranches,
+			Double rentACarAverageGrade, Double rentACarEarning) {
 		super();
 		this.rentACarID = rentACarID;
 		this.rentACarName = rentACarName;
 		this.rentACarAddress = rentACarAddress;
 		this.rentACarDescription = rentACarDescription;
 		this.offersPriceList = offersPriceList;
-		this.vehiclesList = vehiclesList;
 		this.rentACarBranches = rentACarBranches;
 		this.rentACarAverageGrade = rentACarAverageGrade;
 		this.rentACarEarning = rentACarEarning;
@@ -55,22 +82,16 @@ public class RentACar {
 	public void setRentACarDescription(String rentACarDescription) {
 		this.rentACarDescription = rentACarDescription;
 	}
-	public ArrayList<RentACarOffer> getOffersPriceList() {
+	public Set<RentACarOffer> getOffersPriceList() {
 		return offersPriceList;
 	}
-	public void setOffersPriceList(ArrayList<RentACarOffer> offersPriceList) {
+	public void setOffersPriceList(Set<RentACarOffer> offersPriceList) {
 		this.offersPriceList = offersPriceList;
 	}
-	public ArrayList<Vehicle> getVehiclesList() {
-		return vehiclesList;
-	}
-	public void setVehiclesList(ArrayList<Vehicle> vehiclesList) {
-		this.vehiclesList = vehiclesList;
-	}
-	public ArrayList<RentACarBranch> getRentACarBranches() {
+	public Set<RentACarBranch> getRentACarBranches() {
 		return rentACarBranches;
 	}
-	public void setRentACarBranches(ArrayList<RentACarBranch> rentACarBranches) {
+	public void setRentACarBranches(Set<RentACarBranch> rentACarBranches) {
 		this.rentACarBranches = rentACarBranches;
 	}
 	public Double getRentACarAverageGrade() {
@@ -89,7 +110,7 @@ public class RentACar {
 	public String toString() {
 		return "RentACar [rentACarID=" + rentACarID + ", rentACarName=" + rentACarName + ", rentACarAddress="
 				+ rentACarAddress + ", rentACarDescription=" + rentACarDescription + ", offersPriceList="
-				+ offersPriceList + ", vehiclesList=" + vehiclesList + ", rentACarBranches=" + rentACarBranches
+				+ offersPriceList + ", rentACarBranches=" + rentACarBranches
 				+ ", rentACarAverageGrade=" + rentACarAverageGrade + ", rentACarEarning=" + rentACarEarning + "]";
 	}
 

@@ -1,25 +1,51 @@
 package siit.tim25.rezervisi.Beans;
 
-import java.util.ArrayList;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+@Entity
 public class Hotel {
 	
-	Integer hotelID;
-	String hotelName;
-	String hotelAddress;
-	String hotelDescription;
-	ArrayList <HotelOffer> offersPriceList;
-	String roomConfig;
-	Double hotelAverageGrade;
-	Double hotelEarning;
+	@Id
+	@GeneratedValue
+	private Integer hotelID;
+	
+	@Column(nullable = false)
+	private String hotelName;
+	
+	@Column(nullable = false)
+	private String hotelAddress;
+	
+	@Column
+	private String hotelDescription;
+	
+	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<HotelOffer> offersPriceList;
+	
+	@Column
+	private String roomConfig;
+	
+	@Column
+	private Double hotelAverageGrade;
+	
+	@Column
+	private Double hotelEarning;
 	
 	public Hotel() {
 		super();
+		this.hotelAverageGrade = 0.0;
+		this.hotelEarning = 0.0;
 	}
 	
 	public Hotel(Integer hotelID, String hotelName, String hotelAddress, String hotelDescription,
-			ArrayList<HotelOffer> offersPriceList, String roomConfig, Double hotelAverageGrade, Double hotelEarning) {
+			Set<HotelOffer> offersPriceList, String roomConfig, Double hotelAverageGrade, Double hotelEarning) {
 		super();
 		this.hotelID = hotelID;
 		this.hotelName = hotelName;
@@ -54,10 +80,10 @@ public class Hotel {
 	public void setHotelDescription(String hotelDescription) {
 		this.hotelDescription = hotelDescription;
 	}
-	public ArrayList<HotelOffer> getOffersPriceList() {
+	public Set<HotelOffer> getOffersPriceList() {
 		return offersPriceList;
 	}
-	public void setOffersPriceList(ArrayList<HotelOffer> offersPriceList) {
+	public void setOffersPriceList(Set<HotelOffer> offersPriceList) {
 		this.offersPriceList = offersPriceList;
 	}
 	public String getRoomConfig() {

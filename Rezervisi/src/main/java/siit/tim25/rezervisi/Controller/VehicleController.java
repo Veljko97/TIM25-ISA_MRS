@@ -1,6 +1,7 @@
 package siit.tim25.rezervisi.Controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,13 +23,13 @@ public class VehicleController {
 	VehicleServices vehicleServices;
 	
 	@PostMapping(path="/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Boolean> addVehicle(@RequestBody Vehicle vehicle){
+	public ResponseEntity<Vehicle> addVehicle(@RequestBody Vehicle vehicle){
 		
-		return new ResponseEntity<Boolean>(vehicleServices.save(vehicle), HttpStatus.OK);
+		return new ResponseEntity<Vehicle>(vehicleServices.save(vehicle), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ArrayList<Vehicle>> returnAll(){
-		return new ResponseEntity<ArrayList<Vehicle>>(vehicleServices.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Vehicle>> returnAll(){
+		return new ResponseEntity<List<Vehicle>>(vehicleServices.findAll(), HttpStatus.OK);
 	}
 }

@@ -44,6 +44,8 @@ public class AirLine {
 	
     public AirLine() {
 		super();
+	        this.airLineAverageGrade = 0.0;
+	        this.airlineEarning = 0.0;
 	}
 	
 	public AirLine(Integer airLineID, String airLineName, String airLineAddress, String airLineDescription,

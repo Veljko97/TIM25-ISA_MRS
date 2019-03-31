@@ -26,11 +26,12 @@ public class RentACarController {
 	private RentACarServices rentACarServices;
 	
 	@PostMapping(path="/addRentACar", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentACar> addRentACar(@RequestBody RentACar rnt)  {
+	public ResponseEntity<List<RentACar>> addRentACar(@RequestBody RentACar rnt)  {
 		if(rentACarServices.findOneByRentACarName(rnt.getRentACarName()) != null) {
-			return new ResponseEntity<RentACar>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<RentACar>>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<RentACar>(rentACarServices.save(rnt),HttpStatus.OK);
+		rentACarServices.save(rnt);
+		return new ResponseEntity<List<RentACar>>(rentACarServices.findAll(),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showRentACars", produces = MediaType.APPLICATION_JSON_VALUE)

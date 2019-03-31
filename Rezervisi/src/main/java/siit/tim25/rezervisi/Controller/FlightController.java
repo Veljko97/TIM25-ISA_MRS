@@ -31,17 +31,18 @@ public class FlightController {
 	private FlightServices flightServices;
 	
 	@PostMapping(path="/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Flight> addFlight(@RequestBody NewFlight newFlight) throws ParseException  {
+	public ResponseEntity<List<Flight>> addFlight(@RequestBody NewFlight newFlight) throws ParseException  {
 		Flight f = new Flight();
-		f.setStartDestination(new Destination(newFlight.getStartDestinationName()));
-		f.setFinalDestination(new Destination(newFlight.getFinalDestinationName()));
+		// f.setStartDestination(new Destination(newFlight.getStartDestinationName()));
+		// f.setFinalDestination(new Destination(newFlight.getFinalDestinationName()));
 		DateFormat format = new SimpleDateFormat("dd/mm/yyyy hh:mm");
 		f.setTakeOffDate(format.parse(newFlight.getTakeOffDate()));
 		f.setLandingDate(format.parse(newFlight.getLandingDate()));
 		f.setFlightLength(newFlight.getFlightLength());
 		f.setNumberOfStops(newFlight.getNumberOfStops());
 		// f.setFlightTicket(new Ticket(newFlight.getFlightTicket(), f));
-		return new ResponseEntity<Flight>(flightServices.save(f),HttpStatus.OK);
+		flightServices.save(f);
+		return new ResponseEntity<List<Flight>>(flightServices.findAll(),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showFlights", produces = MediaType.APPLICATION_JSON_VALUE)

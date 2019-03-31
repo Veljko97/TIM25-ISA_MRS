@@ -1,5 +1,5 @@
-function Destinations(attributes, addUrlApi, showUrlApi) {
-  Model.call(this, attributes, addUrlApi, showUrlApi);
+function Destinations(attributes, urlApi) {
+  Model.call(this, attributes, urlApi);
 }
 
 Destinations.prototype = Object.create( Model.prototype );
@@ -20,4 +20,4 @@ Destinations.prototype.showAll = function(data) {
   }
 }
 
-var destinations = new Destinations(['destinationName', 'destinationDescription'], '/app/destinations/addDestination', '/app/destinations/showDestinations');
+var destinations = new Destinations(['destinationName', 'destinationDescription'], {'add': '/app/airlines/addDestination?id=1', 'showAll': '/app/airlines/showDestinations?id=1'});

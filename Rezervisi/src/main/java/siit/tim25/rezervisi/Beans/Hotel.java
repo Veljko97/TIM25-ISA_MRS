@@ -53,8 +53,8 @@ public class Hotel {
 		this.hotelDescription = hotelDescription;
 		this.offersPriceList = offersPriceList;
 		this.roomConfig = roomConfig;
-		this.hotelAverageGrade = hotelAverageGrade;
-		this.hotelEarning = hotelEarning;
+		this.hotelAverageGrade = 0.0;
+		this.hotelEarning = 0.0;
 	}
 	public Integer getHotelID() {
 		return hotelID;

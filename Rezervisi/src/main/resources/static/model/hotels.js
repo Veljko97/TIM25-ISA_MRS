@@ -1,5 +1,5 @@
-function Hotels(attributes, addUrlApi, showUrlApi) {
-  Model.call(this, attributes, addUrlApi, showUrlApi);
+function Hotels(attributes, urlApi) {
+  Model.call(this, attributes, urlApi);
 }
 
 Hotels.prototype = Object.create( Model.prototype );
@@ -20,4 +20,4 @@ Hotels.prototype.showAll = function(data) {
   }
 }
 
-var hotels = new Hotels(['hotelName', 'hotelAddress', 'hotelDesc', 'hotelGrade', 'roomConfig', 'hotelEarning'], '/app/hotels/addHotel', '/app/hotels/showHotels');
+var hotels = new Hotels(['hotelName', 'hotelAddress', 'hotelDesc', 'hotelGrade', 'roomConfig', 'hotelEarning'], {'add': '/app/hotels/addHotel', 'showAll': '/app/hotels/showHotels'});

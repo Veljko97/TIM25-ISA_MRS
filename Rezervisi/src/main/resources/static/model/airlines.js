@@ -1,5 +1,5 @@
-function Airlines(attributes, addUrlApi, showUrlApi) {
-  Model.call(this, attributes, addUrlApi, showUrlApi);
+function Airlines(attributes, urlApi) {
+  Model.call(this, attributes, urlApi);
 }
 
 Airlines.prototype = Object.create( Model.prototype );
@@ -39,4 +39,4 @@ Airlines.prototype.show = function(index) {
 }
 
 
-var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], '/app/airlines/addAirline', '/app/airlines/showAirLines');
+var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines'});

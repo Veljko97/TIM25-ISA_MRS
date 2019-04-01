@@ -1,5 +1,5 @@
-function RentACars(attributes, addUrlApi, showUrlApi) {
-  Model.call(this, attributes, addUrlApi, showUrlApi);
+function RentACars(attributes, urlApi) {
+  Model.call(this, attributes, urlApi);
 }
 
 RentACars.prototype = Object.create( Model.prototype );
@@ -20,4 +20,4 @@ RentACars.prototype.showAll = function(data) {
   }
 }
 
-var rentacars = new RentACars(['rentACarName', 'rentACarAddress', 'rentACarDescription'], '/app/rentacar/addRentACar', '/app/rentacar/showRentACars');
+var rentacars = new RentACars(['rentACarName', 'rentACarAddress', 'rentACarDescription'], {'add': '/app/rentacar/addRentACar', 'showAll': '/app/rentacar/showRentACars'});

@@ -26,8 +26,9 @@ public class HotelController {
 	private HotelServices hotelServices;
 	
 	@PostMapping(path="/addHotel", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hotel> addHotel(@RequestBody Hotel hotel)  {		
-		return new ResponseEntity<Hotel>(hotelServices.save(hotel),HttpStatus.OK);
+	public ResponseEntity<List<Hotel>> addHotel(@RequestBody Hotel hotel)  {	
+		hotelServices.save(hotel);
+		return new ResponseEntity<List<Hotel>>(hotelServices.findAll(),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showHotels", produces = MediaType.APPLICATION_JSON_VALUE)

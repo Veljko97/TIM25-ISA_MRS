@@ -1,9 +1,5 @@
-function Model(attributes, addUrlApi = null, showAllUrlApi = null, editUrlApi = null) {
-  this.urlApi = {
-    'add': addUrlApi,
-    'showAll': showAllUrlApi,
-    'edit': editUrlApi
-  };
+function Model(attributes, urlApi) {
+  this.urlApi = urlApi;
 
   this.attributes = attributes;
   this.list = [];

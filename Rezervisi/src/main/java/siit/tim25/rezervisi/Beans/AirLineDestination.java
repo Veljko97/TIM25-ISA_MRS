@@ -6,7 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
 
 @Entity
 public class AirLineDestination {
@@ -24,9 +24,8 @@ public class AirLineDestination {
 		super();
 	}
 	
-	public AirLineDestination(Integer id, AirLine airLine, Destination destination) {
+	public AirLineDestination(AirLine airLine, Destination destination) {
 		super();
-		this.id = id;
 		this.airLine = airLine;
 		this.destination = destination;
 	}

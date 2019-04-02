@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Edit Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../model/rooms.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      $(document).ready(function(){
+        var index = getIndexFromUrl();
+        rooms.show(index);
+      });
+    </script>
+  </head>
+  <body>
+    <span id="message"></span>
+    <ul id="navigationBar">
+        <li><a href="/admin/airlines.html">Airlines</a></li>
+        <li><a href="/admin/hotels.html">Hotels</a></li>
+        <li><a href="/admin/rentacars.html">Rent a Car</a></li>
+        <li><a href="/admin/flights.html">Flights</a></li>
+    </ul>
+    <div class="container" style="max-width: 500px">
+      <h1>Edit Room:</h1>
+      <form id="editRoomForm">
+        <div class="form-group">
+          <label for="roomNumber">Number:</label>
+          <input type="text" class="form-control" id="roomNumber">
+          <label for="roomDescription">Description:</label>
+          <input type="text" class="form-control" id="roomDescription">
+          <label for="roomCapacity">Capacity:</label>
+          <input type="text" class="form-control" id="roomCapacity">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Edit"><br><br>
+      </form>
+    </div>
+  </body>
+</html>

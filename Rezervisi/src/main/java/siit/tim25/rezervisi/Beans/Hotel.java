@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import siit.tim25.rezervisi.Beans.users.HotelAdmin;
+
 @Entity
 public class Hotel {
 	
@@ -35,6 +37,9 @@ public class Hotel {
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<HotelRoom> roomList = new HashSet<HotelRoom>();
+	
+	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 	
 	@Column
 	private String roomConfig;
@@ -141,11 +146,13 @@ public class Hotel {
 	public void setHotelEarning(Double hotelEarning) {
 		this.hotelEarning = hotelEarning;
 	}
-	
-	
-	
-	
-}
-	
-	
+
+	public Set<HotelAdmin> getAdmins() {
+		return admins;
+	}
+
+	public void setAdmins(Set<HotelAdmin> admins) {
+		this.admins = admins;
+	}
+}	
 

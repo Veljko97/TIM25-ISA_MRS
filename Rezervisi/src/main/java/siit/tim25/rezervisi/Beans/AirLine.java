@@ -9,9 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 
 @Entity
 public class AirLine {
@@ -39,6 +42,9 @@ public class AirLine {
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Ticket> offers = new HashSet<Ticket>();
 
+	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AirLineAdmin> admins = new HashSet<AirLineAdmin>();
+	
 	@Column(name = "airLineAverageGrade", nullable = false)
 	private Double airLineAverageGrade;
 

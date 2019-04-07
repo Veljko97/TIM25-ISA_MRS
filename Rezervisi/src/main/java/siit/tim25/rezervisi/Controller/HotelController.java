@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Services.HotelServices;
@@ -32,6 +34,7 @@ public class HotelController {
 	private RoomServices roomServices;
 	
 	@PostMapping(path="/addHotel", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<List<Hotel>> addHotel(@RequestBody Hotel hotel)  {	
 		hotelServices.save(hotel);
 		return new ResponseEntity<List<Hotel>>(hotelServices.findAll(),HttpStatus.OK);
@@ -45,6 +48,7 @@ public class HotelController {
 
 	
 	@PostMapping(path="/addRoom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('HOTEL_ADMIN')")
 	public ResponseEntity<List<Room>> addRoom (HttpServletRequest request, @RequestBody Room room) {
 		if(roomServices.findOneByRoomNumber(room.getRoomNumber())!=null)
 		{
@@ -55,6 +59,7 @@ public class HotelController {
 	}
 	
 	@PostMapping(path="/editRoom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('HOTEL_ADMIN')")
 	public ResponseEntity<Room> editRoom(HttpServletRequest request, @RequestBody Room modifiedRoom)
 	{
 		modifiedRoom.setRoomID(Integer.parseInt(request.getParameter("id")));
@@ -67,6 +72,7 @@ public class HotelController {
 	
 	
 	@PostMapping(path="/removeRoom", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('HOTEL_ADMIN')")
 	public void removeRoom (HttpServletRequest request,String roomID) {
 		Hotel hotel = hotelServices.findOne(Integer.parseInt(request.getParameter("id")));
 		hotel.getRoomList().remove(roomID);

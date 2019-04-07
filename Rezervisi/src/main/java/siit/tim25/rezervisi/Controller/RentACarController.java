@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ public class RentACarController {
 	private RentACarServices rentACarServices;
 	
 	@PostMapping(path="/addRentACar", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<List<RentACar>> addRentACar(@RequestBody RentACar rnt)  {
 		if(rentACarServices.findOneByRentACarName(rnt.getRentACarName()) != null) {
 			return new ResponseEntity<List<RentACar>>(HttpStatus.BAD_REQUEST);
@@ -47,6 +49,7 @@ public class RentACarController {
 	}
 	
 	@PutMapping(path="/updateRentACar", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
 	public ResponseEntity<RentACar> updateRentACar(@RequestBody RentACar rent){
 		
 		return new ResponseEntity<RentACar>(rentACarServices.update(rent), HttpStatus.OK);

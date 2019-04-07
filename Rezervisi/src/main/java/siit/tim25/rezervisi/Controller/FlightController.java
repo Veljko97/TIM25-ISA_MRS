@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ public class FlightController {
 	private FlightServices flightServices;
 	
 	@PostMapping(path="/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<List<Flight>> addFlight(@RequestBody NewFlight newFlight) throws ParseException  {
 		Flight f = new Flight();
 		// f.setStartDestination(new Destination(newFlight.getStartDestinationName()));

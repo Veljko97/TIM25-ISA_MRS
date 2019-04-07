@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,7 @@ public class AirLineController {
 	
 
 	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<List<AirLine>> addAirline(@RequestBody AirLine airline)  {
 		
 		if(airLineServices.findOneByAirLineName(airline.getAirLineName()) != null)	{
@@ -52,6 +54,7 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/editAirline", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<AirLine> editAirline(HttpServletRequest request, @RequestBody AirLine modifiedAirline)
 	{
 		modifiedAirline.setAirLineID(Integer.parseInt(request.getParameter("id")));
@@ -71,6 +74,7 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/addDestination", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<List<Destination>> addDestination (HttpServletRequest request, @RequestBody Destination destination) {
 		AirLine airline = airLineServices.findOne(Integer.parseInt(request.getParameter("id")));
 		AirLineDestination airDest = new AirLineDestination(airline, destination);

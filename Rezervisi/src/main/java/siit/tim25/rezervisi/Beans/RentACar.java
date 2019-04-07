@@ -1,6 +1,5 @@
 package siit.tim25.rezervisi.Beans;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 
 @Entity
 public class RentACar {
@@ -39,6 +40,9 @@ public class RentACar {
 	
 	@Column(name = "rentACarEarning")
 	private Double rentACarEarning;
+	
+	@OneToMany(mappedBy = "rentACar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RentACarAdmin> admins = new HashSet<RentACarAdmin>();
 	
 	public RentACar() {
 		super();
@@ -106,6 +110,14 @@ public class RentACar {
 	public void setRentACarEarning(Double rentACarEarning) {
 		this.rentACarEarning = rentACarEarning;
 	}
+	
+	public Set<RentACarAdmin> getAdmins() {
+		return admins;
+	}
+	public void setAdmins(Set<RentACarAdmin> admins) {
+		this.admins = admins;
+	}
+
 	@Override
 	public String toString() {
 		return "RentACar [rentACarID=" + rentACarID + ", rentACarName=" + rentACarName + ", rentACarAddress="

@@ -34,7 +34,7 @@ public class AirLine {
 
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Set<AirLineDestination> airLineDestinations = new HashSet<AirLineDestination>();
+	private Set<Destination> airLineDestinations = new HashSet<Destination>();
 
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Flight> airLineFlights = new HashSet<Flight>();
@@ -43,6 +43,7 @@ public class AirLine {
 	private Set<Ticket> offers = new HashSet<Ticket>();
 
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<AirLineAdmin> admins = new HashSet<AirLineAdmin>();
 	
 	@Column(name = "airLineAverageGrade", nullable = false)
@@ -58,7 +59,7 @@ public class AirLine {
 	}
 
 	public AirLine(Integer airLineID, String airLineName, String airLineAddress, String airLineDescription,
-			Set<AirLineDestination> airLineDestinations, Set<Flight> airLineFlights, Set<Ticket> offers,
+			Set<Destination> airLineDestinations, Set<Flight> airLineFlights, Set<Ticket> offers,
 			Double airLineAverageGrade, Double airlineEarning) {
 		super();
 		this.airLineID = airLineID;
@@ -104,11 +105,12 @@ public class AirLine {
 		this.airLineDescription = airLineDescription;
 	}
 
-	public Set<AirLineDestination> getAirLineDestinations() {
+
+	public Set<Destination> getAirLineDestinations() {
 		return airLineDestinations;
 	}
 
-	public void setAirLineDestinations(Set<AirLineDestination> airLineDestinations) {
+	public void setAirLineDestinations(Set<Destination> airLineDestinations) {
 		this.airLineDestinations = airLineDestinations;
 	}
 
@@ -151,5 +153,17 @@ public class AirLine {
 				+ ", airLineFlights=" + airLineFlights + ", offers=" + offers + ", airLineAverageGrade="
 				+ airLineAverageGrade + ", airlineEarning=" + airlineEarning + "]";
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+	    if (obj == this) return true;
+	    if (!(obj instanceof AirLine)) return false;
+	    AirLine o = (AirLine) obj;
+	    
+		return o.airLineID == this.airLineID;
+	}
+	
+	
 
 }

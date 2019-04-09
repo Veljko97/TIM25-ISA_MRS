@@ -8,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Room {
@@ -27,8 +29,12 @@ public class Room {
 	@Column (name = "roomCapacity")
 	private String roomCapacity;
 	
-	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<HotelRoom> hotelRoom;
+	@Column (name = "price")
+	private Double price;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Hotel hotel;
 
 	
 	public Integer getRoomID() {
@@ -62,30 +68,55 @@ public class Room {
 	public void setRoomCapacity(String roomCapacity) {
 		this.roomCapacity = roomCapacity;
 	}
-
-	public Set<HotelRoom> getHotelRoom(String id) {
-		return hotelRoom;
-	}
-
-	public void setHotelRoom(Set<HotelRoom> hotelRoom) {
-		this.hotelRoom = hotelRoom;
-	}
 	
+	
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	
+
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
 	public Room(Integer roomID, String roomNumber, String roomDescription, String roomCapacity,
-			Set<HotelRoom> hotelRoom) {
+			Hotel hotel) {
 		super();
 		this.roomID = roomID;
 		this.roomNumber = roomNumber;
 		this.roomDescription = roomDescription;
 		this.roomCapacity = roomCapacity;
-		this.hotelRoom = hotelRoom;
+		this.hotel = hotel;
 	}
 
 	public Room() {
 		super();
 	} 
 	
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+	    if (obj == this) return true;
+	    if (!(obj instanceof Room)) return false;
+	    Room o = (Room) obj;
+	    
+		return o.roomID == this.roomID;
+	}
+
+	@Override
+	public String toString() {
+		return "Room [roomID=" + roomID + ", roomNumber=" + roomNumber + ", roomDescription=" + roomDescription
+				+ ", roomCapacity=" + roomCapacity + ", price=" + price + ", hotel=" + hotel + "]";
+	}
 	
 	
 	

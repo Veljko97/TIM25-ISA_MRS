@@ -1,16 +1,18 @@
 package siit.tim25.rezervisi.Controller;
 
+import java.text.ParseException;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +21,6 @@ import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Services.HotelServices;
 import siit.tim25.rezervisi.Services.RoomServices;
-
-
 
 @RestController
 @RequestMapping(path="app/hotels")
@@ -40,54 +40,72 @@ public class HotelController {
 		return new ResponseEntity<List<Hotel>>(hotelServices.findAll(),HttpStatus.OK);
 	}
 	
+	@DeleteMapping(path="/deleteHotel/{id}")
+	public ResponseEntity<List<Hotel>> deleteHotel(@PathVariable Integer id)
+	{
+		hotelServices.delete(id);
+		return new ResponseEntity<List<Hotel>>(hotelServices.findAll(),HttpStatus.OK);
+	}
+	
 	@GetMapping(path="/showHotels", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Hotel>> showHotels()
 	{
 		return new ResponseEntity<List<Hotel>>(hotelServices.findAll(),HttpStatus.OK);
 	}
+	
+	@GetMapping(path="/getHotel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hotel> getHotel(@PathVariable Integer id)
+	{
+		return new ResponseEntity<Hotel>(hotelServices.findOne(id),HttpStatus.OK);
+	}
+	
+	@PutMapping(path="/editHotel/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hotel> editHotel(@PathVariable Integer id, @RequestBody Hotel modifiedHotel)
+	{
+		modifiedHotel.setHotelID(id);
+		Hotel h = hotelServices.findOne(id);
+		modifiedHotel.setHotelAverageGrade(h.getHotelAverageGrade());
+		modifiedHotel.setHotelEarning(h.getHotelEarning());
+		return new ResponseEntity<Hotel>(hotelServices.save(modifiedHotel), HttpStatus.OK);
+	}
 
 	
-	@PostMapping(path="/addRoom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path="/{hotelId}/showRooms", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('HOTEL_ADMIN')")
-	public ResponseEntity<List<Room>> addRoom (HttpServletRequest request, @RequestBody Room room) {
-		if(roomServices.findOneByRoomNumber(room.getRoomNumber())!=null)
-		{
-			return new ResponseEntity<List<Room>>(HttpStatus.BAD_REQUEST);
-		}
-		roomServices.save(room);
-		return new ResponseEntity<List<Room>>(roomServices.findAll(),HttpStatus.OK);
+	public ResponseEntity<List<Room>> getRooms(@PathVariable Integer hotelId) {
+		return new ResponseEntity<List<Room>>(roomServices.findAll(hotelId),HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/editRoom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path="/{hotelId}/addRoom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('HOTEL_ADMIN')")
-	public ResponseEntity<Room> editRoom(HttpServletRequest request, @RequestBody Room modifiedRoom)
+	public ResponseEntity<List<Room>> addRoom (@PathVariable Integer hotelId, @RequestBody Room r) throws ParseException {
+		roomServices.save(hotelId, r);
+		return new ResponseEntity<List<Room>> (roomServices.findAll(hotelId), HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{hotelId}/getRoom/{roomId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('HOTEL_ADMIN')")
+	public ResponseEntity<Room> getRoom(@PathVariable Integer hotelId, @PathVariable Integer roomId)
 	{
-		modifiedRoom.setRoomID(Integer.parseInt(request.getParameter("id")));
-		Room room = roomServices.findOne(Integer.parseInt(request.getParameter("id")));
-		modifiedRoom.setRoomNumber(room.getRoomNumber());
-		modifiedRoom.setRoomDescription(room.getRoomDescription());
-		modifiedRoom.setRoomCapacity(room.getRoomCapacity());
-		return new ResponseEntity<Room>(roomServices.save(modifiedRoom), HttpStatus.OK);
+		return new ResponseEntity<Room>(roomServices.findOne(hotelId, roomId), HttpStatus.OK);
 	}
 	
-	
-	@PostMapping(path="/removeRoom", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(path="/{hotelId}/editRoom/{roomId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('HOTEL_ADMIN')")
-	public void removeRoom (HttpServletRequest request,String roomID) {
-		Hotel hotel = hotelServices.findOne(Integer.parseInt(request.getParameter("id")));
-		hotel.getRoomList().remove(roomID);
-		hotelServices.save(hotel);
-	}
-	
-	@GetMapping(path="/getRoom", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Room> getAirline(HttpServletRequest request)
+	public ResponseEntity<Room> editRoom(@PathVariable Integer hotelId, @PathVariable Integer roomId, @RequestBody Room modifiedRoom) throws ParseException
 	{
-		return new ResponseEntity<Room>(roomServices.findOne(Integer.parseInt(request.getParameter("index"))),HttpStatus.OK);
+		modifiedRoom.setRoomID(roomId);
+		roomServices.update(hotelId, modifiedRoom);
+		
+		return new ResponseEntity<Room>(modifiedRoom, HttpStatus.OK);
 	}
 	
-	@GetMapping(path="/showRooms", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Room>> showRooms(HttpServletRequest request) {
-		return new ResponseEntity<List<Room>>(roomServices.findAll(), HttpStatus.OK);	
+	@DeleteMapping(path="{hotelId}/deleteRoom/{roomId}")
+	@PreAuthorize("hasRole('HOTEL_ADMIN')")
+	public ResponseEntity<List<Room>> deleteRoom(@PathVariable Integer hotelId, @PathVariable Integer roomId)
+	{
+		roomServices.delete(hotelId, roomId);
+		return new ResponseEntity<List<Room>>(roomServices.findAll(hotelId),HttpStatus.OK);
 	}
 }
 

@@ -7,8 +7,8 @@ function Model(attributes, urlApi) {
 
 Model.prototype.init = function() {
   this.cacheDom();
-  this.bindEvents();
   this.render();
+  this.bindEvents();
 }
 
 Model.prototype.cacheDom = function() {}
@@ -37,10 +37,14 @@ Model.prototype.addCallback = function(e) {
   ajaxService.POST(this.urlApi.add, obj, this.showAll.bind(this));
 }
 
+Model.prototype.deleteCallback = function(i) {
+  ajaxService.DELETE(this.urlApi.delete + i, this.showAll.bind(this));
+}
+
 Model.prototype.editCallback = function(e) {
   e.preventDefault();
   var obj = this.makeJSONObject();
-  ajaxService.POST(this.urlApi.edit, obj, function() { window.location.replace('http://localhost:8888') });
+  ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace('http://localhost:8888') });
 }
 
 Model.prototype.render = function() {

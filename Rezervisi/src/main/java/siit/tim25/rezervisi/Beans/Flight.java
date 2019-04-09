@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Flight {
 	@Id
@@ -36,6 +38,9 @@ public class Flight {
 	@Column
 	private int numberOfStops;
 	
+	@Column
+	private int numberOfSeats;
+	
 	@OneToMany
 	private Set<Destination> stopLocations = new HashSet<Destination>();
 	
@@ -46,6 +51,7 @@ public class Flight {
 	private Double flightAverageGrade;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private AirLine airLine;
 	
 	
@@ -55,7 +61,7 @@ public class Flight {
 	}
 
 	public Flight(Destination startDestination, Destination finalDestination, Date takeOffDate, Date landingDate,
-			String flightLength, int numberOfStops, Set<Destination> stopLocations,
+			String flightLength, int numberOfStops, int numberOfSeats, Set<Destination> stopLocations,
 			Set<Ticket> flightTickets ,Double flightAverageGrade) {
 		super();
 		this.startDestination = startDestination;
@@ -64,6 +70,7 @@ public class Flight {
 		this.landingDate = landingDate;
 		this.flightLength = flightLength;
 		this.numberOfStops = numberOfStops;
+		this.numberOfSeats = numberOfSeats;
 		this.stopLocations = stopLocations;
 		this.flightTickets = flightTickets;
 		this.flightAverageGrade = flightAverageGrade;
@@ -150,12 +157,33 @@ public class Flight {
 	public void setFlightTicket(Set<Ticket> flightTickets) {
 		this.flightTickets = flightTickets;
 	}
+	
+	public int getNumberOfSeats() {
+		return numberOfSeats;
+	}
+
+	public void setNumberOfSeats(int numberOfSeats) {
+		this.numberOfSeats = numberOfSeats;
+	}
+	
+	
+
 	@Override
 	public String toString() {
 		return "Flight [startDestination=" + startDestination + ", finalDestination=" + finalDestination
 				+ ", takeOffDate=" + takeOffDate + ", landingDate=" + landingDate + ", flightLength=" + flightLength
 				+ ", numberOfStops=" + numberOfStops + ", stopLocations=" + stopLocations + ", flightTicket="
 				+ flightTickets + ", flightAverageGrade=" + flightAverageGrade + "]";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+	    if (obj == this) return true;
+	    if (!(obj instanceof Flight)) return false;
+	    Flight o = (Flight) obj;
+	    
+		return o.idFlight == this.idFlight;
 	}
 	
 	

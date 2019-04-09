@@ -36,9 +36,10 @@ public class Hotel {
 	
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Set<HotelRoom> roomList = new HashSet<HotelRoom>();
+	private Set<Room> roomList = new HashSet<Room>();
 	
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 	
 	@Column
@@ -59,7 +60,7 @@ public class Hotel {
 	
 
 	public Hotel(Integer hotelID, String hotelName, String hotelAddress, String hotelDescription,
-			Set<HotelOffer> offersPriceList, Set<HotelRoom> roomList, String roomConfig, Double hotelAverageGrade,
+			Set<HotelOffer> offersPriceList, Set<Room> roomList, String roomConfig, Double hotelAverageGrade,
 			Double hotelEarning) {
 		super();
 		this.hotelID = hotelID;
@@ -69,8 +70,8 @@ public class Hotel {
 		this.offersPriceList = offersPriceList;
 		this.roomList = roomList;
 		this.roomConfig = roomConfig;
-		this.hotelAverageGrade = hotelAverageGrade;
-		this.hotelEarning = hotelEarning;
+		this.hotelAverageGrade = 0.0;
+		this.hotelEarning = 0.0;
 	}
 
 
@@ -115,11 +116,11 @@ public class Hotel {
 		this.offersPriceList = offersPriceList;
 	}
 
-	public Set<HotelRoom> getRoomList() {
+	public Set<Room> getRoomList() {
 		return roomList;
 	}
 
-	public void setRoomList(Set<HotelRoom> roomList) {
+	public void setRoomList(Set<Room> roomList) {
 		this.roomList = roomList;
 	}
 
@@ -154,5 +155,19 @@ public class Hotel {
 	public void setAdmins(Set<HotelAdmin> admins) {
 		this.admins = admins;
 	}
-}	
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+	    if (obj == this) return true;
+	    if (!(obj instanceof Hotel)) return false;
+	    Hotel o = (Hotel) obj;
+	    
+		return o.hotelID == this.hotelID;
+	}
+	
+}
+	
+	
 

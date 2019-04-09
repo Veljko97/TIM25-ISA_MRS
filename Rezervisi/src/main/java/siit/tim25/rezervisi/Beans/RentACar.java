@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 
 @Entity
@@ -42,6 +44,7 @@ public class RentACar {
 	private Double rentACarEarning;
 	
 	@OneToMany(mappedBy = "rentACar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<RentACarAdmin> admins = new HashSet<RentACarAdmin>();
 	
 	public RentACar() {

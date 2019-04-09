@@ -1,26 +1,31 @@
 package siit.tim25.rezervisi.Controller;
 
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import siit.tim25.rezervisi.Beans.AirLine;
-import siit.tim25.rezervisi.Beans.AirLineDestination;
 import siit.tim25.rezervisi.Beans.Destination;
+import siit.tim25.rezervisi.Beans.Flight;
+import siit.tim25.rezervisi.DTO.FlightDTO;
 import siit.tim25.rezervisi.Services.AirLineServices;
+import siit.tim25.rezervisi.Services.DestinationServices;
+import siit.tim25.rezervisi.Services.FlightServices;
 
 @RestController
 @RequestMapping(path="app/airlines")
@@ -28,6 +33,12 @@ public class AirLineController {
 	
 	@Autowired
 	private AirLineServices airLineServices;
+	
+	@Autowired
+	private DestinationServices destinationServices;
+	
+	@Autowired
+	private FlightServices flightServices;
 	
 
 	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -41,50 +52,116 @@ public class AirLineController {
 		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
 	}
 	
+	@DeleteMapping(path="/deleteAirline/{id}")
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<List<AirLine>> deleteAirline(@PathVariable Integer id)
+	{
+		airLineServices.delete(id);
+		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
+	}
+	
 	@GetMapping(path="/showAirLines", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<List<AirLine>> showAirLines()
 	{
 		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
 	}
 	
-	@GetMapping(path="/getAirline", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AirLine> getAirline(HttpServletRequest request)
+	@GetMapping(path="/getAirline/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<AirLine> getAirline(@PathVariable Integer id)
 	{
-		return new ResponseEntity<AirLine>(airLineServices.findOne(Integer.parseInt(request.getParameter("index"))),HttpStatus.OK);
+		return new ResponseEntity<AirLine>(airLineServices.findOne(id),HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/editAirline", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<AirLine> editAirline(HttpServletRequest request, @RequestBody AirLine modifiedAirline)
+	@PutMapping(path="/editAirline/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<AirLine> editAirline(@PathVariable Integer id, @RequestBody AirLine modifiedAirline)
 	{
-		modifiedAirline.setAirLineID(Integer.parseInt(request.getParameter("id")));
-		AirLine air = airLineServices.findOne(Integer.parseInt(request.getParameter("id")));
+		modifiedAirline.setAirLineID(id);
+		AirLine air = airLineServices.findOne(id);
 		modifiedAirline.setAirLineAverageGrade(air.getAirLineAverageGrade());
 		modifiedAirline.setAirlineEarning(air.getAirlineEarning());
 		return new ResponseEntity<AirLine>(airLineServices.save(modifiedAirline), HttpStatus.OK);
 	}
 	
-	@GetMapping(path="/showDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Destination>> getDestinations(HttpServletRequest request) {
-		ArrayList<Destination> responseList = new ArrayList<Destination>();
-		for(AirLineDestination ad: airLineServices.findOne(Integer.parseInt(request.getParameter("id"))).getAirLineDestinations()) {
-			responseList.add(ad.getDestination());
-		}
-		return new ResponseEntity<List<Destination>>(responseList,HttpStatus.OK);
+	@GetMapping(path="/{airlineId}/showDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Set<Destination>> getDestinations(@PathVariable Integer airlineId) {
+		return new ResponseEntity<Set<Destination>>(destinationServices.findAll(airlineId),HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/addDestination", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path="/{airlineId}/addDestination", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<List<Destination>> addDestination (HttpServletRequest request, @RequestBody Destination destination) {
-		AirLine airline = airLineServices.findOne(Integer.parseInt(request.getParameter("id")));
-		AirLineDestination airDest = new AirLineDestination(airline, destination);
-		airline.getAirLineDestinations().add(airDest);
-		airLineServices.save(airline);
-		ArrayList<Destination> responseList = new ArrayList<Destination>();
-		for(AirLineDestination ad: airline.getAirLineDestinations()) {
-			responseList.add(ad.getDestination());
-		}
-		return new ResponseEntity<List<Destination>> (responseList, HttpStatus.OK);
+	public ResponseEntity<Set<Destination>> addDestination (@PathVariable Integer airlineId, @RequestBody Destination destination) {
+		destinationServices.save(airlineId, destination);
+		return new ResponseEntity<Set<Destination>> (destinationServices.findAll(airlineId), HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{airlineId}/getDestination/{destinationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Destination> getDestination(@PathVariable Integer airlineId, @PathVariable Integer destinationId)
+	{
+		return new ResponseEntity<Destination>(destinationServices.findOne(airlineId, destinationId), HttpStatus.OK);
+	}
+	
+	@PutMapping(path="/{airlineId}/editDestination/{destinationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Destination> editDestination(@PathVariable Integer airlineId, @PathVariable Integer destinationId, @RequestBody Destination modifiedDestination)
+	{
+		modifiedDestination.setIdDestination(destinationId);
+		destinationServices.update(airlineId, modifiedDestination);
+		
+		return new ResponseEntity<Destination>(modifiedDestination, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(path="{airlineId}/deleteDestination/{destinationId}")
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Set<Destination>> deleteDestination(@PathVariable Integer airlineId, @PathVariable Integer destinationId)
+	{
+		destinationServices.delete(airlineId, destinationId);
+		return new ResponseEntity<Set<Destination>>(destinationServices.findAll(airlineId),HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(path="/{airlineId}/showFlights", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Set<Flight>> getFlights(@PathVariable Integer airlineId) {
+		return new ResponseEntity<Set<Flight>>(flightServices.findAll(airlineId),HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/{airlineId}/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Set<Flight>> addFlight (@PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
+		Flight fl = f.convert();
+		flightServices.save(airlineId, fl);
+		return new ResponseEntity<Set<Flight>> (flightServices.findAll(airlineId), HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{airlineId}/getFlight/{flightId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Flight> getFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId)
+	{
+		return new ResponseEntity<Flight>(flightServices.findOne(airlineId, flightId), HttpStatus.OK);
+	}
+	
+	@PutMapping(path="/{airlineId}/editFlight/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Flight> editFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody FlightDTO modifiedFlight) throws ParseException
+	{
+		Flight f = modifiedFlight.convert();
+		f.setIdFlight(flightId);
+		flightServices.update(airlineId, f);
+		
+		return new ResponseEntity<Flight>(f, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(path="{airlineId}/deleteFlight/{flightId}")
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Set<Flight>> deleteFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId)
+	{
+		flightServices.delete(airlineId, flightId);
+		return new ResponseEntity<Set<Flight>>(flightServices.findAll(airlineId),HttpStatus.OK);
 	}
 	
 }

@@ -11,13 +11,16 @@ Airlines.prototype.bindEvents = function() {
 
 Airlines.prototype.showAll = function(data) {
   var table = $("#airlinesTable").first();
-  table.html("<tr><th>Name</th><th>Address</th><th>Description</th><th>Options</th></tr>");
+  table.html("<tr><th>Name</th><th>Address</th><th>Description</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
   this.list = [];
 
   for(var i = 0; i < data.length; i++) {
     var airline = data[i];
     this.list.push(airline);
-    table.html(table.html() + "<tr><td>"+ airline.airLineName + "</td><td>" + airline.airLineAddress + "</td><td>"+ airline.airLineDescription+"</td><td><a class=\"btn btn-info\" href=\"edit-airline.html?id=" + i + "\">Edit</a></td></tr>");
+    table.html(table.html() + "<tr><td>"+ airline.airLineName + 
+      "</td><td>" + airline.airLineAddress + "</td><td>"+ airline.airLineDescription+
+      "</td><td><a class=\"btn btn-info\" href=\"edit-airline.html?id=" + airline.airLineID + 
+      "\">Edit</a></td><td><a class=\"btn btn-danger\" onclick=\"airlines.deleteCallback(" + airline.airLineID +")\">Delete</a></td></tr>");
   }
 }
 
@@ -30,13 +33,13 @@ Airlines.prototype.showCallback = function(airline) {
       input.attr("value", airline[inputName]);
     }
   }
-  this.urlApi.edit = '/app/airlines/editAirline?id=' + airline.airLineID;
+  this.urlApi.edit = '/app/airlines/editAirline/' + airline.airLineID;
   $(document).on('submit', '#editAirlineForm', this.editCallback.bind(this));
 }
 
 Airlines.prototype.show = function(index) {
-  ajaxService.GET('/app/airlines/getAirline?index=' + index, this.showCallback.bind(this));
+  ajaxService.GET('/app/airlines/getAirline/' + index, this.showCallback.bind(this));
 }
 
 
-var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines'});
+var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines', 'delete': '/app/airlines/deleteAirline/'});

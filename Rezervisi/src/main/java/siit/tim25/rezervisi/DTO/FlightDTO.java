@@ -1,8 +1,12 @@
-package siit.tim25.rezervisi.Beans;
+package siit.tim25.rezervisi.DTO;
 
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-public class NewFlight {
+import siit.tim25.rezervisi.Beans.Flight;
+
+public class FlightDTO {
 	private String startDestinationName;
 	private String finalDestinationName;
 	private String takeOffDate;
@@ -14,12 +18,12 @@ public class NewFlight {
 	private Double flightAverageGrade;
 	
 	
-	public NewFlight() {
+	public FlightDTO() {
 		super();
 	}
 	
 	
-	public NewFlight(String startDestinationName, String finalDestinationName, String takeOffDate, String landingDate,
+	public FlightDTO(String startDestinationName, String finalDestinationName, String takeOffDate, String landingDate,
 			String flightLength, int numberOfStops, String stopLocation, Double ticketPrice,
 			Double flightAverageGrade) {
 		super();
@@ -97,8 +101,15 @@ public class NewFlight {
 				+ stopLocation + ", ticketPrice=" + ticketPrice + ", flightAverageGrade=" + flightAverageGrade + "]";
 	}
 	
-	
-	
-	
-	
+	public Flight convert() throws ParseException {
+		Flight f = new Flight();
+		DateFormat format = new SimpleDateFormat("dd/mm/yyyy hh:mm");
+		f.setTakeOffDate(format.parse(this.takeOffDate));
+		f.setLandingDate(format.parse(this.landingDate));
+		f.setFlightLength(this.flightLength);
+		f.setNumberOfStops(this.numberOfStops);
+		f.setFlightAverageGrade(this.flightAverageGrade);
+		
+		return f;
+	}
 }

@@ -35,4 +35,7 @@ public class RentACarServices {
 		return rentACarRepository.save(rent);
 	}
 	
+	public void delete(Integer id) {
+		rentACarRepository.delete(id);
+	}
 }

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Manage Destinations</title>
+    <title>Edit Destination</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -8,37 +8,31 @@
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
     <script src="../model/destinations.js"></script>
+    <script src="../js/main.js"></script>
     <script>
-      destinations.init();
+      $(document).ready(function(){
+        var index = getIndexFromUrl();
+        destinations.show(index);
+      });
     </script>
   </head>
   <body>
     <span id="message"></span>
     <ul id="navigationBar">
-        <li><a href="/admin-airlines/destinations.html">Destinations</a></li>
-        <li><a href="/admin-airlines/flights.html">Flights</a></li>
+      <li><a href="/admin-airlines/destinations.html">Destinations</a></li>
+      <li><a href="/admin-airlines/flights.html">Flights</a></li>
     </ul>
     <div class="container" style="max-width: 500px">
-      <h1>Add Destination:</h1>
-      <form id="destinationForm">
+      <h1>Edit Destination:</h1>
+      <form id="editDestinationForm">
         <div class="form-group">
           <label for="destinationName">Name:</label>
           <input type="text" class="form-control" id="destinationName">
           <label for="destinationDescription">Description:</label>
           <input type="text" class="form-control" id="destinationDescription">
         </div>
-        <input type="submit" class="btn btn-primary" value="Add"><br><br>
+        <input type="submit" class="btn btn-primary" value="Edit"><br><br>
       </form>
-    </div>
-    <div class="container">
-      <h2>Destinations:</h2>
-      <table class="table table-hover table-bordered" style="width:100%" id="destinationsTable">
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Options</th>   
-        </tr>
-      </table>
     </div>
   </body>
 </html>

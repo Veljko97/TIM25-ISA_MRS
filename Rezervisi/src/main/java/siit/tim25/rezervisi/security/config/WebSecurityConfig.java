@@ -60,10 +60,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 			.authorizeRequests()
 			.antMatchers("/index", "/auth/**").permitAll()
-			.antMatchers("/admin/edit-room", "/admin/rooms.html").hasRole("HOTEL_ADMIN")
-			.antMatchers("/admin/edit-airline.html", "/admin-airline/destinations.html").hasRole("AIRLINE_ADMIN")
-			.antMatchers("/rent-a-car-admin.html").hasRole("RENTACAR_ADMIN")
-			.antMatchers("/admin/airlines.html","/admin/flights.html","/admin/hotels.html","/admin/rentacars.html").hasRole("SYS_ADMIN")
+			.antMatchers("/admin-hotels/edit-room.html", "/admin-hotels/rooms.html").hasRole("HOTEL_ADMIN")
+			.antMatchers("/admin-airlines/edit-destination.html", "/admin-airlines/destinations.html", 
+					"/admin-airlines/edit-flight.html", "/admin-airlines/flights.html").hasRole("AIRLINE_ADMIN")
+			.antMatchers("/admin/airlines.html", "/admin/edit-airline.html", "/admin/edit-hotel.html", 
+					"/admin/hotels.html","/admin/rentacars.html", "/admin/edit-rentacar.html").hasRole("SYS_ADMIN")
 			.and()
 			.formLogin().and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);

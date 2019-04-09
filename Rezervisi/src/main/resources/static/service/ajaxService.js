@@ -20,5 +20,26 @@ var ajaxService = {
       success: successCallback,
       error: errorCallback
     })
-  }
+  },
+  DELETE: function(apiUrl, successCallback = function() {}, errorCallback = function() {}) {
+    $.ajax({
+      method: "DELETE",
+      url: apiUrl,
+      contentType:"application/json; charset=utf-8",
+      dataType: "json",
+      success: successCallback,
+      error: errorCallback
+    })
+  },
+  PUT: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
+    $.ajax({
+      method: "PUT",
+      url: apiUrl,
+      data: dataObj,
+      contentType:"application/json; charset=utf-8",
+      dataType: "json",
+      success: successCallback,
+      error: errorCallback
+    })
+  },
 }

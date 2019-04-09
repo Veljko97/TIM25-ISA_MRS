@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Manage Hotels</title>
+    <title>Edit Hotel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -8,8 +8,12 @@
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
     <script src="../model/hotels.js"></script>
+    <script src="../js/main.js"></script>
     <script>
-      hotels.init();
+      $(document).ready(function(){
+        var index = getIndexFromUrl();
+        hotels.show(index);
+      });
     </script>
   </head>
   <body>
@@ -20,8 +24,8 @@
         <li><a href="/admin/rentacars.html">Rent a Car</a></li>
     </ul>
     <div class="container" style="max-width: 500px">
-      <h1>Add Hotel:</h1>
-      <form id="hotelForm">
+      <h1>Edit Hotel:</h1>
+      <form id="editHotelForm">
         <div class="form-group">
           <label for="hotelName">Name:</label>
           <input type="text" class="form-control" id="hotelName">
@@ -30,21 +34,8 @@
           <label for="hotelDescription">Description:</label>
           <input type="text" class="form-control" id="hotelDescription">
         </div>
-        <input class="btn btn-primary" type="submit" value="Add Hotel"><br><br>
+        <input type="submit" class="btn btn-primary" value="Edit"><br><br>
       </form>
-    </div>
-    
-    <div class="container">
-      <h2>Hotels:</h2>
-      <table class="table table-hover table-bordered" style="width:100%" id="hotelsTable">
-        <tr>
-          <th>Name</th>
-          <th>Address</th>
-          <th>Average grade</th>
-          <th>Hotel earning</th>
-          <th>Options</th>
-        </tr>
-      </table>
     </div>
   </body>
 </html>

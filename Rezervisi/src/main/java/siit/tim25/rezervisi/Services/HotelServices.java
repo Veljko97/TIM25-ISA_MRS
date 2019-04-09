@@ -28,4 +28,7 @@ public class HotelServices {
 		return hotelRepository.findOne(hotelID);
 	}
 	
+	public void delete(Integer id) {
+		hotelRepository.delete(id);
+	}
 }

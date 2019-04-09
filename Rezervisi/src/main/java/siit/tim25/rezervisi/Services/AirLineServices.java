@@ -34,4 +34,8 @@ public class AirLineServices {
 		return airLineRepository.save(airline);
 	}
 	
+	public void delete(Integer id) {
+		airLineRepository.delete(id);
+	}
+	
 }

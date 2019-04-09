@@ -4,15 +4,15 @@ import siit.tim25.rezervisi.security.model.TokenState;
 
 public class UserDTO {
 	private Integer id;
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private boolean enabled;
-    private Integer serviceId;
-    private TokenState token;
-	
-    public UserDTO() {
+	private String username;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private boolean enabled;
+	private Integer serviceId;
+	private TokenState token;
+
+	public UserDTO() {
 		super();
 		this.id = 0;
 		this.username = "";
@@ -23,9 +23,9 @@ public class UserDTO {
 		this.serviceId = -1;
 		this.token = new TokenState();
 	}
-    
-    public UserDTO(Integer id, String username, String firstName, String lastName, String email,
-			boolean enabled, Integer serviceId, TokenState token) {
+
+	public UserDTO(Integer id, String username, String firstName, String lastName, String email, boolean enabled,
+			Integer serviceId, TokenState token) {
 		super();
 		this.id = id;
 		this.username = username;

@@ -126,30 +126,30 @@ public class AirLineController {
 	
 	@GetMapping(path="/{airlineId}/showFlights", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<Flight>> getFlights(@PathVariable Integer airlineId) {
-		return new ResponseEntity<Set<Flight>>(flightServices.findAll(airlineId),HttpStatus.OK);
+	public ResponseEntity<Set<FlightDTO>> getFlights(@PathVariable Integer airlineId) {
+		return new ResponseEntity<Set<FlightDTO>>(flightServices.findAllAndConvert(airlineId),HttpStatus.OK);
 	}
 	
 	@PostMapping(path="/{airlineId}/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<Flight>> addFlight (@PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
-		Flight fl = f.convert();
+	public ResponseEntity<Set<FlightDTO>> addFlight (@PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
+		Flight fl = f.convert(destinationServices.findAll(airlineId));
 		flightServices.save(airlineId, fl);
-		return new ResponseEntity<Set<Flight>> (flightServices.findAll(airlineId), HttpStatus.OK);
+		return new ResponseEntity<Set<FlightDTO>> (flightServices.findAllAndConvert(airlineId), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/{airlineId}/getFlight/{flightId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Flight> getFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId)
+	public ResponseEntity<FlightDTO> getFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId)
 	{
-		return new ResponseEntity<Flight>(flightServices.findOne(airlineId, flightId), HttpStatus.OK);
+		return new ResponseEntity<FlightDTO>(flightServices.findOneAndConvert(airlineId, flightId), HttpStatus.OK);
 	}
 	
 	@PutMapping(path="/{airlineId}/editFlight/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Flight> editFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody FlightDTO modifiedFlight) throws ParseException
 	{
-		Flight f = modifiedFlight.convert();
+		Flight f = modifiedFlight.convert(destinationServices.findAll(airlineId));
 		f.setIdFlight(flightId);
 		flightServices.update(airlineId, f);
 		

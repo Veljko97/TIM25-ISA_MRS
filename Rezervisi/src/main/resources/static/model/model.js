@@ -26,13 +26,18 @@ Model.prototype.validateInput = function() {
 Model.prototype.makeJSONObject = function() {
   var object = {}
   for(var i = 0; i < this.attributes.length; i++) {
-    object[this.attributes[i]] = $('#' + this.attributes[i]).val();
+    object[this.attributes[i]] = $('#' + this.attributes[i]).val() || $('#' + this.attributes[i]).first().val();
   }
   return JSON.stringify(object);
 }
 
 Model.prototype.addCallback = function(e) {
   e.preventDefault();
+
+  if (!this.validateInput()) {
+    return handleWrongInput();
+  }
+
   var obj = this.makeJSONObject();
   ajaxService.POST(this.urlApi.add, obj, this.showAll.bind(this));
 }
@@ -43,6 +48,11 @@ Model.prototype.deleteCallback = function(i) {
 
 Model.prototype.editCallback = function(e) {
   e.preventDefault();
+
+  if (!this.validateInput()) {
+    return handleWrongInput();
+  }
+
   var obj = this.makeJSONObject();
   ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace('http://localhost:8888') });
 }

@@ -1,8 +1,7 @@
 package siit.tim25.rezervisi.Controller;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.RentACar;
+import siit.tim25.rezervisi.Beans.RentACarBranch;
+import siit.tim25.rezervisi.Services.BranchServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
 
 
@@ -28,6 +30,9 @@ public class RentACarController {
 	
 	@Autowired
 	private RentACarServices rentACarServices;
+	
+	@Autowired
+	private BranchServices branchServices;
 	
 	@PostMapping(path="/addRentACar", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
@@ -72,6 +77,45 @@ public class RentACarController {
 		rentacar.setRentACarAverageGrade(r.getRentACarAverageGrade());
 		rentacar.setRentACarEarning(r.getRentACarEarning());
 		return new ResponseEntity<RentACar>(rentACarServices.save(rentacar), HttpStatus.OK);
+	}
+	
+
+	@GetMapping(path="/{rentacarId}/showBranches", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<Set<RentACarBranch>> getBranches(@PathVariable Integer rentacarId) {
+		return new ResponseEntity<Set<RentACarBranch>>(branchServices.findAll(rentacarId),HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/{rentacarId}/addBranch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<Set<RentACarBranch>> addBranch (@PathVariable Integer rentacarId, @RequestBody RentACarBranch branch) {
+		branchServices.save(rentacarId, branch);
+		return new ResponseEntity<Set<RentACarBranch>> (branchServices.findAll(rentacarId), HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{rentacarId}/getBranch/{branchId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<RentACarBranch> getBranch(@PathVariable Integer rentacarId, @PathVariable Integer branchId)
+	{
+		return new ResponseEntity<RentACarBranch>(branchServices.findOne(rentacarId, branchId), HttpStatus.OK);
+	}
+	
+	@PutMapping(path="/{rentacarId}/editBranch/{branchId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<RentACarBranch> editBranch(@PathVariable Integer rentacarId, @PathVariable Integer branchId, @RequestBody RentACarBranch modifiedBranch)
+	{
+		modifiedBranch.setIdBranch(branchId);
+		branchServices.update(rentacarId, modifiedBranch);
+		
+		return new ResponseEntity<RentACarBranch>(modifiedBranch, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(path="{rentacarId}/deleteBranch/{branchId}")
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<Set<RentACarBranch>> deleteBranch(@PathVariable Integer rentacarId, @PathVariable Integer branchId)
+	{
+		branchServices.delete(rentacarId, branchId);
+		return new ResponseEntity<Set<RentACarBranch>>(branchServices.findAll(rentacarId),HttpStatus.OK);
 	}
 	
 }

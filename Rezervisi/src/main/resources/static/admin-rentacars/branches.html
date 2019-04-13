@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Manage Destinations</title>
+    <title>Manage Rent a Car Branches</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -8,38 +8,36 @@
     <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
-    <script src="../model/destinations.js"></script>
+    <script src="../model/branches.js"></script>
     <script>
-      destinations.init();
+      branches.init();
     </script>
   </head>
   <body>
     <span id="message"></span>
     <ul id="navigationBar">
-        <li><a href="/admin-airlines/destinations.html">Destinations</a></li>
-        <li><a href="/admin-airlines/flights.html">Flights</a></li>
+      <li><a href="/admin-rentacars/branches.html">Branches</a></li>
     </ul>
     <div class="alert alert-danger" id="warning-message">
     </div>
     <div class="container" style="max-width: 500px">
-      <h1>Add Destination:</h1>
-      <form id="destinationForm">
+      <h1>Add Branches:</h1>
+      <form id="branchForm">
         <div class="form-group">
-          <label for="destinationName">Name:</label>
-          <input type="text" class="form-control" id="destinationName">
-          <label for="destinationDescription">Description:</label>
-          <input type="text" class="form-control" id="destinationDescription">
+          <label for="branchName">Branch Name:</label>
+          <input type="text" class="form-control" id="branchName">
+          <label for="branchAddress">Branch Address:</label>
+          <input type="text" class="form-control" id="branchAddress">
         </div>
         <input type="submit" class="btn btn-primary" value="Add"><br><br>
       </form>
     </div>
     <div class="container">
-      <h2>Destinations:</h2>
-      <table class="table table-hover table-bordered" style="width:100%" id="destinationsTable">
+      <h2>Branches:</h2>
+      <table class="table table-hover table-bordered" style="width:100%" id="branchesTable">
         <tr>
           <th>Name</th>
-          <th>Description</th>
-          <th>Options</th>   
+          <th>Address</th>   
         </tr>
       </table>
     </div>

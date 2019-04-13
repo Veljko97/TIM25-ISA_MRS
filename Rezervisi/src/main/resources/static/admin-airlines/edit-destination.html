@@ -5,10 +5,10 @@
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
     <script src="../model/destinations.js"></script>
-    <script src="../js/main.js"></script>
     <script>
       $(document).ready(function(){
         var index = getIndexFromUrl();
@@ -22,6 +22,8 @@
       <li><a href="/admin-airlines/destinations.html">Destinations</a></li>
       <li><a href="/admin-airlines/flights.html">Flights</a></li>
     </ul>
+    <div class="alert alert-danger" id="warning-message">
+    </div>
     <div class="container" style="max-width: 500px">
       <h1>Edit Destination:</h1>
       <form id="editDestinationForm">

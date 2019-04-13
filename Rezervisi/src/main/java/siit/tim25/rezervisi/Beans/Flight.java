@@ -1,5 +1,7 @@
 package siit.tim25.rezervisi.Beans;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import siit.tim25.rezervisi.DTO.FlightDTO;
 @Entity
 public class Flight {
 	@Id
@@ -41,6 +45,9 @@ public class Flight {
 	@Column
 	private int numberOfSeats;
 	
+	@Column
+	private Double ticketPrice;
+	
 	@OneToMany
 	private Set<Destination> stopLocations = new HashSet<Destination>();
 	
@@ -61,7 +68,7 @@ public class Flight {
 	}
 
 	public Flight(Destination startDestination, Destination finalDestination, Date takeOffDate, Date landingDate,
-			String flightLength, int numberOfStops, int numberOfSeats, Set<Destination> stopLocations,
+			String flightLength, int numberOfStops, int numberOfSeats, Double ticketPrice, Set<Destination> stopLocations,
 			Set<Ticket> flightTickets ,Double flightAverageGrade) {
 		super();
 		this.startDestination = startDestination;
@@ -71,6 +78,7 @@ public class Flight {
 		this.flightLength = flightLength;
 		this.numberOfStops = numberOfStops;
 		this.numberOfSeats = numberOfSeats;
+		this.ticketPrice = ticketPrice;
 		this.stopLocations = stopLocations;
 		this.flightTickets = flightTickets;
 		this.flightAverageGrade = flightAverageGrade;
@@ -98,6 +106,16 @@ public class Flight {
 
 	public void setFlightTickets(Set<Ticket> flightTickets) {
 		this.flightTickets = flightTickets;
+	}
+	
+	
+
+	public Double getTicketPrice() {
+		return ticketPrice;
+	}
+
+	public void setTicketPrice(Double ticketPrice) {
+		this.ticketPrice = ticketPrice;
 	}
 
 	public AirLine getAirLine() {
@@ -186,6 +204,10 @@ public class Flight {
 		return o.idFlight == this.idFlight;
 	}
 	
-	
+	public FlightDTO convert() {
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		format.format(this.takeOffDate);
+		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), format.format(this.takeOffDate), format.format(this.landingDate), this.getFlightLength(), this.getNumberOfStops(), this.getNumberOfSeats(), this.getTicketPrice(), this.getFlightAverageGrade());
+	}
 	
 }

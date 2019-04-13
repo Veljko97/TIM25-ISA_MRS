@@ -5,10 +5,10 @@
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
     <script src="../model/flights.js"></script>
-    <script src="../js/main.js"></script>
     <script>
       $(document).ready(function(){
         var index = getIndexFromUrl();
@@ -22,14 +22,16 @@
       <li><a href="/admin-airlines/destinations.html">Destinations</a></li>
       <li><a href="/admin-airlines/flights.html">Flights</a></li>
     </ul>
+    <div class="alert alert-danger" id="warning-message">
+    </div>
     <div class="container" style="max-width: 500px">
       <h1>Edit Flight:</h1>
       <form id="editFlightForm">
         <div class="form-group">
           <label for="startDestinationName">Start Destination:</label>
-          <input type="text" class="form-control" id="startDestinationName">
+          <select class="form-control" id="startDestinationName"></select>
           <label for="finalDestinationName">Final Destination:</label>
-          <input type="text" class="form-control" id="finalDestinationName">
+          <select class="form-control" id="finalDestinationName"></select>
           <label for="takeOffDate">Take Off:</label>
           <input type="text" class="form-control" id="takeOffDate">
           <label for="landingDate">Landing Date:</label>
@@ -40,8 +42,6 @@
           <input type="number" class="form-control" id="numberOfStops">
           <label for="numberOfSeats">Number of Seats:</label>
           <input type="number" class="form-control" id="numberOfSeats">
-          <label for="stopLocation">Stop Location:</label>
-          <input type="text" class="form-control" id="stopLocation">
           <label for="ticketPrice">Ticket Price:</label>
           <input type="text" class="form-control" id="ticketPrice">
         </div>

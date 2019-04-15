@@ -1,13 +1,17 @@
 package siit.tim25.rezervisi.Controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
+import siit.tim25.rezervisi.Beans.users.HotelAdmin;
+import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.HotelServices;
 import siit.tim25.rezervisi.Services.RoomServices;
+import siit.tim25.rezervisi.Services.users.AuthorityServices;
+import siit.tim25.rezervisi.security.model.TokenState;
+import siit.tim25.rezervisi.security.model.User;
 
 @RestController
 @RequestMapping(path="app/hotels")
@@ -32,6 +41,13 @@ public class HotelController {
 	
 	@Autowired
 	private RoomServices roomServices;
+	
+	@Autowired
+	@Lazy
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthorityServices authorityServices;
 	
 	@PostMapping(path="/addHotel", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
@@ -106,6 +122,36 @@ public class HotelController {
 	{
 		roomServices.delete(hotelId, roomId);
 		return new ResponseEntity<List<Room>>(roomServices.findAll(hotelId),HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/showUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<ArrayList<UserDTO>> getUsers(@PathVariable Integer id){
+		ArrayList<UserDTO> users = new ArrayList<UserDTO>();
+		for(User us : hotelServices.findOne(id).getAdmins()) {
+			users.add(new UserDTO(us, new TokenState()));
+		}
+		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/addUser/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestBody UserDTO user){
+		
+		Hotel hotel = hotelServices.findOne(id);
+		HotelAdmin admin = new HotelAdmin();
+		admin.setPassword(passwordEncoder.encode("123"));
+		admin.setUsername(user.getUsername());
+		admin.setFirstName(user.getFirstName());
+		admin.setLastName(user.getLastName());
+		admin.setEmail(user.getEmail());
+		admin.setEnabled(true);
+		admin.setConfirmed(false);
+		admin.setHotel(hotel);
+		hotel.getAdmins().add(admin);
+		admin.setAuthorities(Arrays.asList(authorityServices.findOne(2)));
+		hotelServices.save(hotel);
+		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 }
 

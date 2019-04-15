@@ -6,7 +6,7 @@ Airlines.prototype = Object.create( Model.prototype );
 
 Airlines.prototype.bindEvents = function() {
   $(document).on('submit', '#airlineForm', this.addCallback.bind(this));
-  $(document).on('submit', '#editAirlineForm', this.editCallback.bind(this));
+  $(document).on('submit', '#addUserForm', this.addUserCallback.bind(this));
 }
 
 Airlines.prototype.showAll = function(data) {
@@ -19,8 +19,8 @@ Airlines.prototype.showAll = function(data) {
     this.list.push(airline);
     table.html(table.html() + "<tr><td>"+ airline.airLineName + 
       "</td><td>" + airline.airLineAddress + "</td><td>"+ airline.airLineDescription+
-      "</td><td><a class=\"btn btn-info\" href=\"edit-airline.html?id=" + airline.airLineID + 
-      "\">Edit</a></td><td><a class=\"btn btn-danger\" onclick=\"airlines.deleteCallback(" + airline.airLineID +")\">Delete</a></td></tr>");
+      "</td><td><a class=\"btn btn-info\" href=\"add-admin-airline.html?id=" + airline.airLineID + 
+      "\">Add Admins</a></td><td><a class=\"btn btn-danger\" onclick=\"airlines.deleteCallback(" + airline.airLineID +")\">Delete</a></td></tr>");
   }
 }
 
@@ -41,5 +41,11 @@ Airlines.prototype.show = function(index) {
   ajaxService.GET('/app/airlines/getAirline/' + index, this.showCallback.bind(this));
 }
 
+Airlines.prototype.showUsers = function(index) {
+  this.urlApi.users = '/app/airlines/showUser/' + index
+  this.urlApi.addUser = '/app/airlines/addUser/' + index
+  ajaxService.GET(this.urlApi.users,this.showUsersTable);
+  $(document).on('submit', '#addUserForm', this.addUserCallback.bind(this));
+}
 
 var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines', 'delete': '/app/airlines/deleteAirline/'});

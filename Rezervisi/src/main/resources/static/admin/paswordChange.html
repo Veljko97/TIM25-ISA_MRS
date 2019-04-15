@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Change</title>
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        $(document).ready(function(){
+            var user = JSON.parse(sessionStorage.getItem('user'));
+            ajaxService.SETTOKEN(user.token.accessToken);
+            $("#passwordForm").change(function(e){
+                e.preventDefault();
+                $("#error").hide();
+            });
+            $("#passwordForm").submit(function(e){
+                e.preventDefault();
+                if($("#newPassword1").val() != $("#newPassword2").val()){
+                    $("#error").show();
+                    return;
+                }
+                var password = {
+                    oldPassword: "",
+                    newPassword: $("#newPassword1").val()
+                    };
+                var sucess = function(){
+                    user.confirmed = true;
+                    sessionStorage.setItem('user',JSON.stringify(user));
+                    location.replace("/admin-airlines/index.html")
+                };
+                ajaxService.POST("/auth/first-change-password",JSON.stringify(password), sucess)
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container" style="max-width: 500px">
+        <h1>Change Password:</h1>
+        <form id="passwordForm">
+            <div class="form-group">
+                <label for="newPassword1">Password:</label>
+                <input type="password" class="form-control" id="newPassword1" required>
+                <label for="newPassword2">Repeat Password:</label>
+                <input type="password" class="form-control" id="newPassword2" required>
+            </div>
+            <p id="error" style="color:red" hidden>Passwords didn't match</p>
+            <input type="submit" class="btn btn-primary" value="Submit"><br><br>
+        </form>
+      </div>
+</body>
+</html>

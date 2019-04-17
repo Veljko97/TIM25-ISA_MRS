@@ -6,6 +6,38 @@
   <link rel="stylesheet" type="text/css" href="css/nav.css" >
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="js/jquery.min.js"></script>
+  <script src="../service/ajaxService.js"></script>
+  <script>
+    var move = function(token){
+      var user = JSON.parse(sessionStorage.getItem("user"));
+    //   $.ajaxSetup({
+    //   headers:
+    //   { "Authorization": "Bearer "+user.token.accessToken}
+    // });
+      // Ovo je kod koji doda token u zahtev
+      ajaxService.SETTOKEN(user.token.accessToken);
+      $.ajax({
+      method:"GET",
+      url: "/admin/airlines.html",	
+      // contentType:"application/json; charset=utf-8",
+      // dataType: "json",
+	    success: function(data){
+        // Kad ovo uradim pretrazivac opet posalje svoj zahtev bez tokena
+        location.replace("/admin/airlines.html");
+        
+        // Ovo mi je izgledalo obecavajuce ali nisam nasao naci da kompletno zamenim sadrzaj HTML dokumenta
+        // Ovaj koda samo menja URL bez da refresuje stranicu, al nisam nasao nacin da ubacim kod dobije u data
+        // var new_url="/admin/airlines.html";
+        // window.history.pushState(data,"Title",new_url);
+        // $(document).first()[0].all = $.parseHTML(data)
+        
+      },
+      error: function(data){
+        alert(data);
+      }
+    })
+  }
+  </script>
 </head>
 
 <body>

@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			// Ako uskljucim da je bezbednost stateless nisam pronasao nacin za prosledjivanje
 			// tokena kroz cromove zahteve kad se prebacuje na drugu html stranicu
-			//.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			//.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 			.authorizeRequests()
 			.antMatchers("/index", "/auth/**").permitAll()
@@ -67,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/admin/hotels.html","/admin/rentacars.html", "/admin/edit-rentacar.html").hasRole("SYS_ADMIN")
 			.antMatchers("/admin-rentacars/branches.html", "/admin-rentacars/edit-branch.html").hasRole("RENTACAR_ADMIN")
 			.and()
-			.formLogin().loginPage("/LoginPage.html").and()
+			//.formLogin().loginPage("/LoginPage.html").and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 
 		http.csrf().disable();

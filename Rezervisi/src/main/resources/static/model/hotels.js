@@ -20,7 +20,7 @@ Hotels.prototype.showAll = function(data) {
     table.html(table.html() + "<tr><td>"+ hotel.hotelName + "</td><td>" + 
       hotel.hotelAddress + "</td><td>"+ hotel.hotelAverageGrade+"</td><td>" + 
       hotel.hotelEarning + "</td><td><a class=\"btn btn-info\" href=\"add-admin-hotel.html?id=" + 
-      hotel.hotelID + "\">Edit</a></td><td><a class=\"btn btn-danger\" onclick=\"hotels.deleteCallback(" + hotel.hotelID +")\">Delete</a></td></tr>");
+      hotel.hotelID + "\">Add Admins</a></td><td><a class=\"btn btn-danger\" onclick=\"hotels.deleteCallback(" + hotel.hotelID +")\">Delete</a></td></tr>");
   }
 }
 

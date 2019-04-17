@@ -52,6 +52,9 @@ public class User implements UserDetails {
 
     @Column(name = "enabled")
     private boolean enabled;
+    
+    @Column(name = "confirmed")
+    private boolean confirmed;
 
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
@@ -137,8 +140,16 @@ public class User implements UserDetails {
     public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
+    
+    public boolean isConfirmed() {
+		return confirmed;
+	}
 
-    @JsonIgnore
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+
+	@JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;

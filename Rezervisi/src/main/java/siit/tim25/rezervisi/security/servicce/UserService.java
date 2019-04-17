@@ -1,6 +1,7 @@
 package siit.tim25.rezervisi.security.servicce;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -29,5 +30,13 @@ public class UserService  {
 	public List<User> findAll() throws AccessDeniedException {
 		List<User> result = userRepository.findAll();
 		return result;
+	}
+	
+//	public Set<User> findbyRole(String role){
+//		return userRepository.findbyRole(role);
+//	}
+	
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 }

@@ -54,12 +54,31 @@ Model.prototype.editCallback = function(e) {
   }
 
   var obj = this.makeJSONObject();
-  ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace('http://localhost:8888') });
+  ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace(window.location.host) });
 }
 
 Model.prototype.render = function() {
   ajaxService.GET(this.urlApi.showAll, this.showAll.bind(this));
 }
 
+Model.prototype.addUserCallback = function(e){
+  e.preventDefault();
+  var admin = {
+    username : $("#username").val(),
+    firstName : $("#firstName").val(),
+    lastName  : $("#lastName").val(),
+    email : $("#email").val()
+  }
+  ajaxService.POST(this.urlApi.addUser,JSON.stringify(admin),function(){location.reload()});
+}
 Model.prototype.showAll = function(data) {}
 Model.prototype.show = function(data) {}
+Model.prototype.showUsersTable = function(data) {
+  var table = $("#adminsTable").first();
+  table.html("<tr><th>User Name</th><th>First Name</th><th>Last Name</th><th>E-mail</th></tr>");
+  
+  for(var i = 0; i < data.length; i++){
+    admin = data[i];
+    table.html(table.html()+"<tr><th>"+admin.username+"</th><th>"+admin.firstName+"</th><th>"+admin.lastName+"</th><th>"+admin.email+"</th></tr>");
+  }
+}

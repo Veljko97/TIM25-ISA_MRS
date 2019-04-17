@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index Rent-A-Car Admin</title>
+   	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script>
+        $(document).ready(function(){
+            var user = JSON.parse(sessionStorage.getItem('user'));
+            if(!user.confirmed){
+                location.replace("/admin/paswordChange.html");
+            }
+        });
+    </script>
+</head>
+<body>
+	<ul id="navigationBar">
+        <li><a href="/admin-rentacars/branches.html">Branches</a></li>
+    </ul>
+</body>
+</html>

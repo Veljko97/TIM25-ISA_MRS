@@ -6,7 +6,7 @@ Hotels.prototype = Object.create( Model.prototype );
 
 Hotels.prototype.bindEvents = function() {
   $(document).on('submit', '#hotelForm', this.addCallback.bind(this));
-  $(document).on('submit', '#editHotelForm', this.editCallback.bind(this));
+  $(document).on('submit', '#addUserForm', this.addUserCallback.bind(this));
 }
 
 Hotels.prototype.showAll = function(data) {
@@ -19,7 +19,7 @@ Hotels.prototype.showAll = function(data) {
     this.list.push(hotel);
     table.html(table.html() + "<tr><td>"+ hotel.hotelName + "</td><td>" + 
       hotel.hotelAddress + "</td><td>"+ hotel.hotelAverageGrade+"</td><td>" + 
-      hotel.hotelEarning + "</td><td><a class=\"btn btn-info\" href=\"edit-hotel.html?id=" + 
+      hotel.hotelEarning + "</td><td><a class=\"btn btn-info\" href=\"add-admin-hotel.html?id=" + 
       hotel.hotelID + "\">Edit</a></td><td><a class=\"btn btn-danger\" onclick=\"hotels.deleteCallback(" + hotel.hotelID +")\">Delete</a></td></tr>");
   }
 }
@@ -39,6 +39,13 @@ Hotels.prototype.showCallback = function(hotel) {
 
 Hotels.prototype.show = function(index) {
   ajaxService.GET('/app/hotels/getHotel/' + index, this.showCallback.bind(this));
+}
+
+Hotels.prototype.showUsers = function(index) {
+  this.urlApi.users = '/app/hotels/showUser/' + index
+  this.urlApi.addUser = '/app/hotels/addUser/' + index
+  ajaxService.GET(this.urlApi.users,this.showUsersTable);
+  $(document).on('submit', '#addUserForm', this.addUserCallback.bind(this));
 }
 
 var hotels = new Hotels(['hotelName', 'hotelAddress', 'hotelDescription', 'hotelGrade', 'roomConfig', 'hotelEarning'], {'add': '/app/hotels/addHotel', 'showAll': '/app/hotels/showHotels', 'delete': '/app/hotels/deleteHotel/'});

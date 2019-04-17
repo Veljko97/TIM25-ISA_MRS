@@ -1,14 +1,18 @@
 package siit.tim25.rezervisi.Controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
+import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.DTO.FlightDTO;
+import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.AirLineServices;
 import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.FlightServices;
+import siit.tim25.rezervisi.Services.users.AuthorityServices;
+import siit.tim25.rezervisi.security.model.TokenState;
+import siit.tim25.rezervisi.security.model.User;
 
 @RestController
 @RequestMapping(path="app/airlines")
@@ -40,7 +49,13 @@ public class AirLineController {
 	@Autowired
 	private FlightServices flightServices;
 	
-
+	@Autowired
+	@Lazy
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthorityServices authorityServices;
+	
 	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<List<AirLine>> addAirline(@RequestBody AirLine airline)  {
@@ -164,4 +179,33 @@ public class AirLineController {
 		return new ResponseEntity<Set<Flight>>(flightServices.findAll(airlineId),HttpStatus.OK);
 	}
 	
+	@GetMapping(path="/showUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<ArrayList<UserDTO>> getUsers(@PathVariable Integer id){
+		ArrayList<UserDTO> users = new ArrayList<UserDTO>();
+		for(User us : airLineServices.findOne(id).getAdmins()) {
+			users.add(new UserDTO(us, new TokenState()));
+		}
+		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/addUser/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestBody UserDTO user){
+		
+		AirLine airline = airLineServices.findOne(id);
+		AirLineAdmin admin = new AirLineAdmin();
+		admin.setPassword(passwordEncoder.encode("123"));
+		admin.setUsername(user.getUsername());
+		admin.setFirstName(user.getFirstName());
+		admin.setLastName(user.getLastName());
+		admin.setEmail(user.getEmail());
+		admin.setEnabled(true);
+		admin.setConfirmed(false);
+		admin.setAirLine(airline);
+		airline.getAdmins().add(admin);
+		admin.setAuthorities(Arrays.asList(authorityServices.findOne(3)));
+		airLineServices.save(airline);
+		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+	}
 }

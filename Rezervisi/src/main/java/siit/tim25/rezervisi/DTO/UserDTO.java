@@ -1,6 +1,8 @@
 package siit.tim25.rezervisi.DTO;
 
+import siit.tim25.rezervisi.security.model.Authority;
 import siit.tim25.rezervisi.security.model.TokenState;
+import siit.tim25.rezervisi.security.model.User;
 
 public class UserDTO {
 	private Integer id;
@@ -9,7 +11,9 @@ public class UserDTO {
 	private String lastName;
 	private String email;
 	private boolean enabled;
+	private boolean confirmed;
 	private Integer serviceId;
+	private String role;
 	private TokenState token;
 
 	public UserDTO() {
@@ -20,12 +24,14 @@ public class UserDTO {
 		this.lastName = "";
 		this.email = "";
 		this.enabled = false;
+		this.confirmed = false;
 		this.serviceId = -1;
+		this.role = "";
 		this.token = new TokenState();
 	}
 
 	public UserDTO(Integer id, String username, String firstName, String lastName, String email, boolean enabled,
-			Integer serviceId, TokenState token) {
+			Integer serviceId,boolean confirmed, TokenState token) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -33,8 +39,24 @@ public class UserDTO {
 		this.lastName = lastName;
 		this.email = email;
 		this.enabled = enabled;
+		this.confirmed = confirmed;
 		this.serviceId = serviceId;
 		this.token = token;
+	}
+
+	public UserDTO(User user, TokenState tokenState) {
+		this.id = user.getId();
+		this.username = user.getUsername();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.email = user.getEmail();
+		this.enabled = user.isEnabled();
+		this.serviceId = -1;
+		for(Object au : user.getAuthorities()) {
+			this.role = ((Authority) au).getName();
+		}
+		this.confirmed = user.isConfirmed();
+		this.token = tokenState;
 	}
 
 	public Integer getId() {
@@ -100,4 +122,21 @@ public class UserDTO {
 	public void setToken(TokenState token) {
 		this.token = token;
 	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+	
 }

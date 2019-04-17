@@ -145,6 +145,14 @@ public class AirLine {
 	public void setAirlineEarning(Double airlineEarning) {
 		this.airlineEarning = airlineEarning;
 	}
+	
+	public Set<AirLineAdmin> getAdmins() {
+		return admins;
+	}
+
+	public void setAdmins(Set<AirLineAdmin> admins) {
+		this.admins = admins;
+	}
 
 	@Override
 	public String toString() {

@@ -87,7 +87,6 @@ public class AuthenticationController {
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public ResponseEntity logOut(HttpServletRequest request) {
-		request.getSession().invalidate();
 		SecurityContextHolder.getContext().setAuthentication(null);
 		return new ResponseEntity(HttpStatus.OK);
 	}

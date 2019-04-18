@@ -1,11 +1,17 @@
 var ajaxService = {
-  SETTOKEN: function(token){
+  SETTOKEN: function(){
+    var user = JSON.parse(sessionStorage.getItem("user"));
+    var token = "";
+    if(user != null){
+      token = user.token.accessToken
+    }
     $.ajaxSetup({
       headers:
       { "Authorization": "Bearer "+token}
     });
   },
   GET: function(apiUrl, successCallback = function() {}, errorCallback = function() {}) {
+    this.SETTOKEN();
     $.ajax({
       method:"GET",
       url: apiUrl,	
@@ -17,6 +23,7 @@ var ajaxService = {
     })
   },
   POST: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
+    this.SETTOKEN();
     $.ajax({
       method:"POST",
       url: apiUrl,	
@@ -28,6 +35,7 @@ var ajaxService = {
     })
   },
   DELETE: function(apiUrl, successCallback = function() {}, errorCallback = function() {}) {
+    this.SETTOKEN();
     $.ajax({
       method: "DELETE",
       url: apiUrl,
@@ -38,6 +46,7 @@ var ajaxService = {
     })
   },
   PUT: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
+    this.SETTOKEN();
     $.ajax({
       method: "PUT",
       url: apiUrl,
@@ -49,6 +58,7 @@ var ajaxService = {
     })
   },
   GETPAGE: function(apiUrl, page, successCallback = function() {}, errorCallback = function() {}) {
+    this.SETTOKEN();
     $.ajax({
       method:"GET",
       url: apiUrl,	

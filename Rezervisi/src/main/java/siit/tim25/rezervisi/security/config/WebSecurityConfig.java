@@ -60,14 +60,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 			.authorizeRequests()
 			.antMatchers("/index", "/auth/**").permitAll()
-			.antMatchers("/admin-hotels/edit-room.html", "/admin-hotels/rooms.html").hasRole("HOTEL_ADMIN")
-			.antMatchers("/admin-airlines/edit-destination.html", "/admin-airlines/destinations.html", 
-					"/admin-airlines/edit-flight.html", "/admin-airlines/flights.html").hasRole("AIRLINE_ADMIN")
-			.antMatchers("/admin/airlines.html", "/admin/edit-airline.html", "/admin/edit-hotel.html", 
-					"/admin/hotels.html","/admin/rentacars.html", "/admin/edit-rentacar.html").hasRole("SYS_ADMIN")
-			.antMatchers("/admin-rentacars/branches.html", "/admin-rentacars/edit-branch.html").hasRole("RENTACAR_ADMIN")
+			.antMatchers("/admin-hotels/index","/admin-hotels/edit-room", "/admin-hotels/rooms").hasRole("HOTEL_ADMIN")
+			.antMatchers("/admin-airlines/index","/admin-airlines/edit-destination", "/admin-airlines/destinations", 
+					"/admin-airlines/edit-flight", "/admin-airlines/flights").hasRole("AIRLINE_ADMIN")
+			.antMatchers("/admin/airlines", "/admin/edit-airline", "/admin/edit-hotel", 
+					"/admin/hotels","/admin/rentacars", "/admin/edit-rentacar", 
+					"/admin/add-admin-airline","/admin/add-admin-hotel","/admin/add-admin-rentACar").hasRole("SYS_ADMIN")
+			.antMatchers("/admin-rentacars/index","/admin-rentacars/branches", "/admin-rentacars/edit-branch").hasRole("RENTACAR_ADMIN")
 			.and()
-			//.formLogin().loginPage("/LoginPage.html").and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 
 		http.csrf().disable();

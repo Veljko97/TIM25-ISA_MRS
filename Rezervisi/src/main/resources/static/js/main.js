@@ -30,3 +30,18 @@ function handleWrongInput() {
 
   return false;
 }
+
+function canIbeHear(){
+  ajaxService.SETTOKEN();
+  $.ajax({
+    method:"GET",
+    url: document.location.pathname.split(".")[0],
+    success: function(data){},
+    error: function(data){
+      if(data.status == "404"){
+        return;
+      }
+      location.replace("/LoginPage.html");
+    }
+  });
+}

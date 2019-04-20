@@ -20,7 +20,7 @@ RentACars.prototype.showAll = function(data) {
     table.html(table.html() + "<tr><td>"+ rentacar.rentACarName + "</td><td>" + 
       rentacar.rentACarAddress + "</td><td>" + rentacar.rentACarDescription + 
       "</td><td><a class=\"btn btn-info\" href=\"add-admin-rentacar.html?id=" + 
-      rentacar.rentACarID + "\">Edit</a></td><td><a class=\"btn btn-danger\" onclick=\"rentacars.deleteCallback(" 
+      rentacar.rentACarID + "\">Add Admins</a></td><td><a class=\"btn btn-danger\" onclick=\"rentacars.deleteCallback(" 
       + rentacar.rentACarID +")\">Delete</a></td></tr>");
   }
 }

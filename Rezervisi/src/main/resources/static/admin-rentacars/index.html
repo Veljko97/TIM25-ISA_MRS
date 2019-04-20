@@ -10,6 +10,9 @@
     <script src="../service/ajaxService.js"></script>
     <script>
         $(document).ready(function(){
+            canIbeHear();
+        });
+        $(document).ready(function(){
             var user = JSON.parse(sessionStorage.getItem('user'));
             if(!user.confirmed){
                 location.replace("/admin/paswordChange.html");

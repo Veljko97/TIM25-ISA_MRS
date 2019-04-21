@@ -1,23 +1,423 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>System Administrator Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="css/nav.css" >
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="js/jquery.min.js"></script>
-  <script src="../service/ajaxService.js"></script>
-  <script src="../js/main.js"></script>
-  <script>
-    canIbeHear();
-  </script>
-</head>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<body>
-  <ul id="navigationBar">
-      <li><a href="/admin/airlines.html">Airlines</a></li>
-      <li><a href="/admin/hotels.html">Hotels</a></li>
-      <li><a href="/admin/rentacars.html">Rent a Car</a></li>
-  </ul>
-</body>
+		<title>Reservify</title>
+		<meta name="description" content="Free Bootstrap 4 Template by uicookies.com">
+		<meta name="keywords" content="Free website templates, Free bootstrap themes, Free template, Free bootstrap, Free website template">
+
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400" rel="stylesheet">
+
+		<link rel="stylesheet" href="assets/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="assets/fonts/fontawesome/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/slick-theme.css">
+
+    <link rel="stylesheet" href="assets/css/helpers.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/landing-2.css">
+  </head>
+	<body data-spy="scroll" data-target="#pb-navbar" data-offset="200">
+
+    <nav class="navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="landing.html">Reservify</a>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar" aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span><i class="ion-navicon"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="probootstrap-navbar">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/aboutUs.html">About us</a></li>
+            <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" href="/LoginPage.html"><span class="pb_rounded-4 px-4">Get Started</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section class="pb_cover_v3 overflow-hidden cover-bg-indigo cover-bg-opacity text-left pb_gradient_v1 pb_slant-light" id="section-home">
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-6">
+            <h2 class="heading mb-3">Reservify</h2>
+            <div class="sub-heading">
+              <p class="mb-4">Enjoy your trips completely and let us handle the rest. A new way to accomodate all your needs and enjoy completely. <br>Come see what you’ve been missing.<br> Plan all your trips, with us. </p>
+              <p class="mb-5"><a class="btn btn-success btn-lg pb_btn-pill smoothscroll" href="#section-pricing"><span class="pb_font-14 text-uppercase pb_letter-spacing-1">See More</span></a></p>
+            </div>
+          </div>
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-5 relative align-self-center">
+
+            <form action="#" class="bg-white rounded pb_form_v1" style="margin-top: 1em;">
+              <h2 class="mb-4 mt-0 text-center">Sign Up for Free</h2>
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control pb_height-50 reverse" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Register">
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END section -->
+
+    <section class="pb_section bg-light pb_slant-white pb_pb-250" id="section-features">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-6 text-center mb-5">
+            <h2>Our services:</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md- col-sm-6">
+            <div class="media d-block pb_feature-v1 text-left">
+              <div class="pb_icon"><i class="ion-ios-paperplane-outline pb_icon-gradient"></i></div>
+              <div class="media-body">
+                <h5 class="mt-0 mb-3 heading">Flight tickets</h5>
+                <p class="text-sans-serif">Get tickets to reach your destination in fastest way possible and save money by doing it!</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md- col-sm-6">
+            <div class="media d-block pb_feature-v1 text-left">
+              <div class="pb_icon"><i class="ion-android-home pb_icon-gradient"></i></div>
+              <div class="media-body">
+                <h5 class="mt-0 mb-3 heading">Hotel accommodation</h5>
+                <p class="text-sans-serif">Find an apartment at places you visit that will immerse you completely in local culture and suit all your needs.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md- col-sm-6">
+            <div class="media d-block pb_feature-v1 text-left">
+              <div class="pb_icon"><i class="ion-android-car pb_icon-gradient"></i></div>
+              <div class="media-body">
+                <h5 class="mt-0 mb-3 heading">Rent transport</h5>
+                <p class="text-sans-serif">Rent transport in places you visit using our platform. You will find all kinds of cars that will certainly fulfill your needs and let you enjoy all perks place has to offer.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md- col-sm-6">
+            <div class="media d-block pb_feature-v1 text-left">
+              <div class="pb_icon"><i class="ion-ios-color-filter-outline pb_icon-gradient"></i></div>
+              <div class="media-body">
+                <h5 class="mt-0 mb-3 heading">Invite friends</h5>
+                <p class="text-sans-serif">Select your trips, choose your reservations and bring friends together with you on all of your trips! You can invite your friends via e-mail and get interesting bonuses!</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md- col-sm-6">
+            <div class="media d-block pb_feature-v1 text-left">
+              <div class="pb_icon"><i class="ion-ios-bookmarks-outline pb_icon-gradient"></i></div>
+              <div class="media-body">
+                <h5 class="mt-0 mb-3 heading">Minimal Design</h5>
+                <p class="text-sans-serif">Application design complexity kept on minimum, so it can serve you in a fast and efficient way.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md- col-sm-6">
+            <div class="media d-block pb_feature-v1 text-left">
+              <div class="pb_icon"><i class="ion-ios-speedometer-outline pb_icon-gradient"></i></div>
+              <div class="media-body">
+                <h5 class="mt-0 mb-3 heading">Fast Service</h5>
+                <p class="text-sans-serif">We keep our application fast, so you can fulfill all your accomodation needs quickly.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END section -->
+
+    <section class="pb_section pb_slant-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 mb-5">
+            <img src="assets/images/airplane.png" alt="Image placeholder" class="img-fluid">
+          </div>
+          <div class="col-lg-8 pl-md-5 pl-sm-0">
+            <div class="row">
+              <div class="col">
+                <h2>Flight Ticket Reservation</h2>
+                <p class="pb_font-20">
+                  User can search through our list of available flights and find the one that suits him. <br>
+                  He chooses one or more seat on the plane for that flight and invites friends if he chooses to. <br>
+                  User will have an option to make hotel reservation or rent-a-car reservation at the place he is visiting.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END section -->
+
+    <section class="pb_section bg-light pb_slant-white">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 order-2">
+            <img src="assets/images/hotel.png" alt="Image placeholder" class="img-fluid">
+          </div>
+          <div class="col-lg-8 pr-md-5 pr-sm-0 order-1  mb-5">
+            <div class="row">
+              <div class="col">
+                <h2>Hotel Reservation</h2>
+                <p class="pb_font-20">
+                  Registered user can choose a hotel from a list or search for it using criteria provided. <br>
+                  He can choose specifics like date, number of nights spent, number of guests that are accompanying him and the price span. <br>
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END section -->
+
+    <section class="pb_section pb_slant-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 mb-5">
+            <img src="assets/images/car.png" alt="Image placeholder" class="img-fluid">
+          </div>
+          <div class="col-lg-8 pl-md-5 pl-sm-0">
+            <div class="row">
+              <div class="col">
+                <h2>Rent-a-Car Reservation</h2>
+                <p class="pb_font-20">
+                  User chooses rent-a-car service or searches for it. <br>
+                  He can choose specifics like date and place of pick up, date and place of giving a car back, type of car, number of passengers. <br>
+                  Optionally, he can define a price span.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pb_section pb_slant-light pb_pb-220" id="section-reviews">
+      <div class="container">
+        <div class="row justify-content-center mb-1">
+          <div class="col-md-6 text-center mb-5">
+            <h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>Reviews</strong></h5>
+            <h2>What Our Users Say About Us</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <div class="pb_slide_testimonial_sync_v1">
+              <div class="pb_slider_content js-pb_slider_content2">
+                <div>
+                  <div class="media d-block text-center testimonial_v1 pb_quote_v2">
+                    <div class="media-body">
+                      <div class="quote">&ldquo;</div>
+                      <blockquote class="mb-5">WOAH AMAZING!</blockquote>
+                      <p>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                      </p>
+                      <h3 class="heading">Garry Alexander</h3>
+                      <span class="subheading">@garry</span>
+
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="media d-block text-center testimonial_v1 pb_quote_v2">
+                    <div class="media-body">
+                      <div class="quote">&ldquo;</div>
+                      <blockquote class="mb-5">To this day, I've never seen anything like this. Absolutely astonishing!</blockquote>
+                      <p>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                      </p>
+                      <h3 class="heading">Deborah Smith</h3>
+                      <span class="subheading">@deborah</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="media d-block text-center testimonial_v1 pb_quote_v2">
+                    <div class="media-body">
+                      <div class="quote">&ldquo;</div>
+                      <blockquote class="mb-5">There were certain delays in reservations I made, but customer service was quick to resolve my situation.</blockquote>
+                      <p>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star-half text-warning"></i>
+                        <i class="ion-ios-star-outline text-warning"></i>
+                      </p>
+                      <h3 class="heading">James Robertson</h3>
+                      <span class="subheading">@james</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="media d-block text-center testimonial_v1 pb_quote_v2">
+                    <div class="media-body">
+                      <div class="quote">&ldquo;</div>
+                      <blockquote class="mb-5">Loved it!</blockquote>
+                      <p>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                        <i class="ion-ios-star text-warning"></i>
+                      </p>
+                      <h3 class="heading">Marie Gibson</h3>
+                      <span class="subheading">@marie</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mx-auto">
+                  <div class="pb_slider_nav js-pb_slider_nav2">
+                    <div class="author">
+                      <img class="img-fluid rounded-circle" src="assets/images/person_1.jpg" alt="Generic placeholder image">
+                    </div>
+                    <div class="author">
+                      <img class="img-fluid rounded-circle" src="assets/images/person_5.jpg" alt="Generic placeholder image">
+                    </div>
+                    <div class="author">
+                      <img class="img-fluid rounded-circle" src="assets/images/person_2.jpg" alt="Generic placeholder image">
+                    </div>
+                    <div class="author">
+                      <img class="img-fluid rounded-circle" src="assets/images/person_6.jpg" alt="Generic placeholder image">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- END sync_v1 -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END section -->
+
+    <section class="pb_section pb_slant-white" id="section-faq">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-6 text-center mb-5">
+            <h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>FAQ</strong></h5>
+            <h2>Frequently Ask Questions</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <div id="pb_faq" class="pb_accordion" data-children=".item">
+              <div class="item">
+                <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq1" aria-expanded="true" aria-controls="pb_faq1" class="pb_font-22 py-4">What is Reservify?</a>
+                <div id="pb_faq1" class="collapse show" role="tabpanel">
+                  <div class="py-3">
+                  <p>Reservify is a service that is there to accommodate all your travel needs!</p>
+                  <p>You'll be able to make reservations for flight tickets, hotels and rent-a-car services in the places you visit.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq2" aria-expanded="false" aria-controls="pb_faq2" class="pb_font-22 py-4">Is this available to my country?</a>
+                <div id="pb_faq2" class="collapse" role="tabpanel">
+                  <div class="py-3">
+                    <p>Reservify is available to all countries with airports and airlines that are operating there.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq3" aria-expanded="false" aria-controls="pb_faq3" class="pb_font-22 py-4">How do I use the features of Reservify?</a>
+                <div id="pb_faq3" class="collapse" role="tabpanel">
+                  <div class="py-3">
+                    <p>You will be able to search for flight tickets and destinations using advanced filter and search criteria provided. You can invite friends and reserve hotel or rent-a-car service cars at the place you visit.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq4" aria-expanded="false" aria-controls="pb_faq4" class="pb_font-22 py-4">How much do the Reservify services cost?</a>
+                <div id="pb_faq4" class="collapse" role="tabpanel">
+                  <div class="py-3">
+                    <p>Reservify is completely free since a small group of students made it for a sole purpose to hone their programming skills.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <a data-toggle="collapse" data-parent="#pb_faq" href="#pb_faq5" aria-expanded="false" aria-controls="pb_faq5" class="pb_font-22 py-4">I have technical problem, who do I email?</a>
+                <div id="pb_faq5" class="collapse" role="tabpanel">
+                  <div class="py-3">
+                    <p>You can reach our customer support at customers@reservify.com. We will get back to you shortly.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pb_footer bg-light" role="contentinfo">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col">
+            <ul class="list-inline">
+              <li class="list-inline-item"><a href="#" class="p-2"><i class="fa fa-facebook"></i></a></li>
+              <li class="list-inline-item"><a href="#" class="p-2"><i class="fa fa-twitter"></i></a></li>
+              <li class="list-inline-item"><a href="#" class="p-2"><i class="fa fa-linkedin"></i></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <p class="pb_font-14">&copy; 2019. All Rights Reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- loader -->
+    <div id="pb_loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#1d82ff"/></svg></div>
+
+
+
+    <script src="assets/js/jquery.min.js"></script>
+
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/slick.min.js"></script>
+    <script src="assets/js/jquery.mb.YTPlayer.min.js"></script>
+
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/jquery.easing.1.3.js"></script>
+
+    <script src="assets/js/main.js"></script>
+
+	</body>
 </html>

@@ -11,9 +11,7 @@
     <script src="../model/flights.js"></script>
     <script>
       $(document).ready(function(){
-        canIbeHear();
-      });
-      $(document).ready(function(){
+        checkUserPermission();
         var index = getIndexFromUrl();
         flights.show(index);
       });

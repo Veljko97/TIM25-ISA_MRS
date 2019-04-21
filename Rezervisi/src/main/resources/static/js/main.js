@@ -31,12 +31,12 @@ function handleWrongInput() {
   return false;
 }
 
-function canIbeHear(){
+function checkUserPermission(){
   ajaxService.SETTOKEN();
   $.ajax({
     method:"GET",
     url: document.location.pathname.split(".")[0],
-    success: function(data){},
+    success: function(){},
     error: function(data){
       if(data.status == "404"){
         return;

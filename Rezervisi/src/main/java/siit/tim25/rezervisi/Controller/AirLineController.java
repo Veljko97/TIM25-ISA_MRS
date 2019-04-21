@@ -95,7 +95,6 @@ public class AirLineController {
 	{
 		modifiedAirline.setAirLineID(id);
 		AirLine air = airLineServices.findOne(id);
-		modifiedAirline.setAirLineAverageGrade(air.getAirLineAverageGrade());
 		modifiedAirline.setAirlineEarning(air.getAirlineEarning());
 		return new ResponseEntity<AirLine>(airLineServices.save(modifiedAirline), HttpStatus.OK);
 	}

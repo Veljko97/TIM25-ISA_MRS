@@ -32,9 +32,9 @@ public class UserService  {
 		return result;
 	}
 	
-//	public Set<User> findbyRole(String role){
-//		return userRepository.findbyRole(role);
-//	}
+	public Set<User> findbyRole(String role){
+		return userRepository.findbyRole(role);
+	}
 	
 	public User save(User user) {
 		return userRepository.save(user);

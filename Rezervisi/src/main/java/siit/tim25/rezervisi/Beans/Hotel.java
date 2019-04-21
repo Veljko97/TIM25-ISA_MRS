@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import siit.tim25.rezervisi.Beans.Grades.HotelGrade;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
 
 @Entity
@@ -42,18 +43,17 @@ public class Hotel {
 	@JsonIgnore
 	private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 	
-	@Column
-	private String roomConfig;
+	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<HotelGrade> grades = new HashSet<HotelGrade>();
 	
 	@Column
-	private Double hotelAverageGrade;
+	private String roomConfig;
 	
 	@Column
 	private Double hotelEarning;
 	
 	public Hotel() {
 		super();
-		this.hotelAverageGrade = 0.0;
 		this.hotelEarning = 0.0;
 	}
 	
@@ -70,7 +70,6 @@ public class Hotel {
 		this.offersPriceList = offersPriceList;
 		this.roomList = roomList;
 		this.roomConfig = roomConfig;
-		this.hotelAverageGrade = 0.0;
 		this.hotelEarning = 0.0;
 	}
 
@@ -132,12 +131,12 @@ public class Hotel {
 		this.roomConfig = roomConfig;
 	}
 
-	public Double getHotelAverageGrade() {
-		return hotelAverageGrade;
+	public Set<HotelGrade> getGrades() {
+		return grades;
 	}
 
-	public void setHotelAverageGrade(Double hotelAverageGrade) {
-		this.hotelAverageGrade = hotelAverageGrade;
+	public void setGrades(Set<HotelGrade> grades) {
+		this.grades = grades;
 	}
 
 	public Double getHotelEarning() {

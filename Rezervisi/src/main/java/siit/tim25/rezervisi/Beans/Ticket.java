@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import siit.tim25.rezervisi.Beans.users.StandardUser;
+
 @Entity
 public class Ticket {
 	@Id
@@ -22,6 +24,9 @@ public class Ticket {
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private AirLine airLine;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private StandardUser user;
 	
 	public Ticket() {
 		super();
@@ -70,7 +75,14 @@ public class Ticket {
 		return "Ticket [ticketPrice=" + ticketPrice + ", flight=" + flight + "]";
 	}
 	
-	
+	public StandardUser getUser() {
+		return user;
+	}
+
+	public void setUser(StandardUser user) {
+		this.user = user;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) return false;

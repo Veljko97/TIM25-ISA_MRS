@@ -4,9 +4,9 @@ INSERT INTO USER (id, username, password, first_name, last_name, email, enabled,
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (4, 'rentacar', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikolina', 'Nikolic', 'niki@example.com', true, true);
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (5, 'user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
 
-INSERT INTO air_line (air_lineid, air_line_address, air_line_average_grade, air_line_description, air_line_name, airline_earning) VALUES ('1', 'fasf', '0', 'fasf', 'Name', '0');
-INSERT INTO rentacar (rentacarid, rentacar_address, rentacar_average_grade, rentacar_description, rentacar_earning, rentacar_name) VALUES ('1', 'neka', '0', 'super', '0', 'Ime');
-INSERT INTO hotel (hotelid, hotel_address, hotel_average_grade, hotel_description, hotel_earning, hotel_name) VALUES ('1', 'adresa', '0', 'valja', '0', 'ime');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning) VALUES ('1', 'fasf', 'fasf', 'Name', '0');
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name) VALUES ('1', 'neka', 'super', '0', 'Ime');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name) VALUES ('1', 'adresa', 'valja', '0', 'ime');
 
 
 INSERT INTO air_line_admin(id, air_line_air_lineid) VALUES (3, 1);

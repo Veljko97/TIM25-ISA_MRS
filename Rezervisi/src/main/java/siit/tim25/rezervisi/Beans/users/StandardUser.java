@@ -1,0 +1,117 @@
+package siit.tim25.rezervisi.Beans.users;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+import siit.tim25.rezervisi.Beans.RoomReservation;
+import siit.tim25.rezervisi.Beans.Ticket;
+import siit.tim25.rezervisi.Beans.Grades.AirLineGrade;
+import siit.tim25.rezervisi.Beans.Grades.HotelGrade;
+import siit.tim25.rezervisi.Beans.Grades.RentACarGrade;
+import siit.tim25.rezervisi.Beans.Grades.RoomGrade;
+import siit.tim25.rezervisi.Beans.Grades.VehicleGrade;
+import siit.tim25.rezervisi.Beans.VehicleReservation;
+import siit.tim25.rezervisi.security.model.User;
+
+@Entity
+public class StandardUser extends User {
+
+	private static final long serialVersionUID = -1537025436231150265L;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AirLineGrade> airLineGrades = new HashSet<AirLineGrade>();
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<HotelGrade> hotelGrades = new HashSet<HotelGrade>();
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RoomGrade> roomGrades = new HashSet<RoomGrade>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RentACarGrade> rentACarGrades = new HashSet<RentACarGrade>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<VehicleGrade> vehicleGrades = new HashSet<VehicleGrade>();
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Ticket> airLineTickets = new HashSet<Ticket>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RoomReservation> roomReservation = new HashSet<RoomReservation>();
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<VehicleReservation> vehicleReservation = new HashSet<VehicleReservation>();
+
+	public Set<AirLineGrade> getAirLineGrades() {
+		return airLineGrades;
+	}
+
+	public void setAirLineGrades(Set<AirLineGrade> airLineGrades) {
+		this.airLineGrades = airLineGrades;
+	}
+
+	public Set<HotelGrade> getHotelGrades() {
+		return hotelGrades;
+	}
+
+	public void setHotelGrades(Set<HotelGrade> hotelGrades) {
+		this.hotelGrades = hotelGrades;
+	}
+
+	public Set<RoomGrade> getRoomGrades() {
+		return roomGrades;
+	}
+
+	public void setRoomGrades(Set<RoomGrade> roomGrades) {
+		this.roomGrades = roomGrades;
+	}
+
+	public Set<RentACarGrade> getRentACarGrades() {
+		return rentACarGrades;
+	}
+
+	public void setRentACarGrades(Set<RentACarGrade> rentACarGrades) {
+		this.rentACarGrades = rentACarGrades;
+	}
+
+	public Set<VehicleGrade> getVehicleGrades() {
+		return vehicleGrades;
+	}
+
+	public void setVehicleGrades(Set<VehicleGrade> vehicleGrades) {
+		this.vehicleGrades = vehicleGrades;
+	}
+
+	public Set<Ticket> getAirLineTickets() {
+		return airLineTickets;
+	}
+
+	public void setAirLineTickets(Set<Ticket> airLineTickets) {
+		this.airLineTickets = airLineTickets;
+	}
+
+	public Set<RoomReservation> getRoomReservation() {
+		return roomReservation;
+	}
+
+	public void setRoomReservation(Set<RoomReservation> roomReservation) {
+		this.roomReservation = roomReservation;
+	}
+
+	public Set<VehicleReservation> getVehicleReservation() {
+		return vehicleReservation;
+	}
+
+	public void setVehicleReservation(Set<VehicleReservation> vehicleReservation) {
+		this.vehicleReservation = vehicleReservation;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+}

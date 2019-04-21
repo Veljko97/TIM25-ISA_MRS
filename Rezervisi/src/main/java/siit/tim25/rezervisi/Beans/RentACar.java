@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import siit.tim25.rezervisi.Beans.Grades.RentACarGrade;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 
 @Entity
@@ -38,8 +39,8 @@ public class RentACar {
 	@JsonIgnore
 	private Set<RentACarBranch> rentACarBranches = new HashSet<RentACarBranch>();
 	
-	@Column(name = "rentACarAverageGrade")
-	private Double rentACarAverageGrade;
+	@OneToMany(mappedBy = "rentACar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RentACarGrade> grades = new HashSet<RentACarGrade>();
 	
 	@Column(name = "rentACarEarning")
 	private Double rentACarEarning;
@@ -50,7 +51,6 @@ public class RentACar {
 	
 	public RentACar() {
 		super();
-		this.rentACarAverageGrade = 0.0;
 		this.rentACarEarning = 0.0;
 	}
 	public RentACar(Integer rentACarID, String rentACarName, String rentACarAddress, String rentACarDescription,
@@ -63,7 +63,6 @@ public class RentACar {
 		this.rentACarDescription = rentACarDescription;
 		this.offersPriceList = offersPriceList;
 		this.rentACarBranches = rentACarBranches;
-		this.rentACarAverageGrade = rentACarAverageGrade;
 		this.rentACarEarning = rentACarEarning;
 	}
 	public Integer getRentACarID() {
@@ -102,12 +101,15 @@ public class RentACar {
 	public void setRentACarBranches(Set<RentACarBranch> rentACarBranches) {
 		this.rentACarBranches = rentACarBranches;
 	}
-	public Double getRentACarAverageGrade() {
-		return rentACarAverageGrade;
+	
+	public Set<RentACarGrade> getGrades() {
+		return grades;
 	}
-	public void setRentACarAverageGrade(Double rentACarAverageGrade) {
-		this.rentACarAverageGrade = rentACarAverageGrade;
+	
+	public void setGrades(Set<RentACarGrade> grades) {
+		this.grades = grades;
 	}
+	
 	public Double getRentACarEarning() {
 		return rentACarEarning;
 	}
@@ -126,8 +128,7 @@ public class RentACar {
 	public String toString() {
 		return "RentACar [rentACarID=" + rentACarID + ", rentACarName=" + rentACarName + ", rentACarAddress="
 				+ rentACarAddress + ", rentACarDescription=" + rentACarDescription + ", offersPriceList="
-				+ offersPriceList + ", rentACarBranches=" + rentACarBranches
-				+ ", rentACarAverageGrade=" + rentACarAverageGrade + ", rentACarEarning=" + rentACarEarning + "]";
+				+ offersPriceList + ", rentACarBranches=" + rentACarBranches+", rentACarEarning=" + rentACarEarning + "]";
 	}
 
 	

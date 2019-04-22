@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Manage RentACar Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../model/rentacars.js"></script>
+    <script>
+   
+var showUrl="/app/rentacar/showRentacar";
+      
+      $(document).ready(function(){
+			$.ajax({
+				url: showUrl,
+				method: 'GET',
+				data: {},
+				contentType: 'application/json; charset=utf-8',
+				success: function(data) { 
+					if (data != null) {
+						showRents(data);
+					} else {
+						alert("Error!");
+					}	
+				},
+				error: function(error) {
+					console.log(error);
+					$(document.documentElement).html("<p>"+error+"</p>");
+					return;
+				}
+			})	
+		})
+      
+      function showRents(rent) 
+		{
+			$.each(rent,function(index,rent){ 
+				var tr = $("<tr></tr>");
+				tr.append(
+					"<td>" + "<a href=rentacarsDetails.html?id=" + rent.rentACarID + ">"+rent.rentACarName+"</a>" + "</td>"+	
+					"<td>" + rent.rentACarAddress + "</td>" +
+					"<td>" + rent.rentACarDescription + "</td>" +
+					"<td>" + rent.rentACarAverageGrade + "</td>" 
+				);
+				$("#rentTable").append(tr);
+			})
+		}
+      
+      
+    </script>
+  </head>
+  <body>
+    <span id="message"></span>
+    <ul id="navigationBar">
+        <li><a href="/UnregisteredView/airlinesPage.html">Airlines</a></li>
+        <li><a href="/UnregisteredView/hotelsPage.html">Hotels</a></li>
+        <li><a href="/UnregisteredView/rentacarsPage.html">Rent a Car</a></li>
+    </ul>
+    <div class="alert alert-danger" id="warning-message">
+    </div>
+    <div class="container">
+      <h2>Rent-A-Cars:</h2>
+      <table class="table table-hover table-bordered" style="width:100%" id="rentTable">
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Description</th>
+          <th>Grade</th>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

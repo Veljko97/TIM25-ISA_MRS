@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -36,6 +37,7 @@ import siit.tim25.rezervisi.Beans.users.HotelAdmin;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.DTO.AirLineAdminDTO;
 import siit.tim25.rezervisi.DTO.HotelAdminDTO;
+import siit.tim25.rezervisi.DTO.RegistrationUserDTO;
 import siit.tim25.rezervisi.DTO.RentACarAdminDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.users.AirLineAdminServices;
@@ -123,6 +125,16 @@ public class AuthenticationController {
 		return ResponseEntity.badRequest().build();
 	}
 	
+	@PostMapping(value="/registration", consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> addUser(@RequestBody @Valid RegistrationUserDTO user) {
+		 UserDTO udto = userServices.create(user);
+		 if(udto!=null) {
+			 System.out.println(udto);
+			 return new ResponseEntity<>(udto,HttpStatus.CREATED);	 
+		 }
+		 return new ResponseEntity<>(udto,HttpStatus.CONFLICT);
+	 }
+	
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
 	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
 
@@ -191,4 +203,5 @@ public class AuthenticationController {
 		userServices.save(admin);
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
+	
 }

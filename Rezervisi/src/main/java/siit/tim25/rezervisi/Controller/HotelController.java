@@ -67,6 +67,7 @@ public class HotelController {
 	public ResponseEntity<List<Hotel>> showHotels()
 	{
 		return new ResponseEntity<List<Hotel>>(hotelServices.findAll(),HttpStatus.OK);
+		
 	}
 	
 	@GetMapping(path="/getHotel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,7 +88,6 @@ public class HotelController {
 
 	
 	@GetMapping(path="/{hotelId}/showRooms", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('HOTEL_ADMIN')")
 	public ResponseEntity<List<Room>> getRooms(@PathVariable Integer hotelId) {
 		return new ResponseEntity<List<Room>>(roomServices.findAll(hotelId),HttpStatus.OK);
 	}

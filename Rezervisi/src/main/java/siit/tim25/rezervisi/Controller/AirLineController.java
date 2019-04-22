@@ -76,7 +76,6 @@ public class AirLineController {
 	}
 	
 	@GetMapping(path="/showAirLines", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<List<AirLine>> showAirLines()
 	{
 		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
@@ -101,7 +100,6 @@ public class AirLineController {
 	}
 	
 	@GetMapping(path="/{airlineId}/showDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Set<Destination>> getDestinations(@PathVariable Integer airlineId) {
 		return new ResponseEntity<Set<Destination>>(destinationServices.findAll(airlineId),HttpStatus.OK);
 	}

@@ -98,7 +98,6 @@ public class RentACarController {
 	
 
 	@GetMapping(path="/{rentacarId}/showBranches", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
 	public ResponseEntity<Set<RentACarBranch>> getBranches(@PathVariable Integer rentacarId) {
 		return new ResponseEntity<Set<RentACarBranch>>(branchServices.findAll(rentacarId),HttpStatus.OK);
 	}

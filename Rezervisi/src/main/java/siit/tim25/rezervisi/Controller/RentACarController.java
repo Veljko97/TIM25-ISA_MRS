@@ -91,7 +91,6 @@ public class RentACarController {
 	{
 		rentacar.setRentACarID(id);
 		RentACar r = rentACarServices.findOne(id);
-		rentacar.setRentACarAverageGrade(r.getRentACarAverageGrade());
 		rentacar.setRentACarEarning(r.getRentACarEarning());
 		return new ResponseEntity<RentACar>(rentACarServices.save(rentacar), HttpStatus.OK);
 	}

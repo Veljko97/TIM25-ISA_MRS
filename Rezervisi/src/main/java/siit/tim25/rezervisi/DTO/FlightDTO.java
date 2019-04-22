@@ -3,8 +3,10 @@ package siit.tim25.rezervisi.DTO;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Set;
 
+import siit.tim25.rezervisi.Beans.AirPlane;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
 
@@ -16,6 +18,7 @@ public class FlightDTO {
 	private String flightLength;
 	private int numberOfStops;
 	private int numberOfSeats;
+	private String airplane;
 	private Double ticketPrice;
 	private Double flightAverageGrade;
 	private Integer idFlight;
@@ -27,7 +30,7 @@ public class FlightDTO {
 	
 	
 	public FlightDTO(Integer idFlight, String startDestinationName, String finalDestinationName, String takeOffDate, String landingDate,
-			String flightLength, int numberOfStops, int numberOfSeats, Double ticketPrice,
+			String flightLength, int numberOfStops, int numberOfSeats, String airplane, Double ticketPrice,
 			Double flightAverageGrade) {
 		super();
 		this.idFlight = idFlight;
@@ -38,6 +41,7 @@ public class FlightDTO {
 		this.flightLength = flightLength;
 		this.numberOfStops = numberOfStops;
 		this.numberOfSeats = numberOfSeats;
+		this.airplane = airplane;
 		this.ticketPrice = ticketPrice;
 		this.flightAverageGrade = flightAverageGrade;
 	}
@@ -82,18 +86,13 @@ public class FlightDTO {
 		return ticketPrice;
 	}
 
-	
-	
-
-	public int getNumberOfSeats() {
-		return numberOfSeats;
+	public String getAirplane() {
+		return airplane;
 	}
 
-
-	public void setNumberOfSeats(int numberOfSeats) {
-		this.numberOfSeats = numberOfSeats;
+	public void setAirplane(String airplane) {
+		this.airplane = airplane;
 	}
-
 
 	public void setTicketPrice(Double ticketPrice) {
 		this.ticketPrice = ticketPrice;
@@ -114,6 +113,16 @@ public class FlightDTO {
 		this.flightAverageGrade = flightAverageGrade;
 	}
 
+	public int getNumberOfSeats() {
+		return numberOfSeats;
+	}
+
+
+	public void setNumberOfSeats(int numberOfSeats) {
+		this.numberOfSeats = numberOfSeats;
+	}
+
+
 	@Override
 	public String toString() {
 		return "NewFlight [startDestinationName=" + startDestinationName + ", finalDestinationName="
@@ -122,7 +131,7 @@ public class FlightDTO {
 			    + ", ticketPrice=" + ticketPrice + ", flightAverageGrade=" + flightAverageGrade + "]";
 	}
 	
-	public Flight convert(Set<Destination> destinations) throws ParseException {
+	public Flight convert(Set<Destination> destinations, List<AirPlane> airplanes) throws ParseException {
 		Flight f = new Flight();
 		DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		for(Destination d: destinations) {
@@ -134,13 +143,18 @@ public class FlightDTO {
 			}
 		}
 		
+		for(AirPlane a: airplanes) {
+			if(a.getName().equals(this.getAirplane())) {
+				f.setAirplane(a);
+			}
+		}
+		
 		f.setTakeOffDate(format.parse(this.takeOffDate));
 		f.setLandingDate(format.parse(this.landingDate));
 		f.setFlightLength(this.flightLength);
 		f.setTicketPrice(this.getTicketPrice());
 		f.setNumberOfStops(this.numberOfStops);
 		f.setFlightAverageGrade(this.flightAverageGrade);
-		f.setNumberOfSeats(this.numberOfSeats);
 		
 		return f;
 	}

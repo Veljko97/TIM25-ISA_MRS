@@ -8,6 +8,13 @@ INSERT INTO air_line (air_lineid, air_line_address, air_line_average_grade, air_
 INSERT INTO rentacar (rentacarid, rentacar_address, rentacar_average_grade, rentacar_description, rentacar_earning, rentacar_name) VALUES ('1', 'neka', '0', 'super', '0', 'Ime');
 INSERT INTO hotel (hotelid, hotel_address, hotel_average_grade, hotel_description, hotel_earning, hotel_name) VALUES ('1', 'adresa', '0', 'valja', '0', 'ime');
 
+INSERT INTO air_plane (id, name, number_of_seats) VALUES ('1', 'Boeing 787', '30');
+INSERT INTO air_plane (id, name, number_of_seats) VALUES ('2', 'Airbus A220', '42');
+INSERT INTO air_plane (id, name, number_of_seats) VALUES ('3', 'Boeing 777', '48');
+INSERT INTO air_plane (id, name, number_of_seats) VALUES ('4', 'Comac C919', '54');
+INSERT INTO air_plane (id, name, number_of_seats) VALUES ('5', 'Airbus A330', '60');
+INSERT INTO air_plane (id, name, number_of_seats) VALUES ('6', 'Douglas DC-8', '66');
+INSERT INTO air_plane (id, name, number_of_seats) VALUES ('7', 'Convair 880', '72');
 
 INSERT INTO air_line_admin(id, air_line_air_lineid) VALUES (3, 1);
 INSERT INTO hotel_admin (id, hotel_hotelid) VALUES (2, 1);

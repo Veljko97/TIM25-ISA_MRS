@@ -14,6 +14,9 @@ Airlines.prototype.showAll = function(data) {
   table.html("<tr><th>Name</th><th>Address</th><th>Description</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
   this.list = [];
 
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
   for(var i = 0; i < data.length; i++) {
     var airline = data[i];
     this.list.push(airline);
@@ -48,4 +51,5 @@ Airlines.prototype.showUsers = function(index) {
   $(document).on('submit', '#addUserForm', this.addUserCallback.bind(this));
 }
 
-var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines', 'delete': '/app/airlines/deleteAirline/'});
+
+var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines?size=5&page=0', 'delete': '/app/airlines/deleteAirline/'});

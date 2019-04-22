@@ -69,12 +69,14 @@ Flights.prototype.showCallback = function(flight) {
 
 Flights.prototype.show = function(index) {
   ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
+  ajaxService.GET(this.urlApi.showAirplanes, this.showAirplanes.bind(this));
   ajaxService.GET('/app/airlines/1/getFlight/' + index, this.showCallback.bind(this));
 }
 
 Flights.prototype.render = function() {
   ajaxService.GET(this.urlApi.showAll, this.showAll.bind(this));
   ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
+  ajaxService.GET(this.urlApi.showAirplanes, this.showAirplanes.bind(this));
 }
 
 Flights.prototype.showDestinations = function(data) {
@@ -88,4 +90,63 @@ Flights.prototype.showDestinations = function(data) {
   }
 }
 
-var flights = new Flights(['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightLength', 'numberOfStops', 'numberOfSeats', 'stopLocation', 'ticketPrice'], {'add': '/app/airlines/1/addFlight', 'showAll': '/app/airlines/1/showFlights/', 'delete': '/app/airlines/1/deleteFlight/', 'showDestinations': '/app/airlines/1/showDestinations/'});
+Flights.prototype.showAirplanes = function(data) {
+  var airplanes = $("#airplane").first();
+
+  for(var i = 0; i < data.length; i++) {
+    var airplane = data[i];
+    airplanes.html(airplanes.html() + "<option value=\""+airplane.name+"\">"+airplane.name+"</option>");
+  }
+}
+
+Flights.prototype.showSeats = function(airlineId, flightId) {
+  ajaxService.GET('/app/airlines/'+airlineId+'/getFlight/' + flightId, function(flight) {
+    $("h1").first().html(flight.airplane);
+    let numberOfSeats = flight.numberOfSeats;
+    var cockpit = $("#cockpit").first();
+    var numberOfRows = numberOfSeats / 6;
+
+    for(let i = 1; i <= numberOfRows; i++) {
+      cockpit.html(cockpit.html() + "\
+        <li class=\"row row--"+i+"\">\
+          <ol class=\"seats\" type=\"A\">\
+            <li class=\"seat\">\
+              <input type=\"checkbox\" id=\""+i+"A\"/>\
+              <label for=\""+i+"A\">"+i+"A</label>\
+            </li>\
+            <li class=\"seat\">\
+              <input type=\"checkbox\" id=\""+i+"B\"/>\
+              <label for=\""+i+"1B\">"+i+"B</label>\
+            </li>\
+            <li class=\"seat\">\
+              <input type=\"checkbox\" id=\""+i+"C\"/>\
+              <label for=\""+i+"C\">"+i+"C</label>\
+            </li>\
+            <li class=\"seat\">\
+              <input type=\"checkbox\" id=\""+i+"D\"/>\
+              <label for=\""+i+"D\">"+i+"D</label>\
+            </li>\
+            <li class=\"seat\">\
+              <input type=\"checkbox\" id=\""+i+"E\"/>\
+              <label for=\""+i+"E\">"+i+"E</label>\
+            </li>\
+            <li class=\"seat\">\
+              <input type=\"checkbox\" id=\""+i+"F\"/>\
+              <label for=\""+i+"F\">"+i+"F</label>\
+            </li>\
+          </ol>\
+        </li>")
+    }
+  });
+}
+
+var flights = new Flights(
+  ['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'ticketPrice'],
+  {
+    'add': '/app/airlines/1/addFlight',
+    'showAll': '/app/airlines/1/showFlights/',
+    'delete': '/app/airlines/1/deleteFlight/',
+    'showDestinations': '/app/airlines/1/showDestinations?page=1&size=5',
+    'showAirplanes': '/app/airplanes/show'
+  }
+);

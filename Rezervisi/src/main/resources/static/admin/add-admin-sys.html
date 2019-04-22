@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Hotel Admins</title>
+    <title>System Admins</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -8,13 +8,13 @@
     <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
-    <script src="../model/hotels.js"></script>
+    <script src="../model/sys-admins.js"></script>
     <script src="../js/main.js"></script>
     <script>
       $(document).ready(function(){
         checkUserPermission();
-        var index = getIndexFromUrl();
-        hotels.showUsers(index);
+        SysAdmins.init();
+        SysAdmins.showUsers();
       });
     </script>
   </head>

@@ -45,3 +45,18 @@ function checkUserPermission(){
     }
   });
 }
+
+function getAdminUrlSlug(user) {
+  switch(user.role) {
+    case 'ROLE_AIRLINE_ADMIN':
+      return '/admin-airlines/'
+    case 'ROLE_RENTACAR_ADMIN':
+      return '/admin-rentacars/'
+    case 'ROLE_HOTEL_ADMIN':
+      return '/admin-hotels/'
+    case 'ROLE_SYS_ADMIN':
+      return '/admin/'
+    default:
+      return ''
+  }
+}

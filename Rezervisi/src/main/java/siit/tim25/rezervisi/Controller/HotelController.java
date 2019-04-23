@@ -81,7 +81,6 @@ public class HotelController {
 	{
 		modifiedHotel.setHotelID(id);
 		Hotel h = hotelServices.findOne(id);
-		modifiedHotel.setHotelAverageGrade(h.getHotelAverageGrade());
 		modifiedHotel.setHotelEarning(h.getHotelEarning());
 		return new ResponseEntity<Hotel>(hotelServices.save(modifiedHotel), HttpStatus.OK);
 	}

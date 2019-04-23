@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			//.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 			.authorizeRequests()
-			.antMatchers("/index", "/auth/**").permitAll()
+			.antMatchers("/index", "reservations/seats.html", "/auth/**").permitAll()
 			.antMatchers("/admin-hotels/index","/admin-hotels/edit-room", "/admin-hotels/rooms").hasRole("HOTEL_ADMIN")
 			.antMatchers("/admin-airlines/index","/admin-airlines/edit-destination", "/admin-airlines/destinations", 
 					"/admin-airlines/edit-flight", "/admin-airlines/flights").hasRole("AIRLINE_ADMIN")

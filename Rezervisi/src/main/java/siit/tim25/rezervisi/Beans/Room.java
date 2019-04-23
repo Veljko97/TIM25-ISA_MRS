@@ -1,5 +1,6 @@
 package siit.tim25.rezervisi.Beans;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,8 +10,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import siit.tim25.rezervisi.Beans.Grades.RoomGrade;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
 
 @Entity
 public class Room {
@@ -35,7 +40,15 @@ public class Room {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Hotel hotel;
+	
+	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RoomGrade> grades = new HashSet<RoomGrade>();
+	
+	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RoomReservation> reservation = new HashSet<RoomReservation>();
 
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private StandardUser user;
 	
 	public Integer getRoomID() {
 		return roomID;
@@ -78,7 +91,13 @@ public class Room {
 		this.price = price;
 	}
 
-	
+	public Set<RoomGrade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(Set<RoomGrade> grades) {
+		this.grades = grades;
+	}
 
 	public Hotel getHotel() {
 		return hotel;

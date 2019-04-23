@@ -1,5 +1,8 @@
 package siit.tim25.rezervisi.Beans;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import siit.tim25.rezervisi.Beans.Grades.VehicleGrade;
 
 @Entity
 public class Vehicle {
@@ -23,6 +29,12 @@ public class Vehicle {
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private RentACarBranch branch;
+	
+	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<VehicleGrade> grades = new HashSet<VehicleGrade>();
+
+	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<VehicleReservation> reservation = new HashSet<VehicleReservation>();
 
 	public Vehicle() {
 		this.vehicleName = "";
@@ -77,7 +89,14 @@ public class Vehicle {
 		this.branch = branch;
 	}
 	
-	
+	public Set<VehicleGrade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(Set<VehicleGrade> grades) {
+		this.grades = grades;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) return false;

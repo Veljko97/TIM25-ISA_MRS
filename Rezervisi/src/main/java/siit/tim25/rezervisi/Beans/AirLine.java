@@ -9,11 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import siit.tim25.rezervisi.Beans.Grades.AirLineGrade;
 import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 
 @Entity
@@ -46,15 +46,14 @@ public class AirLine {
 	@JsonIgnore
 	private Set<AirLineAdmin> admins = new HashSet<AirLineAdmin>();
 	
-	@Column(name = "airLineAverageGrade", nullable = false)
-	private Double airLineAverageGrade;
+	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AirLineGrade> grades = new HashSet<AirLineGrade>();
 
 	@Column(name = "airlineEarning", nullable = false)
 	private Double airlineEarning;
 
 	public AirLine() {
 		super();
-		this.airLineAverageGrade = 0.0;
 		this.airlineEarning = 0.0;
 	}
 
@@ -69,7 +68,6 @@ public class AirLine {
 		this.airLineDestinations = airLineDestinations;
 		this.airLineFlights = airLineFlights;
 		this.offers = offers;
-		this.airLineAverageGrade = 0.0;
 		this.airlineEarning = 0.0;
 	}
 
@@ -121,21 +119,21 @@ public class AirLine {
 	public void setAirLineFlights(Set<Flight> airLineFlights) {
 		this.airLineFlights = airLineFlights;
 	}
-
-	public Set<Ticket> getoffers() {
+	
+	public Set<Ticket> getOffers() {
 		return offers;
 	}
 
-	public void setoffers(Set<Ticket> offers) {
+	public void setOffers(Set<Ticket> offers) {
 		this.offers = offers;
 	}
 
-	public Double getAirLineAverageGrade() {
-		return airLineAverageGrade;
+	public Set<AirLineGrade> getGrades() {
+		return grades;
 	}
 
-	public void setAirLineAverageGrade(Double airLineAverageGrade) {
-		this.airLineAverageGrade = airLineAverageGrade;
+	public void setGrades(Set<AirLineGrade> grades) {
+		this.grades = grades;
 	}
 
 	public Double getAirlineEarning() {
@@ -158,8 +156,7 @@ public class AirLine {
 	public String toString() {
 		return "AirLine [airLineID=" + airLineID + ", airLineName=" + airLineName + ", airLineAddress=" + airLineAddress
 				+ ", airLineDescription=" + airLineDescription + ", airLineDestinations=" + airLineDestinations
-				+ ", airLineFlights=" + airLineFlights + ", offers=" + offers + ", airLineAverageGrade="
-				+ airLineAverageGrade + ", airlineEarning=" + airlineEarning + "]";
+				+ ", airLineFlights=" + airLineFlights + ", offers=" + offers + ", airlineEarning=" + airlineEarning + "]";
 	}
 
 	@Override

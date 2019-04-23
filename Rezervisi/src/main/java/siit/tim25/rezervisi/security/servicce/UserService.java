@@ -38,9 +38,9 @@ public class UserService  {
 		return result;
 	}
 	
-//	public Set<User> findbyRole(String role){
-//		return userRepository.findbyRole(role);
-//	}
+	public Set<User> findbyRole(String role){
+		return userRepository.findbyRole(role);
+	}
 	
 	public UserDTO create(RegistrationUserDTO t) {
 		if(userRepository.findByUsername(t.getUsername())==null)

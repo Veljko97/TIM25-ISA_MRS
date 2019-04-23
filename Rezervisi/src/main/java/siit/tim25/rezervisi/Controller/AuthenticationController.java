@@ -177,15 +177,15 @@ public class AuthenticationController {
 		public String newPassword;
 	}
 	
-//	@GetMapping(path="/showUser", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('SYS_ADMIN')")
-//	public ResponseEntity<ArrayList<UserDTO>> getUsers(){
-//		ArrayList<UserDTO> users = new ArrayList<UserDTO>();
-//		for(User us : userServices.findbyRole("ROLE_SYS_ADMIN")) {
-//			users.add(new UserDTO(us, new TokenState()));
-//		}
-//		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
-//	}
+	@GetMapping(path="/showUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('SYS_ADMIN')")
+	public ResponseEntity<ArrayList<UserDTO>> getUsers(){
+		ArrayList<UserDTO> users = new ArrayList<UserDTO>();
+		for(User us : userServices.findbyRole("ROLE_SYS_ADMIN")) {
+			users.add(new UserDTO(us, new TokenState()));
+		}
+		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
+	}
 	
 	@PostMapping(path="/addUser",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")

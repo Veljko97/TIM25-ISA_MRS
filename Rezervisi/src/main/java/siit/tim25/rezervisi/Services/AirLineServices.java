@@ -4,7 +4,10 @@ package siit.tim25.rezervisi.Services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Repository.AirLineRepository;
 
@@ -17,9 +20,14 @@ public class AirLineServices {
 		return airLineRepository.save(airline);
 	}
 	
+	public Page<AirLine> findAll(Pageable pageable){
+		return airLineRepository.findAll(pageable);
+	}
+	
 	public List<AirLine> findAll(){
 		return airLineRepository.findAll();
 	}
+	
 	
 	public AirLine findOne(Integer airLineID)
 	{

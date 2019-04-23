@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import siit.tim25.rezervisi.Beans.AirLine;
@@ -30,6 +33,7 @@ import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.DTO.FlightDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.AirLineServices;
+import siit.tim25.rezervisi.Services.AirplaneServices;
 import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.FlightServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
@@ -48,6 +52,9 @@ public class AirLineController {
 	
 	@Autowired
 	private FlightServices flightServices;
+	
+	@Autowired
+	private AirplaneServices airplaneServices;
 	
 	@Autowired
 	@Lazy
@@ -76,10 +83,10 @@ public class AirLineController {
 	}
 	
 	@GetMapping(path="/showAirLines", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<List<AirLine>> showAirLines()
+	public ResponseEntity<Page<AirLine>> showAirLines(Pageable pageable)
 	{
-		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
+		
+		return new ResponseEntity<Page<AirLine>>(airLineServices.findAll(pageable),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/getAirline/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -99,9 +106,9 @@ public class AirLineController {
 		return new ResponseEntity<AirLine>(airLineServices.save(modifiedAirline), HttpStatus.OK);
 	}
 	
-	@GetMapping(path="/{airlineId}/showDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path="/{airlineId}/showDestinations", params = { "page", "size" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<Destination>> getDestinations(@PathVariable Integer airlineId) {
+	public ResponseEntity<Set<Destination>> getDestinations(@RequestParam("page") int page, @RequestParam("size") int size, @PathVariable Integer airlineId) {
 		return new ResponseEntity<Set<Destination>>(destinationServices.findAll(airlineId),HttpStatus.OK);
 	}
 	
@@ -147,13 +154,12 @@ public class AirLineController {
 	@PostMapping(path="/{airlineId}/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Set<FlightDTO>> addFlight (@PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
-		Flight fl = f.convert(destinationServices.findAll(airlineId));
+		Flight fl = f.convert(destinationServices.findAll(airlineId), airplaneServices.findAll());
 		flightServices.save(airlineId, fl);
 		return new ResponseEntity<Set<FlightDTO>> (flightServices.findAllAndConvert(airlineId), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/{airlineId}/getFlight/{flightId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<FlightDTO> getFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId)
 	{
 		return new ResponseEntity<FlightDTO>(flightServices.findOneAndConvert(airlineId, flightId), HttpStatus.OK);
@@ -163,7 +169,7 @@ public class AirLineController {
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Flight> editFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody FlightDTO modifiedFlight) throws ParseException
 	{
-		Flight f = modifiedFlight.convert(destinationServices.findAll(airlineId));
+		Flight f = modifiedFlight.convert(destinationServices.findAll(airlineId), airplaneServices.findAll());
 		f.setIdFlight(flightId);
 		flightServices.update(airlineId, f);
 		

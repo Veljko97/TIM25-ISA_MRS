@@ -3,6 +3,8 @@ function Model(attributes, urlApi) {
 
   this.attributes = attributes;
   this.list = [];
+  this.currentPage = 0;
+  this.numberOfPages = 0;
 }
 
 Model.prototype.init = function() {
@@ -71,8 +73,18 @@ Model.prototype.addUserCallback = function(e){
   }
   ajaxService.POST(this.urlApi.addUser,JSON.stringify(admin),function(){location.reload()});
 }
+
 Model.prototype.showAll = function(data) {}
 Model.prototype.show = function(data) {}
+
+Model.prototype.switchPage = function(dir) {
+  if ((dir == -1 && this.currentPage > 0) || (dir == 1 && this.currentPage < (this.numberOfPages - 1))) {
+    this.currentPage += dir;
+    this.urlApi.showAll = this.urlApi.showAll.slice(0, -1) + this.currentPage;
+    this.render();
+  }
+}
+
 Model.prototype.showUsersTable = function(data) {
   var table = $("#adminsTable").first();
   table.html("<tr><th>User Name</th><th>First Name</th><th>Last Name</th><th>E-mail</th></tr>");

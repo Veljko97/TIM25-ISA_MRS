@@ -13,4 +13,15 @@ public class AirLineAdminDTO extends UserDTO{
 			this.setRole(((Authority) au).getName());
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "AirLineAdminDTO [getId()=" + getId() + ", getUsername()=" + getUsername() + ", getFirstName()="
+				+ getFirstName() + ", getLastName()=" + getLastName() + ", getEmail()=" + getEmail() + ", isEnabled()="
+				+ isEnabled() + ", getServiceId()=" + getServiceId() + ", getToken()=" + getToken() + ", getRole()="
+				+ getRole() + ", isConfirmed()=" + isConfirmed() + ", getClass()=" + getClass() + ", hashCode()="
+				+ hashCode() + ", toString()=" + super.toString() + "]";
+	}
+	
+	
 }

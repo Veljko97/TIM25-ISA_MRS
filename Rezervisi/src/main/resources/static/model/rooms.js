@@ -12,7 +12,6 @@ Rooms.prototype.bindEvents = function() {
 
 Rooms.prototype.showAll = function(data) {
   var table = $("#roomsTable").first();
-  console.log('a');
   table.html("<tr><th>Number</th><th>Description</th><th>Capacity</th><th>Price</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
   this.list = [];
 
@@ -27,20 +26,20 @@ Rooms.prototype.showAll = function(data) {
 }
 
 Rooms.prototype.showCallback = function(room) {
-	  if (room) {
-	    var inputs = $("input");
-	    for(var i = 0; i < inputs.length - 1; i++) {
-	      var input = inputs.eq(i);
-	      var inputName = input.attr("id");
-	      input.attr("value", room[inputName]);
-	    }
-	  }
-	  this.urlApi.edit = '/app/hotels/1/editRoom/' + room.roomID;
-	  $(document).on('submit','#editRoomForm', this.editCallback.bind(this));
-	}
+  if (room) {
+    var inputs = $("input");
+    for(var i = 0; i < inputs.length - 1; i++) {
+      var input = inputs.eq(i);
+      var inputName = input.attr("id");
+      input.attr("value", room[inputName]);
+    }
+  }
+  this.urlApi.edit = '/app/hotels/1/editRoom/' + room.roomID;
+  $(document).on('submit','#editRoomForm', this.editCallback.bind(this));
+}
 
-	Rooms.prototype.show = function(index) {
-	  ajaxService.GET('/app/hotels/1/getRoom/' + index, this.showCallback.bind(this));
-	}
+Rooms.prototype.show = function(index) {
+  ajaxService.GET('/app/hotels/1/getRoom/' + index, this.showCallback.bind(this));
+}
 
 var rooms = new Rooms(['roomNumber', 'roomDescription','roomCapacity', 'price'], {'add': '/app/hotels/1/addRoom', 'showAll': '/app/hotels/1/showRooms', 'delete': '/app/hotels/1/deleteRoom/'});

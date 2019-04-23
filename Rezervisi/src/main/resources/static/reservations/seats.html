@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../css/seats.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../model/flights.js"></script>
+    <script>
+      flights.showSeats(1, 1);
+    </script>
+  </head>
+  <body>
+    <div class="plane">
+      <div class="cockpit">
+        <h1></h1>
+      </div>
+      <div class="exit exit--front fuselage">
+        
+      </div>
+      <ol class="cabin fuselage" id="cockpit">
+          <!-- <li class="seat">
+            <input type="checkbox" disabled id="1D" />
+            <label for="1D">Occupied</label>
+          </li> -->
+      </ol>
+      <div class="exit exit--back fuselage">
+        
+      </div>
+    </div>
+  </body>
+</html>

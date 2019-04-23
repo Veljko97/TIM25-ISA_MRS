@@ -72,7 +72,7 @@ public class FlightServices {
 		Flight fl = null;
 		for(Flight flight: a.getAirLineFlights()) {
 			if (flight.getIdFlight() == f.getIdFlight()) {
-				flight = new Flight(f.getStartDestination(), f.getFinalDestination(), f.getTakeOffDate(), f.getLandingDate(), f.getFlightLength(), f.getNumberOfStops(), f.getNumberOfSeats(), f.getTicketPrice(), f.getStopLocations(), f.getFlightTicket(), f.getFlightAverageGrade());
+				flight = new Flight(f.getStartDestination(), f.getFinalDestination(), f.getTakeOffDate(), f.getLandingDate(), f.getFlightLength(), f.getNumberOfStops(), f.getAirplane(), f.getTicketPrice(), f.getStopLocations(), f.getFlightTicket(), f.getFlightAverageGrade());
 				fl = flight;
 			}
 		}

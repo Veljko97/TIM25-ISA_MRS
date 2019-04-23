@@ -75,6 +75,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// Putanje za koje nije potrebna autentikacija
-		web.ignoring().antMatchers("/css/**", "/js/**","/model/**","/service/**");
+		web.ignoring().antMatchers("/css/**", "/js/**","/model/**","/service/**","/UnregisteredView/**");
 	}
 }

@@ -11,10 +11,10 @@ public class UserDTO {
 	private String lastName;
 	private String email;
 	private boolean enabled;
-	private boolean confirmed;
-	private Integer serviceId;
+	private static boolean confirmed;
+	private static Integer serviceId;
 	private String role;
-	private TokenState token;
+	private static TokenState token;
 
 	public UserDTO() {
 		super();
@@ -58,6 +58,20 @@ public class UserDTO {
 		this.confirmed = user.isConfirmed();
 		this.token = tokenState;
 	}
+	
+	public UserDTO(User user) {
+		this(
+			user.getId(),
+			user.getUsername(),
+			user.getFirstName(), 
+			user.getLastName(),
+			user.getEmail(),
+			user.isEnabled(), 
+			serviceId, 
+			confirmed, token
+			);
+	}
+	
 
 	public Integer getId() {
 		return id;

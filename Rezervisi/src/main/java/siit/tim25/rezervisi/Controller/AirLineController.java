@@ -83,9 +83,7 @@ public class AirLineController {
 	}
 	
 	@GetMapping(path="/showAirLines", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<AirLine>> showAirLines(Pageable pageable)
-	{
-		
+	public ResponseEntity<Page<AirLine>> showAirLines(Pageable pageable)  {
 		return new ResponseEntity<Page<AirLine>>(airLineServices.findAll(pageable),HttpStatus.OK);
 	}
 	
@@ -106,9 +104,9 @@ public class AirLineController {
 		return new ResponseEntity<AirLine>(airLineServices.save(modifiedAirline), HttpStatus.OK);
 	}
 	
-	@GetMapping(path="/{airlineId}/showDestinations", params = { "page", "size" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<Destination>> getDestinations(@RequestParam("page") int page, @RequestParam("size") int size, @PathVariable Integer airlineId) {
+
+	@GetMapping(path="/{airlineId}/showDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<Destination>> getDestinations(@PathVariable Integer airlineId) {
 		return new ResponseEntity<Set<Destination>>(destinationServices.findAll(airlineId),HttpStatus.OK);
 	}
 	

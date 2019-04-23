@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Rent-A-Car Branches</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../model/rentacars.js"></script>
+    <script>
+   
+    var rentID = getUrlParameter('id');
+    console.log(rentID);
+ 	
+     var showUrl="/app/rentacar/" + rentID + "/showBranches/"
+      $(document).ready(function(){
+			$.ajax({
+				url: showUrl,
+				method: 'GET',
+				data: {},
+				contentType: 'application/json; charset=utf-8',
+				success: function(data) { 
+					if (data != null) {
+						showBranches(data);
+					} else {
+						alert("Error!");
+					}	
+				},
+				error: function(error) {
+					console.log(error);
+					$(document.documentElement).html("<p>"+error+"</p>");
+					return;
+				}
+			})	
+		})
+      
+      function showBranches(branch) 
+		{
+			$.each(branch,function(index,branch){ 
+				var tr = $("<tr></tr>");
+				tr.append(
+				    "<td>" + branch.branchName + "</a>" + "</td>" +
+					"<td>" + branch.branchAddress + "</td>"  
+				);
+				$("#branchTable").append(tr);
+			})
+		}
+      
+      function getUrlParameter(sParam) {
+		    var sPageURL = window.location.search.substring(1),
+		        sURLVariables = sPageURL.split('&'),
+		        sParameterName,
+		        i;
+
+		    for (i = 0; i < sURLVariables.length; i++) {
+		        sParameterName = sURLVariables[i].split('=');
+
+		        if (sParameterName[0] === sParam) {
+		            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+		        }
+		    }
+		};
+      
+      
+    </script>
+  </head>
+  <body>
+    <span id="message"></span>
+    <ul id="navigationBar">
+        <li><a href="/UnregisteredView/airlinesPage.html">Airlines</a></li>
+        <li><a href="/UnregisteredView/hotelsPage.html">Hotels</a></li>
+        <li><a href="/UnregisteredView/rentacarsPage.html">Rent a Car</a></li>
+    </ul>
+    <div class="alert alert-danger" id="warning-message">
+    </div>
+    <div class="container">
+      <h2>Rent-A-Cars:</h2>
+      <table class="table table-hover table-bordered" style="width:100%" id="branchTable">
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

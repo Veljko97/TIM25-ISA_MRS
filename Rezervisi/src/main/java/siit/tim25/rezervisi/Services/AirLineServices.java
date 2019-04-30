@@ -28,6 +28,10 @@ public class AirLineServices {
 		return airLineRepository.findAll();
 	}
 	
+	public Page<AirLine> findByName(String airLineName, Pageable pageable) {
+		return airLineRepository.findByAirLineName(airLineName, pageable);
+	}
+	
 	
 	public AirLine findOne(Integer airLineID)
 	{

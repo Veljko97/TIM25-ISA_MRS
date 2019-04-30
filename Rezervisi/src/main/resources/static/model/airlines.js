@@ -27,6 +27,7 @@ Airlines.prototype.showAll = function(data) {
   }
 }
 
+
 Airlines.prototype.showCallback = function(airline) {
   if (airline) {
     var inputs = $("input");
@@ -52,4 +53,4 @@ Airlines.prototype.showUsers = function(index) {
 }
 
 
-var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines?size=5&page=0', 'delete': '/app/airlines/deleteAirline/'});
+var airlines = new Airlines(['airLineName', 'airLineAddress', 'airLineDescription'], {'add': '/app/airlines/addAirline', 'showAll': '/app/airlines/showAirLines', 'delete': '/app/airlines/deleteAirline/'});

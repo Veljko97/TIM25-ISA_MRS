@@ -5,6 +5,7 @@ function Model(attributes, urlApi) {
   this.list = [];
   this.currentPage = 0;
   this.numberOfPages = 0;
+  this.pageSize = 5;
 }
 
 Model.prototype.init = function() {
@@ -41,11 +42,11 @@ Model.prototype.addCallback = function(e) {
   }
 
   var obj = this.makeJSONObject();
-  ajaxService.POST(this.urlApi.add, obj, this.showAll.bind(this));
+  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.showAll.bind(this));
 }
 
 Model.prototype.deleteCallback = function(i) {
-  ajaxService.DELETE(this.urlApi.delete + i, this.showAll.bind(this));
+  ajaxService.DELETE(this.urlApi.delete + i + '?page=' + this.currentPage + "&size=" + this.pageSize, this.showAll.bind(this));
 }
 
 Model.prototype.editCallback = function(e) {
@@ -59,8 +60,8 @@ Model.prototype.editCallback = function(e) {
   ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace(window.location.host) });
 }
 
-Model.prototype.render = function() {
-  ajaxService.GET(this.urlApi.showAll, this.showAll.bind(this));
+Model.prototype.render = function(url = null) {
+  ajaxService.GET(url || (this.urlApi.showAll+ '?size='+this.pageSize+'&page=' + this.currentPage), this.showAll.bind(this));
 }
 
 Model.prototype.addUserCallback = function(e){
@@ -80,8 +81,7 @@ Model.prototype.show = function(data) {}
 Model.prototype.switchPage = function(dir) {
   if ((dir == -1 && this.currentPage > 0) || (dir == 1 && this.currentPage < (this.numberOfPages - 1))) {
     this.currentPage += dir;
-    this.urlApi.showAll = this.urlApi.showAll.slice(0, -1) + this.currentPage;
-    this.render();
+    this.render(this.urlApi.showAll +'?size='+this.pageSize+'&page=' + this.currentPage);
   }
 }
 

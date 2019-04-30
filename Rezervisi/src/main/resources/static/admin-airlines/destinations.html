@@ -12,6 +12,7 @@
     <script>
       $(document).ready(function(){
         checkUserPermission();
+        showAdminNavbar();
         destinations.init();
       });
     </script>
@@ -31,13 +32,19 @@
           <label for="destinationName">Name:</label>
           <input type="text" class="form-control" id="destinationName">
           <label for="destinationDescription">Description:</label>
-          <input type="text" class="form-control" id="destinationDescription">
+          <input type="textarea" class="form-control" id="destinationDescription">
         </div>
         <input type="submit" class="btn btn-primary" value="Add"><br><br>
       </form>
     </div>
     <div class="container">
-      <h2>Destinations:</h2>
+      <div class="table-header">
+        <h2>Destinations:</h2>
+        <div class="pagination">
+          <a onclick="destinations.switchPage(-1)">&laquo;</a>
+          <a onclick="destinations.switchPage(1)">&raquo;</a>
+        </div>
+      </div>
       <table class="table table-hover table-bordered" style="width:100%" id="destinationsTable">
         <tr>
           <th>Name</th>

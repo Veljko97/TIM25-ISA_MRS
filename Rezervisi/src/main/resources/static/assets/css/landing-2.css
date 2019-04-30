@@ -1,6 +1,21 @@
 body {
   overflow-x: hidden; }
 
+  
+.profil-img {
+  width: 60%;
+  cursor: pointer;
+}
+
+.search-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.switch-icon {
+  font-size: 35px;
+}
+
 .bg-light {
   background-color: #f2f4f9 !important; }
 

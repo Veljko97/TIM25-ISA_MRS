@@ -3,6 +3,8 @@ package siit.tim25.rezervisi.Services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.RentACar;
@@ -20,6 +22,14 @@ public class RentACarServices {
 	
 	public List<RentACar> findAll(){
 		return rentACarRepository.findAll();
+	}
+	
+	public Page<RentACar> findAll(Pageable pageable){
+		return rentACarRepository.findAll(pageable);
+	}
+	
+	public Page<RentACar> search(String rentACarName, String destinationName, Pageable pageable){
+		return rentACarRepository.findSearch(rentACarName, destinationName, pageable);
 	}
 	
 	public RentACar findOneByRentACarName(String rentACarName) {

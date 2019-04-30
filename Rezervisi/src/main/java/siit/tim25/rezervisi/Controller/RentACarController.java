@@ -3,10 +3,11 @@ package siit.tim25.rezervisi.Controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import siit.tim25.rezervisi.Beans.Hotel;
+import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
-import siit.tim25.rezervisi.Beans.users.HotelAdmin;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
+import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.BranchServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
@@ -53,25 +55,30 @@ public class RentACarController {
 	
 	@PostMapping(path="/addRentACar", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<List<RentACar>> addRentACar(@RequestBody RentACar rnt)  {
+	public ResponseEntity<Page<RentACar>> addRentACar(Pageable pageable, @RequestBody RentACar rnt)  {
 		if(rentACarServices.findOneByRentACarName(rnt.getRentACarName()) != null) {
-			return new ResponseEntity<List<RentACar>>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Page<RentACar>>(HttpStatus.BAD_REQUEST);
 		}
 		rentACarServices.save(rnt);
-		return new ResponseEntity<List<RentACar>>(rentACarServices.findAll(),HttpStatus.OK);
+		return new ResponseEntity<Page<RentACar>>(rentACarServices.findAll(pageable),HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<RentACar>> searchAirline(Pageable pageable, @RequestParam String name, @RequestParam String destination) {
+		return new ResponseEntity<Page<RentACar>>(rentACarServices.search(name, destination, pageable), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showRentACars", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<RentACar>> showRentACars()
+	public ResponseEntity<Page<RentACar>> showRentACars(Pageable pageable)
 	{
-		return new ResponseEntity<List<RentACar>>(rentACarServices.findAll(), HttpStatus.OK);
+		return new ResponseEntity<Page<RentACar>>(rentACarServices.findAll(pageable), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path="/deleteRentacar/{id}")
-	public ResponseEntity<List<RentACar>> deleteRentACar(@PathVariable Integer id)
+	public ResponseEntity<Page<RentACar>> deleteRentACar(Pageable pageable, @PathVariable Integer id)
 	{
 		rentACarServices.delete(id);
-		return new ResponseEntity<List<RentACar>>(rentACarServices.findAll(),HttpStatus.OK);
+		return new ResponseEntity<Page<RentACar>>(rentACarServices.findAll(pageable),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showRentacar", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,22 +104,22 @@ public class RentACarController {
 	
 
 	@GetMapping(path="/{rentacarId}/showBranches", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Set<RentACarBranch>> getBranches(@PathVariable Integer rentacarId) {
-		return new ResponseEntity<Set<RentACarBranch>>(branchServices.findAll(rentacarId),HttpStatus.OK);
+	public ResponseEntity<Page<RentACarBranchDTO>> getBranches(Pageable pageable, @PathVariable Integer rentacarId) {
+		return new ResponseEntity<Page<RentACarBranchDTO>>(branchServices.findAllAndConvert(rentacarId, pageable),HttpStatus.OK);
 	}
 	
 	@PostMapping(path="/{rentacarId}/addBranch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
-	public ResponseEntity<Set<RentACarBranch>> addBranch (@PathVariable Integer rentacarId, @RequestBody RentACarBranch branch) {
+	public ResponseEntity<Page<RentACarBranchDTO>> addBranch (Pageable pageable, @PathVariable Integer rentacarId, @RequestBody RentACarBranch branch) {
 		branchServices.save(rentacarId, branch);
-		return new ResponseEntity<Set<RentACarBranch>> (branchServices.findAll(rentacarId), HttpStatus.OK);
+		return new ResponseEntity<Page<RentACarBranchDTO>> (branchServices.findAllAndConvert(rentacarId, pageable), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/{rentacarId}/getBranch/{branchId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
-	public ResponseEntity<RentACarBranch> getBranch(@PathVariable Integer rentacarId, @PathVariable Integer branchId)
+	public ResponseEntity<RentACarBranchDTO> getBranch(@PathVariable Integer rentacarId, @PathVariable Integer branchId)
 	{
-		return new ResponseEntity<RentACarBranch>(branchServices.findOne(rentacarId, branchId), HttpStatus.OK);
+		return new ResponseEntity<RentACarBranchDTO>(branchServices.findOne(rentacarId, branchId).convert(), HttpStatus.OK);
 	}
 	
 	@PutMapping(path="/{rentacarId}/editBranch/{branchId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -127,10 +134,10 @@ public class RentACarController {
 	
 	@DeleteMapping(path="{rentacarId}/deleteBranch/{branchId}")
 	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
-	public ResponseEntity<Set<RentACarBranch>> deleteBranch(@PathVariable Integer rentacarId, @PathVariable Integer branchId)
+	public ResponseEntity<Page<RentACarBranchDTO>> deleteBranch(Pageable pageable, @PathVariable Integer rentacarId, @PathVariable Integer branchId)
 	{
 		branchServices.delete(rentacarId, branchId);
-		return new ResponseEntity<Set<RentACarBranch>>(branchServices.findAll(rentacarId),HttpStatus.OK);
+		return new ResponseEntity<Page<RentACarBranchDTO>>(branchServices.findAllAndConvert(rentacarId, pageable),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

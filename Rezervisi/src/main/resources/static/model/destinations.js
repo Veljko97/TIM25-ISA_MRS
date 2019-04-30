@@ -14,6 +14,9 @@ Destinations.prototype.showAll = function(data) {
   table.html("<tr><th>Name</th><th>Description</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
   this.list = [];
 
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
   for(var i = 0; i < data.length; i++) {
     var destination = data[i];
     this.list.push(destination);
@@ -32,12 +35,12 @@ Destinations.prototype.showCallback = function(destination) {
       input.attr("value", destination[inputName]);
     }
   }
-  this.urlApi.edit = '/app/airlines/1/editDestination/' + destination.idDestination;
+  this.urlApi.edit = '/app/airlines/'+getUserServiceId()+'/editDestination/' + destination.idDestination;
   $(document).on('submit', '#editDestinationForm', this.editCallback.bind(this));
 }
 
 Destinations.prototype.show = function(index) {
-  ajaxService.GET('/app/airlines/1/getDestination/' + index, this.showCallback.bind(this));
+  ajaxService.GET('/app/airlines/'+getUserServiceId()+'/getDestination/' + index, this.showCallback.bind(this));
 }
 
-var destinations = new Destinations(['destinationName', 'destinationDescription'], {'add': '/app/airlines/1/addDestination', 'showAll': '/app/airlines/1/showDestinations/', 'delete': '/app/airlines/1/deleteDestination/'});
+var destinations = new Destinations(['destinationName', 'destinationDescription'], {'add': '/app/airlines/'+getUserServiceId()+'/addDestination', 'showAll': '/app/airlines/'+getUserServiceId()+'/showDestinations', 'delete': '/app/airlines/'+getUserServiceId()+'/deleteDestination/'});

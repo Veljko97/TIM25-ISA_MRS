@@ -1,5 +1,7 @@
 package siit.tim25.rezervisi.Beans;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,12 +11,15 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import siit.tim25.rezervisi.Beans.Grades.HotelGrade;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
+import siit.tim25.rezervisi.DTO.FlightDTO;
+import siit.tim25.rezervisi.DTO.HotelDTO;
 
 @Entity
 public class Hotel {
@@ -28,6 +33,9 @@ public class Hotel {
 	
 	@Column(nullable = false)
 	private String hotelAddress;
+	
+	@ManyToOne
+	private Destination destination;
 	
 	@Column
 	private String hotelDescription;
@@ -56,22 +64,26 @@ public class Hotel {
 		super();
 		this.hotelEarning = 0.0;
 	}
-	
-	
 
-	public Hotel(Integer hotelID, String hotelName, String hotelAddress, String hotelDescription,
-			Set<HotelOffer> offersPriceList, Set<Room> roomList, String roomConfig, Double hotelAverageGrade,
-			Double hotelEarning) {
+	public Hotel(Integer hotelID, String hotelName, String hotelAddress, Destination destination,
+			String hotelDescription, Set<HotelOffer> offersPriceList, Set<Room> roomList, Set<HotelAdmin> admins,
+			Set<HotelGrade> grades, String roomConfig, Double hotelEarning) {
 		super();
 		this.hotelID = hotelID;
 		this.hotelName = hotelName;
 		this.hotelAddress = hotelAddress;
+		this.destination = destination;
 		this.hotelDescription = hotelDescription;
 		this.offersPriceList = offersPriceList;
 		this.roomList = roomList;
+		this.admins = admins;
+		this.grades = grades;
 		this.roomConfig = roomConfig;
 		this.hotelEarning = 0.0;
 	}
+
+
+
 
 
 
@@ -131,6 +143,19 @@ public class Hotel {
 		this.roomConfig = roomConfig;
 	}
 
+	
+	public Destination getDestination() {
+		return destination;
+	}
+
+
+
+	public void setDestination(Destination destination) {
+		this.destination = destination;
+	}
+
+
+
 	public Set<HotelGrade> getGrades() {
 		return grades;
 	}
@@ -155,7 +180,31 @@ public class Hotel {
 		this.admins = admins;
 	}
 	
+	public Double getAverageGrade() {
+		if (this.grades.size() == 0) {
+			return 0.0;
+		} else {
+			Double grade = 0.0;
+			for(HotelGrade g: this.grades) {
+				grade += g.getScore();
+			}
+			return grade;
+		}
+	}
 	
+	
+	
+	
+	@Override
+	public String toString() {
+		return "Hotel [hotelID=" + hotelID + ", hotelName=" + hotelName + ", hotelAddress=" + hotelAddress
+				+ ", destination=" + destination + ", hotelDescription=" + hotelDescription + ", offersPriceList="
+				+ offersPriceList + ", roomList=" + roomList + ", admins=" + admins + ", grades=" + grades
+				+ ", roomConfig=" + roomConfig + ", hotelEarning=" + hotelEarning + "]";
+	}
+
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
@@ -164,6 +213,10 @@ public class Hotel {
 	    Hotel o = (Hotel) obj;
 	    
 		return o.hotelID == this.hotelID;
+	}
+	
+	public HotelDTO convert() {
+		return new HotelDTO(this.hotelID.toString(), this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade().toString(), this.hotelEarning.toString());
 	}
 	
 }

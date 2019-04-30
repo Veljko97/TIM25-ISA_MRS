@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
+
 
 
 @Entity
@@ -27,6 +29,9 @@ public class RentACarBranch {
 	@Column(name = "branchAddress")
 	private String branchAddress;
 	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Destination destination;
+	
 	@OneToMany(mappedBy = "branch", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Vehicle> vehiclesList = new HashSet<Vehicle>();
 	
@@ -37,14 +42,17 @@ public class RentACarBranch {
 	public RentACarBranch() {
 		super();
 	}
-	public RentACarBranch(String branchName, String branchAddress) {
+	public RentACarBranch(String branchName, String branchAddress, Destination destination) {
 		super();
 		this.branchName = branchName;
 		this.branchAddress = branchAddress;
+		this.destination = destination;
 	}
 	public String getBranchName() {
 		return branchName;
 	}
+	
+	
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
 	}
@@ -72,9 +80,19 @@ public class RentACarBranch {
 	public void setService(RentACar service) {
 		this.service = service;
 	}
+	public Destination getDestination() {
+		return destination;
+	}
+	public void setDestination(Destination destination) {
+		this.destination = destination;
+	}
 	@Override
 	public String toString() {
 		return "RentACarBranch [branchName=" + branchName + ", branchAddress=" + branchAddress + "]";
+	}
+	
+	public RentACarBranchDTO convert() {
+		return new RentACarBranchDTO(this.idBranch.toString(), this.branchName, this.branchAddress, this.destination.getDestinationName());
 	}
 	
 	

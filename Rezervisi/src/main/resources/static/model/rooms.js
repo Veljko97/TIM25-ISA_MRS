@@ -15,6 +15,9 @@ Rooms.prototype.showAll = function(data) {
   table.html("<tr><th>Number</th><th>Description</th><th>Capacity</th><th>Price</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
   this.list = [];
 
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
   for(var i = 0; i < data.length; i++) {
     var room = data[i];
     this.list.push(room);
@@ -34,12 +37,19 @@ Rooms.prototype.showCallback = function(room) {
       input.attr("value", room[inputName]);
     }
   }
-  this.urlApi.edit = '/app/hotels/1/editRoom/' + room.roomID;
+  this.urlApi.edit = '/app/hotels/'+getUserServiceId()+'/editRoom/' + room.roomID;
   $(document).on('submit','#editRoomForm', this.editCallback.bind(this));
 }
 
 Rooms.prototype.show = function(index) {
-  ajaxService.GET('/app/hotels/1/getRoom/' + index, this.showCallback.bind(this));
+  ajaxService.GET('/app/hotels/'+getUserServiceId()+'/getRoom/' + index, this.showCallback.bind(this));
 }
 
-var rooms = new Rooms(['roomNumber', 'roomDescription','roomCapacity', 'price'], {'add': '/app/hotels/1/addRoom', 'showAll': '/app/hotels/1/showRooms', 'delete': '/app/hotels/1/deleteRoom/'});
+var rooms = new Rooms(
+  ['roomNumber', 'roomDescription','roomCapacity', 'price'], 
+  {
+    'add': '/app/hotels/'+getUserServiceId()+'/addRoom',
+    'showAll': '/app/hotels/'+getUserServiceId()+'/showRooms',
+    'delete': '/app/hotels/'+getUserServiceId()+'/deleteRoom/'
+  }
+);

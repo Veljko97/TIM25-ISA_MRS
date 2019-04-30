@@ -13,6 +13,9 @@ Flights.prototype.showAll = function(data) {
   table.html("<tr><th>Start Destination</th><th>End Destination</th><th>Take off Date</th><th>Landing Date</th><th>Flight Length</th></tr>");
   this.list = [];
 
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
   for(var i = 0; i < data.length; i++) {
     var flight = data[i];
     this.list.push(flight);
@@ -63,18 +66,18 @@ Flights.prototype.showCallback = function(flight) {
       }
     }
   }
-  this.urlApi.edit = '/app/airlines/1/editFlight/' + flight.idFlight;
+  this.urlApi.edit = '/app/airlines/'+getUserServiceId()+'/editFlight/' + flight.idFlight;
   $(document).on('submit', '#editFlightForm', this.editCallback.bind(this));
 }
 
 Flights.prototype.show = function(index) {
   ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
   ajaxService.GET(this.urlApi.showAirplanes, this.showAirplanes.bind(this));
-  ajaxService.GET('/app/airlines/1/getFlight/' + index, this.showCallback.bind(this));
+  ajaxService.GET('/app/airlines/'+getUserServiceId()+'/getFlight/' + index, this.showCallback.bind(this));
 }
 
 Flights.prototype.render = function() {
-  ajaxService.GET(this.urlApi.showAll, this.showAll.bind(this));
+  ajaxService.GET(this.urlApi.showAll + '?size='+this.pageSize+'&page=' + this.currentPage, this.showAll.bind(this));
   ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
   ajaxService.GET(this.urlApi.showAirplanes, this.showAirplanes.bind(this));
 }
@@ -141,12 +144,12 @@ Flights.prototype.showSeats = function(airlineId, flightId) {
 }
 
 var flights = new Flights(
-  ['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'ticketPrice'],
+  ['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightClass', 'type', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'ticketPrice'],
   {
-    'add': '/app/airlines/1/addFlight',
-    'showAll': '/app/airlines/1/showFlights/',
-    'delete': '/app/airlines/1/deleteFlight/',
-    'showDestinations': '/app/airlines/1/showDestinations?page=1&size=5',
+    'add': '/app/airlines/'+getUserServiceId()+'/addFlight',
+    'showAll': '/app/airlines/'+getUserServiceId()+'/showFlights',
+    'delete': '/app/airlines/'+getUserServiceId()+'/deleteFlight/',
+    'showDestinations': '/app/airlines/showAllDestinations',
     'showAirplanes': '/app/airplanes/show'
   }
 );

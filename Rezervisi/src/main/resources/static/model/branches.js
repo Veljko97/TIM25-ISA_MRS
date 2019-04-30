@@ -14,6 +14,9 @@ Branches.prototype.showAll = function(data) {
   table.html("<tr><th>Name</th><th>Address</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
   this.list = [];
 
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
   for(var i = 0; i < data.length; i++) {
     var branch = data[i];
     this.list.push(branch);
@@ -32,12 +35,36 @@ Branches.prototype.showCallback = function(branch) {
       input.attr("value", branch[inputName]);
     }
   }
-  this.urlApi.edit = '/app/rentacar/1/editBranch/' + branch.idBranch;
+  this.urlApi.edit = '/app/rentacar/'+ getUserServiceId() +'/editBranch/' + branch.idBranch;
   $(document).on('submit', '#editBranchForm', this.editCallback.bind(this));
 }
 
-Branches.prototype.show = function(index) {
-  ajaxService.GET('/app/rentacar/1/getBranch/' + index, this.showCallback.bind(this));
+Branches.prototype.showDestinations = function(data) {
+  var destinations = $("#destination").first();
+
+  destinations.html("");
+
+  for(var i = 0; i < data.length; i++) {
+    var destination = data[i];
+    destinations.html(destinations.html() + "<option value=\""+destination.destinationName+"\">"+destination.destinationName+"</option>");
+  }
 }
 
-var branches = new Branches(['branchName', 'branchAddress'], {'add': '/app/rentacar/1/addBranch', 'showAll': '/app/rentacar/1/showBranches/', 'delete': '/app/rentacar/1/deleteBranch/'});
+Branches.prototype.render = function() {
+  ajaxService.GET(this.urlApi.showAll + '?size='+this.pageSize+'&page=' + this.currentPage, this.showAll.bind(this));
+  ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
+}
+
+Branches.prototype.show = function(index) {
+  ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
+  ajaxService.GET('/app/rentacar/' + getUserServiceId() +'/getBranch/' + index, this.showCallback.bind(this));
+}
+
+var branches = new Branches(
+  ['branchName', 'branchAddress', 'destination'],
+  {
+    'add': '/app/rentacar/' + getUserServiceId() +'/addBranch',
+    'showAll': '/app/rentacar/'+getUserServiceId()+'/showBranches',
+    'delete': '/app/rentacar/'+getUserServiceId()+'/deleteBranch/',
+    'showDestinations': '/app/airlines/showAllDestinations'
+});

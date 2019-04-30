@@ -129,7 +129,6 @@ public class AuthenticationController {
     public ResponseEntity<UserDTO> addUser(@RequestBody @Valid RegistrationUserDTO user) {
 		 UserDTO udto = userServices.create(user);
 		 if(udto!=null) {
-			 System.out.println(udto);
 			 return new ResponseEntity<>(udto,HttpStatus.CREATED);	 
 		 }
 		 return new ResponseEntity<>(udto,HttpStatus.CONFLICT);

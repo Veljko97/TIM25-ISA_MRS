@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,26 +25,27 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.AirLineAdminDTO;
 import siit.tim25.rezervisi.DTO.HotelAdminDTO;
 import siit.tim25.rezervisi.DTO.RegistrationUserDTO;
 import siit.tim25.rezervisi.DTO.RentACarAdminDTO;
+import siit.tim25.rezervisi.DTO.StandardUserDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.users.AirLineAdminServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.HotelAdminServices;
 import siit.tim25.rezervisi.Services.users.RentACarAdminServices;
+import siit.tim25.rezervisi.Services.users.StandardUserServices;
 import siit.tim25.rezervisi.security.TokenUtils;
 import siit.tim25.rezervisi.security.auth.JwtAuthenticationRequest;
 import siit.tim25.rezervisi.security.model.Authority;
@@ -81,10 +83,16 @@ public class AuthenticationController {
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
+	private StandardUserServices standardUserServices;
+	
+	@Autowired
 	private AuthorityServices authorityServices;
 	
 	@Autowired
 	private UserService userServices;
+	
+	@Autowired
+	private JavaMailSender mailSender;
 	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
@@ -118,6 +126,9 @@ public class AuthenticationController {
 			}else if(auth.getName().equals("ROLE_RENTACAR_ADMIN")) {
 				user = rentACarAdminServices.findOne(userId);
 				return ResponseEntity.ok(new RentACarAdminDTO((RentACarAdmin) user, new TokenState(jwt, expiresIn)));
+			}else if(auth.getName().equals("ROLE_RENTACAR_ADMIN")) {
+				user = standardUserServices.findOne(userId);
+				return ResponseEntity.ok(new StandardUserDTO((StandardUser) user, new TokenState(jwt, expiresIn)));
 			}else {
 				return ResponseEntity.ok(new UserDTO(user, new TokenState(jwt, expiresIn)));
 			}
@@ -126,13 +137,18 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping(value="/registration", consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> addUser(@RequestBody @Valid RegistrationUserDTO user) {
-		 UserDTO udto = userServices.create(user);
-		 if(udto!=null) {
-			 System.out.println(udto);
-			 return new ResponseEntity<>(udto,HttpStatus.CREATED);	 
-		 }
-		 return new ResponseEntity<>(udto,HttpStatus.CONFLICT);
+    public ResponseEntity<StandardUserDTO> addUser(@RequestBody @Valid RegistrationUserDTO userData) {
+	 	StandardUser user = new StandardUser();
+	 	user.setPassword(passwordEncoder.encode(userData.getPassword()));
+	 	user.setUsername(userData.getUsername());
+	 	user.setFirstName(userData.getFirstName());
+	 	user.setLastName(userData.getLastName());
+	 	user.setEmail(userData.getEmail());
+	 	user.setEnabled(true);
+	 	user.setConfirmed(false);
+	 	user.setAuthorities(Arrays.asList(authorityServices.findOne(5)));
+	 	standardUserServices.save(user);
+		return new ResponseEntity<>(new StandardUserDTO(user, new TokenState()),HttpStatus.CREATED);
 	 }
 	
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)

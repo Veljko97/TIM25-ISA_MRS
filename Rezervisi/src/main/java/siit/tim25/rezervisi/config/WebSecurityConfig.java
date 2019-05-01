@@ -1,4 +1,4 @@
-package siit.tim25.rezervisi.security.config;
+package siit.tim25.rezervisi.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/admin/hotels","/admin/rentacars", "/admin/edit-rentacar", 
 					"/admin/add-admin-airline","/admin/add-admin-hotel","/admin/add-admin-rentACar").hasRole("SYS_ADMIN")
 			.antMatchers("/admin-rentacars/index","/admin-rentacars/branches", "/admin-rentacars/edit-branch").hasRole("RENTACAR_ADMIN")
+			.antMatchers("/app/friends/**", "/user/friends").hasRole("USER")
 			.and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 

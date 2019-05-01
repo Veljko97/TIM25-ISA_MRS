@@ -11,8 +11,9 @@ INSERT INTO USER (id, username, password, first_name, last_name, email, enabled,
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (10, 'user6', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
 
 INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning) VALUES ('1', 'fasf', 'fasf', 'Name', '0');
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid) VALUES ('1', 'Description neki', 'Destinacija', '1');
 INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name) VALUES ('1', 'neka', 'super', '0', 'Ime');
-INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name) VALUES ('1', 'adresa', 'valja', '0', 'ime');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination) VALUES ('1', 'adresa', 'valja', '0', 'ime', '1');
 
 
 INSERT INTO air_line_admin(id, air_line_air_lineid) VALUES (3, 1);

@@ -37,7 +37,7 @@ li a:hover {
   display: inline-block;
 }
 
-.pagination a {
+.pagination span {
   color: black;
   float: left;
   padding: 8px 16px;
@@ -45,6 +45,11 @@ li a:hover {
 }
 
 .table-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+#navigationBar {
   display: flex;
   justify-content: space-between;
 }

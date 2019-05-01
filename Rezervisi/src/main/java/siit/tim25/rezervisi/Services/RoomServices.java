@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.Hotel;
-import siit.tim25.rezervisi.Beans.HotelRoom;
 import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Repository.HotelRepository;
 import siit.tim25.rezervisi.Repository.RoomRepository;
@@ -43,6 +44,10 @@ public class RoomServices {
 		return list;
 	}
 	
+	public Page<Room> findAll(Integer hotelId, Pageable pageable) {
+		return roomRepository.findAllByHotelID(hotelId, pageable);
+	}
+	
 	public Room findOne(Integer hotelId, Integer roomId)
 	{
 		Hotel h = hotelRepository.findOne(hotelId);
@@ -57,11 +62,9 @@ public class RoomServices {
 	}
 	
 	public Room update(Integer hotelId, Room r) {
-		System.out.println(r);
 		Hotel h = hotelRepository.findOne(hotelId);
 		Room room = null;
 		for(Room hr: h.getRoomList()) {
-			System.out.println(hr);
 			if (hr.getRoomID() == r.getRoomID()) {
 				hr.setRoomDescription(r.getRoomDescription());
 				hr.setRoomNumber(r.getRoomNumber());
@@ -71,7 +74,6 @@ public class RoomServices {
 			}
 		}
 		hotelRepository.save(h);
-		System.out.println(room);
 		// roomRepository.save(room);
 		return room;
 	}

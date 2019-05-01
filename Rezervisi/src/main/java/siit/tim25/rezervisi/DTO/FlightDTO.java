@@ -9,6 +9,8 @@ import java.util.Set;
 import siit.tim25.rezervisi.Beans.AirPlane;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
+import siit.tim25.rezervisi.Beans.FlightClass;
+import siit.tim25.rezervisi.Beans.FlightType;
 
 public class FlightDTO {
 	private String startDestinationName;
@@ -22,6 +24,8 @@ public class FlightDTO {
 	private Double ticketPrice;
 	private Double flightAverageGrade;
 	private Integer idFlight;
+	private String type;
+	private String flightClass;
 
 	
 	public FlightDTO() {
@@ -30,7 +34,7 @@ public class FlightDTO {
 	
 	
 	public FlightDTO(Integer idFlight, String startDestinationName, String finalDestinationName, String takeOffDate, String landingDate,
-			String flightLength, int numberOfStops, int numberOfSeats, String airplane, Double ticketPrice,
+			String flightLength, int numberOfStops, int numberOfSeats, String flightClass, String type, String airplane, Double ticketPrice,
 			Double flightAverageGrade) {
 		super();
 		this.idFlight = idFlight;
@@ -44,6 +48,8 @@ public class FlightDTO {
 		this.airplane = airplane;
 		this.ticketPrice = ticketPrice;
 		this.flightAverageGrade = flightAverageGrade;
+		this.type = type;
+		this.flightClass = flightClass;
 	}
 	public String getStartDestinationName() {
 		return startDestinationName;
@@ -117,9 +123,27 @@ public class FlightDTO {
 		return numberOfSeats;
 	}
 
-
 	public void setNumberOfSeats(int numberOfSeats) {
 		this.numberOfSeats = numberOfSeats;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+	public String getFlightClass() {
+		return flightClass;
+	}
+
+
+	public void setFlightClass(String flightClass) {
+		this.flightClass = flightClass;
 	}
 
 
@@ -155,7 +179,8 @@ public class FlightDTO {
 		f.setTicketPrice(this.getTicketPrice());
 		f.setNumberOfStops(this.numberOfStops);
 		f.setFlightAverageGrade(this.flightAverageGrade);
-		
+		f.setType(FlightType.valueOf(this.type));
+		f.setFlightClass(FlightClass.valueOf(this.flightClass));
 		return f;
 	}
 }

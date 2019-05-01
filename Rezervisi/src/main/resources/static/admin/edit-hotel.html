@@ -13,6 +13,7 @@
     <script>
       $(document).ready(function(){
         checkUserPermission();
+        showAdminNavbar();
         var index = getIndexFromUrl();
         hotels.show(index);
       });
@@ -37,6 +38,8 @@
           <input type="text" class="form-control" id="hotelAddress">
           <label for="hotelDescription">Description:</label>
           <input type="text" class="form-control" id="hotelDescription">
+          <label for="destination">Hotel Destination:</label>
+          <select class="form-control" id="destination"></select>
         </div>
         <input type="submit" class="btn btn-primary" value="Edit"><br><br>
       </form>

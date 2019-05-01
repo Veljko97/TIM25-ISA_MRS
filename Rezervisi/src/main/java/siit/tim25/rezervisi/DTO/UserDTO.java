@@ -9,6 +9,7 @@ public class UserDTO {
 	private String username;
 	private String firstName;
 	private String lastName;
+	private String password;
 	private String email;
 	private boolean enabled;
 	private static boolean confirmed;
@@ -23,6 +24,7 @@ public class UserDTO {
 		this.firstName = "";
 		this.lastName = "";
 		this.email = "";
+		this.password = "";
 		this.enabled = false;
 		this.confirmed = false;
 		this.serviceId = -1;
@@ -42,6 +44,7 @@ public class UserDTO {
 		this.confirmed = confirmed;
 		this.serviceId = serviceId;
 		this.token = token;
+		this.password = "";
 	}
 
 	public UserDTO(User user, TokenState tokenState) {
@@ -151,6 +154,14 @@ public class UserDTO {
 
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 }

@@ -46,6 +46,12 @@ public class StandardUser extends User {
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<VehicleReservation> vehicleReservation = new HashSet<VehicleReservation>();
+	
+	@OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Friends> sentRequest = new HashSet<Friends>();
+	
+	@OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Friends> receivedRequests = new HashSet<Friends>();
 
 	public Set<AirLineGrade> getAirLineGrades() {
 		return airLineGrades;
@@ -113,5 +119,21 @@ public class StandardUser extends User {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Set<Friends> getSentRequest() {
+		return sentRequest;
+	}
+
+	public void setSentRequest(Set<Friends> sentRequest) {
+		this.sentRequest = sentRequest;
+	}
+
+	public Set<Friends> getReceivedRequests() {
+		return receivedRequests;
+	}
+
+	public void setReceivedRequests(Set<Friends> receivedRequests) {
+		this.receivedRequests = receivedRequests;
 	}
 }

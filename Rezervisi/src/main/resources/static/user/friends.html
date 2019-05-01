@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Friends</title>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.2.0/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/sockjs/1.0.3/sockjs.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script type="text/javascript" src="../service/friends.js"></script>
+<script type="text/javascript" src="../service/ajaxService.js"></script>
+<script type="text/javascript" src="../model/friends.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+	checkUserPermission();
+	var friends = new Friends("friends");
+	$(document).ready(function(){
+		friends.loadFriends();
+		friendLisener(friends.arivedCallback.bind(friends), friends.responseCallback.bind(friends), friends.deleteCallback.bind(friends));
+		$("#serchForm").on("submit",friends.findUsers.bind(friends));
+	})
+</script>
+</head>
+<body>
+	<form id="serchForm">
+		<input type="text" id="serchParam" placeholder="look for user">
+		<button type="submit">Serch</button>
+	</form>
+	<h1>Users:</h1>
+	<table id = "userTable">
+		<thead>
+			<tr>
+				<td>Username</td>
+				<td>First Name</td>
+				<td>Last Name</td>
+				<td>E-mail</td>
+				<td>Oprions</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<h1>Pending:</h1>
+	<table id = "pendingTable">
+		<thead>
+			<tr>
+				<td>Username</td>
+				<td>First Name</td>
+				<td>Last Name</td>
+				<td>E-mail</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<h1>Confirmation:</h1>
+	<table id = "confirmationTable">
+		<thead>
+			<tr>
+				<td>Username</td>
+				<td>First Name</td>
+				<td>Last Name</td>
+				<td>E-mail</td>
+				<td colspan="2">Oprions</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<h1>Accepted:</h1>
+	<table id = "acceptedTable">
+		<thead>
+			<tr>
+				<td>Username</td>
+				<td>First Name</td>
+				<td>Last Name</td>
+				<td>E-mail</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	
+</body>
+</html>

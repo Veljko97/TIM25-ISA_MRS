@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>System Administrator Panel</title>
+  <title>Rezervisi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="../css/nav.css" >
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -9,21 +9,15 @@
   <script src="../service/ajaxService.js"></script>
   <script src="../js/main.js"></script>
   <script>
-    $(document).ready(function(){
-      checkUserPermission();
-      showAdminNavbar();
-    });
+    checkUserPermission();
   </script>
 </head>
 
 <body>
   <ul id="navigationBar">
-      <li><a href="/admin/airlines.html">Airlines</a></li>
-      <li><a href="/admin/hotels.html">Hotels</a></li>
-      <li><a href="/admin/rentacars.html">Rent a Car</a></li>
-      <li><a href="/admin/add-admin-sys.html">System Admins</a></li>
+      <li><a href="/UnregisteredView/airlinesPage.html">Airlines</a></li>
+      <li><a href="/UnregisteredView/hotelsPage.html">Hotels</a></li>
+      <li><a href="/UnregisteredView/rentacarsPage.html">Rent a Car</a></li>
   </ul>
-  
-  <a href="/editProfile.html">Edit profile</a>
 </body>
 </html>

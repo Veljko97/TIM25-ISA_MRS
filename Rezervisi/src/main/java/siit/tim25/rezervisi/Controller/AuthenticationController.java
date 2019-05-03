@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -150,7 +152,30 @@ public class AuthenticationController {
 	 	standardUserServices.save(user);
 		return new ResponseEntity<>(new StandardUserDTO(user, new TokenState()),HttpStatus.CREATED);
 	 }
+
 	
+	@PutMapping(path="/editUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO modifiedUser,HttpServletRequest request, Device device) //prima izmenjenog korisnika kojeg saljem sa fronta
+	{ 		
+		
+		
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+	    
+		User user = this.userServices.findByUsername(username);
+	  
+	    List<User> allUsers = userServices.findAll();
+	    for (User u : allUsers) {
+			if(user.getEmail().equalsIgnoreCase(modifiedUser.getEmail())){
+				return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
+			}
+		}
+	    user.setUsername(modifiedUser.getUsername());
+	    user.setEmail(modifiedUser.getEmail());
+	    user = this.userServices.save(user);
+	    return new ResponseEntity<UserDTO>(new UserDTO(user, new TokenState(tokenUtils.generateToken(user.getUsername(), device),tokenUtils.getExpired())), HttpStatus.OK); 
+	}
+		
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
 	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
 

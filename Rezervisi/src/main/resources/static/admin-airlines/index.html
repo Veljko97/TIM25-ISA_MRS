@@ -9,19 +9,18 @@
     <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script>
-        $(document).ready(function(){
-            checkUserPermission();
-            var user = JSON.parse(sessionStorage.getItem('user'));
-            if(!user.confirmed){
-                location.replace("/admin/paswordChange.html");
-            }
-        });
+  
     </script>
-</head>
+   
+   
+   </head>
 <body>
   <ul id="navigationBar">
       <li><a href="/admin-airlines/destinations.html">Destinations</a></li>
       <li><a href="/admin-airlines/flights.html">Flights</a></li>
   </ul>
+ 
+  <a href="/editProfile.html">Edit profile</a>
+  
 </body>
 </html>

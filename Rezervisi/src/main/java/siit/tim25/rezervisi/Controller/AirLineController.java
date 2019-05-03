@@ -62,23 +62,28 @@ public class AirLineController {
 	@Autowired
 	private AuthorityServices authorityServices;
 	
+	@GetMapping(path="/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<AirLine>> searchAirline(Pageable pageable, @RequestParam String name) {
+		return new ResponseEntity<Page<AirLine>>(airLineServices.findByName('%' + name + '%', pageable), HttpStatus.OK);
+	}
+	
 	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<List<AirLine>> addAirline(@RequestBody AirLine airline)  {
+	public ResponseEntity<Page<AirLine>> addAirline(Pageable pageable, @RequestBody AirLine airline )  {
 		
 		if(airLineServices.findOneByAirLineName(airline.getAirLineName()) != null)	{
-			return new ResponseEntity<List<AirLine>>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Page<AirLine>>(HttpStatus.BAD_REQUEST);
 		}
 		airLineServices.save(airline);
-		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
+		return new ResponseEntity<Page<AirLine>>(airLineServices.findAll(pageable),HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path="/deleteAirline/{id}")
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<List<AirLine>> deleteAirline(@PathVariable Integer id)
+	public ResponseEntity<Page<AirLine>> deleteAirline(Pageable pageable, @PathVariable Integer id)
 	{
 		airLineServices.delete(id);
-		return new ResponseEntity<List<AirLine>>(airLineServices.findAll(),HttpStatus.OK);
+		return new ResponseEntity<Page<AirLine>>(airLineServices.findAll(pageable),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showAirLines", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,15 +110,20 @@ public class AirLineController {
 	
 
 	@GetMapping(path="/{airlineId}/showDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Set<Destination>> getDestinations(@PathVariable Integer airlineId) {
-		return new ResponseEntity<Set<Destination>>(destinationServices.findAll(airlineId),HttpStatus.OK);
+	public ResponseEntity<Page<Destination>> getDestinations(Pageable pageable, @PathVariable Integer airlineId) {
+		return new ResponseEntity<Page<Destination>>(destinationServices.findAll(airlineId, pageable),HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/showAllDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Destination>> getAllDestinations() {
+		return new ResponseEntity<List<Destination>>(destinationServices.findAll(),HttpStatus.OK);
 	}
 	
 	@PostMapping(path="/{airlineId}/addDestination", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<Destination>> addDestination (@PathVariable Integer airlineId, @RequestBody Destination destination) {
+	public ResponseEntity<Page<Destination>> addDestination (Pageable pageable, @PathVariable Integer airlineId, @RequestBody Destination destination) {
 		destinationServices.save(airlineId, destination);
-		return new ResponseEntity<Set<Destination>> (destinationServices.findAll(airlineId), HttpStatus.OK);
+		return new ResponseEntity<Page<Destination>> (destinationServices.findAll(airlineId, pageable), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/{airlineId}/getDestination/{destinationId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -135,25 +145,38 @@ public class AirLineController {
 	
 	@DeleteMapping(path="{airlineId}/deleteDestination/{destinationId}")
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<Destination>> deleteDestination(@PathVariable Integer airlineId, @PathVariable Integer destinationId)
+	public ResponseEntity<Page<Destination>> deleteDestination(Pageable pageable, @PathVariable Integer airlineId, @PathVariable Integer destinationId)
 	{
 		destinationServices.delete(airlineId, destinationId);
-		return new ResponseEntity<Set<Destination>>(destinationServices.findAll(airlineId),HttpStatus.OK);
+		return new ResponseEntity<Page<Destination>>(destinationServices.findAll(airlineId, pageable),HttpStatus.OK);
 	}
 	
+	@GetMapping(path="/searchFlights", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<FlightDTO>> searchFlights(Pageable pageable, @RequestParam String type, @RequestParam String flightClass, 
+			@RequestParam String from, @RequestParam String to, @RequestParam String takeOff, @RequestParam String landing, @RequestParam String numberOfPeople,
+			@RequestParam String airLineName, @RequestParam String flightLength, @RequestParam String priceFrom, @RequestParam String priceTo) throws ParseException {
+		return new ResponseEntity<Set<FlightDTO>>(flightServices.search(type, flightClass, from, to, takeOff, landing, numberOfPeople, airLineName, flightLength, priceFrom, priceTo, pageable), HttpStatus.OK);
+	}
 	
 	@GetMapping(path="/{airlineId}/showFlights", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<FlightDTO>> getFlights(@PathVariable Integer airlineId) {
-		return new ResponseEntity<Set<FlightDTO>>(flightServices.findAllAndConvert(airlineId),HttpStatus.OK);
+	public ResponseEntity<Page<FlightDTO>> getFlights(Pageable pageable, @PathVariable Integer airlineId) {
+		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(airlineId, pageable),HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/showAllFlights", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<FlightDTO>> getAllPagedFlights(Pageable pageable) {
+		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(pageable),HttpStatus.OK);
 	}
 	
 	@PostMapping(path="/{airlineId}/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<FlightDTO>> addFlight (@PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
+	public ResponseEntity<Page<FlightDTO>> addFlight (Pageable pageable, @PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
+		System.out.println(f);
 		Flight fl = f.convert(destinationServices.findAll(airlineId), airplaneServices.findAll());
+		System.out.println(fl);
 		flightServices.save(airlineId, fl);
-		return new ResponseEntity<Set<FlightDTO>> (flightServices.findAllAndConvert(airlineId), HttpStatus.OK);
+		return new ResponseEntity<Page<FlightDTO>> (flightServices.findAllAndConvert(airlineId, pageable), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/{airlineId}/getFlight/{flightId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -168,6 +191,7 @@ public class AirLineController {
 	{
 		Flight f = modifiedFlight.convert(destinationServices.findAll(airlineId), airplaneServices.findAll());
 		f.setIdFlight(flightId);
+		f.setAirLine(airLineServices.findOne(airlineId));
 		flightServices.update(airlineId, f);
 		
 		return new ResponseEntity<Flight>(f, HttpStatus.OK);
@@ -175,10 +199,10 @@ public class AirLineController {
 	
 	@DeleteMapping(path="{airlineId}/deleteFlight/{flightId}")
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
-	public ResponseEntity<Set<Flight>> deleteFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId)
+	public ResponseEntity<Page<FlightDTO>> deleteFlight(Pageable pageable, @PathVariable Integer airlineId, @PathVariable Integer flightId)
 	{
 		flightServices.delete(airlineId, flightId);
-		return new ResponseEntity<Set<Flight>>(flightServices.findAll(airlineId),HttpStatus.OK);
+		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(airlineId, pageable),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

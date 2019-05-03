@@ -14,6 +14,9 @@ RentACars.prototype.showAll = function(data) {
   table.html("<tr><th>Name</th><th>Address</th><th>Description</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
   this.list = [];
 
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
   for(var i = 0; i < data.length; i++) {
     var rentacar = data[i];
     this.list.push(rentacar);

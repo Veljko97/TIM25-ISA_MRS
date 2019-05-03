@@ -1,4 +1,4 @@
-package siit.tim25.rezervisi.security.config;
+package siit.tim25.rezervisi.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			//.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 			.authorizeRequests()
-			.antMatchers("/index", "reservations/seats.html", "/auth/**").permitAll()
+			.antMatchers("/index", "reservations/seats.html", "/guest/**", "/auth/**").permitAll()
 			.antMatchers("/admin-hotels/index","/admin-hotels/edit-room", "/admin-hotels/rooms").hasRole("HOTEL_ADMIN")
 			.antMatchers("/admin-airlines/index","/admin-airlines/edit-destination", "/admin-airlines/destinations", 
 					"/admin-airlines/edit-flight", "/admin-airlines/flights").hasRole("AIRLINE_ADMIN")
@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/admin/hotels","/admin/rentacars", "/admin/edit-rentacar", 
 					"/admin/add-admin-airline","/admin/add-admin-hotel","/admin/add-admin-rentACar").hasRole("SYS_ADMIN")
 			.antMatchers("/admin-rentacars/index","/admin-rentacars/branches", "/admin-rentacars/edit-branch").hasRole("RENTACAR_ADMIN")
+			.antMatchers("/app/friends/**", "/user/friends").hasRole("USER")
 			.and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 

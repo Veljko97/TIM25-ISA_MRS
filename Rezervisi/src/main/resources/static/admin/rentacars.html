@@ -12,6 +12,7 @@
     <script>
       $(document).ready(function(){
         checkUserPermission();
+        showAdminNavbar();
         rentacars.init();
       });
     </script>
@@ -41,7 +42,13 @@
       </form>
     </div>
     <div class="container">
-      <h2>Airlines:</h2>
+      <div class="table-header">
+        <h2>Rentacars:</h2>
+        <div class="pagination">
+          <a onclick="rentacars.switchPage(-1)">&laquo;</a>
+          <a onclick="rentacars.switchPage(1)">&raquo;</a>
+        </div>
+      </div>
       <table class="table table-hover table-bordered" style="width:100%" id="rentTable">
         <tr>
           <th>Name</th>

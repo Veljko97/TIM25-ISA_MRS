@@ -12,6 +12,7 @@
     <script>
       $(document).ready(function(){
         checkUserPermission();
+        showAdminNavbar();
         flights.init();
       });
     </script>
@@ -44,12 +45,30 @@
           <select class="form-control" id="airplane"></select>
           <label for="ticketPrice">Ticket Price:</label>
           <input type="text" class="form-control" id="ticketPrice">
+          <label for="type">Type:</label>
+          <select class="form-control" id="type">
+            <option value="ROUND_TRIP">Round Trip</option>
+            <option value="ONE_WAY">One Way</option>
+            <option value="MULTI_CITY">Multi Choice</option>
+          </select>
+          <label for="flightClass">Class:</label>
+          <select class="form-control" id="flightClass">
+            <option value="BUSINESS">Business</option>
+            <option value="ECONOMY">Economy</option>
+            <option value="FIRST">First</option>
+          </select> 
         </div>
         <input type="submit" class="btn btn-primary" value="Add Flight"><br><br>
       </form>
     </div>
     <div class="container">
-      <h2>Flights:</h2>
+      <div class="table-header">
+        <h2>Flights:</h2>
+        <div class="pagination">
+          <a onclick="flights.switchPage(-1)">&laquo;</a>
+          <a onclick="flights.switchPage(1)">&raquo;</a>
+        </div>
+      </div>
       <table class="table table-hover table-bordered" style="width:100%" id="flightsTable">
         <tr>
           <th>Start Destination</th>

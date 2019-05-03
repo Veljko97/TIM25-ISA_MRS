@@ -12,6 +12,7 @@
     <script>
       $(document).ready(function(){
         checkUserPermission();
+        showAdminNavbar();
         hotels.init();
       });
     </script>
@@ -19,10 +20,11 @@
   <body>
     <span id="message"></span>
     <ul id="navigationBar">
-        <li><a href="/admin/airlines.html">Airlines</a></li>
-        <li><a href="/admin/hotels.html">Hotels</a></li>
-        <li><a href="/admin/rentacars.html">Rent a Car</a></li>
-        <li><a href="/admin/add-admin-sys.html">System Admins</a></li>
+      <li><a href="/admin/airlines.html">Airlines</a></li>
+      <li><a href="/admin/hotels.html">Hotels</a></li>
+      <li><a href="/admin/rentacars.html">Rent a Car</a></li>
+      <li><a href="/admin/add-admin-sys.html">System Admins</a></li>
+      <li><a href="#" onclick="return logout(event)">Logout</a></li>
     </ul>
     <div class="alert alert-danger" id="warning-message">
     </div>
@@ -36,13 +38,21 @@
           <input type="text" class="form-control" id="hotelAddress">
           <label for="hotelDescription">Description:</label>
           <input type="text" class="form-control" id="hotelDescription">
+          <label for="destination">Hotel Destination:</label>
+          <select class="form-control" id="destination"></select>
         </div>
         <input class="btn btn-primary" type="submit" value="Add Hotel"><br><br>
       </form>
     </div>
     
     <div class="container">
-      <h2>Hotels:</h2>
+      <div class="table-header">
+        <h2>Hotels:</h2>
+        <div class="pagination">
+          <a onclick="hotels.switchPage(-1)">&laquo;</a>
+          <a onclick="hotels.switchPage(1)">&raquo;</a>
+        </div>
+      </div>
       <table class="table table-hover table-bordered" style="width:100%" id="hotelsTable">
         <tr>
           <th>Name</th>

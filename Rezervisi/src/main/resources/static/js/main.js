@@ -60,3 +60,56 @@ function getAdminUrlSlug(user) {
       return ''
   }
 }
+
+function showAdminNavbar() {
+  let user = JSON.parse(sessionStorage.user);
+  let navbar = $("#navigationBar");
+  switch(user.role) {
+    case 'ROLE_AIRLINE_ADMIN':
+      navbar.html("\
+        <div>\
+          <li><a href=\"/admin-airlines/destinations.html\">Destinations</a></li>\
+          <li><a href=\"/admin-airlines/flights.html\">Flights</a></li>\
+        </div>\
+        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      ")
+      return;
+    case 'ROLE_RENTACAR_ADMIN':
+      navbar.html("\
+        <li><a href=\"/admin-rentacars/branches.html\">Branches</a></li>\
+        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      ")
+      return;
+    case 'ROLE_HOTEL_ADMIN':
+      navbar.html("\
+        <li><a href=\"/admin-hotels/rooms.html\">Rooms</a></li>\
+        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      ")
+      return;
+    case 'ROLE_SYS_ADMIN':
+      navbar.html("\
+      <div>\
+        <li><a href=\"/admin/airlines.html\">Airlines</a></li>\
+        <li><a href=\"/admin/hotels.html\">Hotels</a></li>\
+        <li><a href=\"/admin/rentacars.html\">Rent a Car</a></li>\
+        <li><a href=\"/admin/add-admin-sys.html\">System Admins</a></li>\
+      </div>\
+      <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      ")
+      return;
+    default:
+      return;
+  }
+}
+
+function logout(e) {
+  e.preventDefault();
+  sessionStorage.user = null;
+  location.replace("/index.html");
+  return false;
+}
+
+function getUserServiceId() {
+  let user = JSON.parse(sessionStorage.user);
+  return user ? JSON.parse(sessionStorage.user).serviceId : null;
+}

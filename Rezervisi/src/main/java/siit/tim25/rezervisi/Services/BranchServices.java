@@ -3,12 +3,18 @@ package siit.tim25.rezervisi.Services;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
-import siit.tim25.rezervisi.Repository.RentACarRepository;
+import siit.tim25.rezervisi.DTO.HotelDTO;
+import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.Repository.BranchRepository;
+import siit.tim25.rezervisi.Repository.RentACarRepository;
 
 @Component
 public class BranchServices {
@@ -31,6 +37,21 @@ public class BranchServices {
 
 		return r.getRentACarBranches();
 	}
+	
+	public Page<RentACarBranch> findAll(Integer serviceId, Pageable pageable) {
+		return branchRepository.findAllByServiceId(serviceId, pageable);
+	}
+	
+	public Page<RentACarBranchDTO> findAllAndConvert(Integer serviceId, Pageable pageable) {
+		Page<RentACarBranch> branchList = branchRepository.findAllByServiceId(serviceId, pageable);
+		return branchList.map(new Converter<RentACarBranch, RentACarBranchDTO>() {
+		    @Override
+		    public RentACarBranchDTO convert(RentACarBranch entity) {
+		        return entity.convert();
+		    }
+		});
+	}
+	
 	
 	public RentACarBranch findOne(Integer serviceId, Integer branchId)
 	{

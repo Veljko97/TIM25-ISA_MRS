@@ -42,11 +42,16 @@ Model.prototype.addCallback = function(e) {
   }
 
   var obj = this.makeJSONObject();
-  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.showAll.bind(this));
+  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.addSuccessCallback.bind(this), function() {handleErrorAction();});
+}
+
+Model.prototype.addSuccessCallback = function(data) {
+  handleSuccessAction();
+  this.showAll(data);
 }
 
 Model.prototype.deleteCallback = function(i) {
-  ajaxService.DELETE(this.urlApi.delete + i + '?page=' + this.currentPage + "&size=" + this.pageSize, this.showAll.bind(this));
+  ajaxService.DELETE(this.urlApi.delete + i + '?page=' + this.currentPage + "&size=" + this.pageSize, this.showAll.bind(this), function() {handleErrorAction();});
 }
 
 Model.prototype.editCallback = function(e) {
@@ -57,11 +62,11 @@ Model.prototype.editCallback = function(e) {
   }
 
   var obj = this.makeJSONObject();
-  ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace(window.location.host) });
+  ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace(window.location.host);handleSuccessAction(); }, function() {handleErrorAction();});
 }
 
 Model.prototype.render = function(url = null) {
-  ajaxService.GET(url || (this.urlApi.showAll+ '?size='+this.pageSize+'&page=' + this.currentPage), this.showAll.bind(this));
+  ajaxService.GET(url || (this.urlApi.showAll+ '?size='+this.pageSize+'&page=' + this.currentPage), this.showAll.bind(this), function() {handleErrorAction();});
 }
 
 Model.prototype.addUserCallback = function(e){
@@ -72,7 +77,7 @@ Model.prototype.addUserCallback = function(e){
     lastName  : $("#lastName").val(),
     email : $("#email").val()
   }
-  ajaxService.POST(this.urlApi.addUser,JSON.stringify(admin),function(){location.reload()});
+  ajaxService.POST(this.urlApi.addUser,JSON.stringify(admin),function(){location.reload();}, function() {handleErrorAction();});
 }
 
 Model.prototype.showAll = function(data) {}

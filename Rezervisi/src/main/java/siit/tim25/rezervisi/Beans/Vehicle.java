@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import siit.tim25.rezervisi.Beans.Grades.VehicleGrade;
+import siit.tim25.rezervisi.DTO.VehicleDTO;
 
 @Entity
 public class Vehicle {
@@ -23,9 +24,6 @@ public class Vehicle {
 
 	@Column(name = "vehicleName", nullable = false)
 	private String vehicleName;
-	
-	@Column(name = "vehicleGrade", nullable = false)
-	private String vehicleGrade;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private RentACarBranch branch;
@@ -38,14 +36,12 @@ public class Vehicle {
 
 	public Vehicle() {
 		this.vehicleName = "";
-		this.vehicleGrade = "";
 	}
 	
 	public Vehicle(Integer id, String vehicleName, String vehicleGrade) {
 		super();
 		this.idVehicle = id;
 		this.vehicleName = vehicleName;
-		this.vehicleGrade = vehicleGrade;
 	}
 
 	public String getVehicleName() {
@@ -54,14 +50,6 @@ public class Vehicle {
 
 	public void setVehicleName(String vehicleName) {
 		this.vehicleName = vehicleName;
-	}
-
-	public String getVehicleGrade() {
-		return vehicleGrade;
-	}
-
-	public void setVehicleGrade(String vehicleGrade) {
-		this.vehicleGrade = vehicleGrade;
 	}
 
 	public Integer getId() {
@@ -106,5 +94,10 @@ public class Vehicle {
 	    
 		return o.idVehicle == this.idVehicle;
 	}
+	
+	public VehicleDTO convert() {
+		return new VehicleDTO(this.vehicleName, this.idVehicle, this.branch.getBranchName());
+	}
+	
 	
 }

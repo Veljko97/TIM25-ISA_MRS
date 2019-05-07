@@ -93,7 +93,6 @@ public class AirLineController {
 	}
 	
 	@GetMapping(path="/getAirline/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<AirLine> getAirline(@PathVariable Integer id)
 	{
 		return new ResponseEntity<AirLine>(airLineServices.findOne(id),HttpStatus.OK);
@@ -160,7 +159,6 @@ public class AirLineController {
 	}
 	
 	@GetMapping(path="/{airlineId}/showFlights", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Page<FlightDTO>> getFlights(Pageable pageable, @PathVariable Integer airlineId) {
 		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(airlineId, pageable),HttpStatus.OK);
 	}

@@ -67,7 +67,7 @@ public class HotelController {
 	
 	@GetMapping(path="/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<HotelDTO>> search(Pageable pageable, @RequestParam String name, @RequestParam String destination) {
-		return new ResponseEntity<Page<HotelDTO>>(hotelServices.search('%' + name + '%', '%' + destination + '%',pageable), HttpStatus.OK);
+		return new ResponseEntity<Page<HotelDTO>>(hotelServices.search(name, destination,pageable), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path="/deleteHotel/{id}")

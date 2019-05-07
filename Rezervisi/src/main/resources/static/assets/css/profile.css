@@ -1,3 +1,27 @@
 .profile-section {
   height: 55px !important;
 }
+
+.about {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.description {
+  text-align: justify;
+  margin-top: 20px;
+}
+
+.profile-headline {
+  margin-top: 20px;
+}
+
+.profile-img {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.sub-list-headline {
+  margin-top: 20px;
+}

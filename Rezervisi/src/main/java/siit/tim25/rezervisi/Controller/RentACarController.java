@@ -1,8 +1,10 @@
 package siit.tim25.rezervisi.Controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,14 +25,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
+import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
+import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Services.BranchServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
+import siit.tim25.rezervisi.Services.VehicleServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.security.model.TokenState;
 import siit.tim25.rezervisi.security.model.User;
@@ -45,6 +49,9 @@ public class RentACarController {
 	
 	@Autowired
 	private BranchServices branchServices;
+	
+	@Autowired
+	private VehicleServices vehicleServices;
 	
 	@Autowired
 	@Lazy
@@ -102,6 +109,11 @@ public class RentACarController {
 		return new ResponseEntity<RentACar>(rentACarServices.save(rentacar), HttpStatus.OK);
 	}
 	
+	
+	@GetMapping(path="/{rentacarId}/showAllBranches", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<RentACarBranchDTO>> getAllBranches(Pageable pageable, @PathVariable Integer rentacarId) {
+		return new ResponseEntity<Set<RentACarBranchDTO>>(branchServices.findAllAndConvert(rentacarId),HttpStatus.OK);
+	}
 
 	@GetMapping(path="/{rentacarId}/showBranches", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<RentACarBranchDTO>> getBranches(Pageable pageable, @PathVariable Integer rentacarId) {
@@ -128,16 +140,54 @@ public class RentACarController {
 	{
 		modifiedBranch.setIdBranch(branchId);
 		branchServices.update(rentacarId, modifiedBranch);
-		
+
 		return new ResponseEntity<RentACarBranch>(modifiedBranch, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(path="{rentacarId}/deleteBranch/{branchId}")
 	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
 	public ResponseEntity<Page<RentACarBranchDTO>> deleteBranch(Pageable pageable, @PathVariable Integer rentacarId, @PathVariable Integer branchId)
 	{
 		branchServices.delete(rentacarId, branchId);
 		return new ResponseEntity<Page<RentACarBranchDTO>>(branchServices.findAllAndConvert(rentacarId, pageable),HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(path="/{rentacarId}/showVehicles", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<VehicleDTO>> getVehicles(Pageable pageable, @PathVariable Integer rentacarId) {
+		return new ResponseEntity<Page<VehicleDTO>>(vehicleServices.findAllAndConvert(rentacarId, pageable), HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/{rentacarId}/addVehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<Page<VehicleDTO>> addVehicle(Pageable pageable, @PathVariable Integer rentacarId, @RequestBody VehicleDTO vehicle) throws ParseException {
+		vehicleServices.save(rentacarId, vehicle.convert(branchServices.findAll(rentacarId)));
+		return new ResponseEntity<Page<VehicleDTO>> (vehicleServices.findAllAndConvert(rentacarId, pageable), HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{rentacarId}/getVehicle/{vehicleId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<VehicleDTO> getVehicle(@PathVariable Integer rentacarId, @PathVariable Integer vehicleId)
+	{
+		return new ResponseEntity<VehicleDTO>(vehicleServices.findOne(rentacarId, vehicleId).convert(), HttpStatus.OK);
+	}
+	
+	@PutMapping(path="/{rentacarId}/editVehicle/{vehicleId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<VehicleDTO> editVehicle(@PathVariable Integer rentacarId, @PathVariable Integer vehicleId, @RequestBody VehicleDTO modifiedVehicle) throws ParseException
+	{
+		modifiedVehicle.setIdVehicle(vehicleId);
+		vehicleServices.update(rentacarId, modifiedVehicle.convert(branchServices.findAll(rentacarId)));
+		
+		return new ResponseEntity<VehicleDTO>(modifiedVehicle, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(path="{rentacarId}/deleteVehicle/{vehicleId}")
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<Page<VehicleDTO>> deleteVehicle(Pageable pageable, @PathVariable Integer rentacarId, @PathVariable Integer vehicleId)
+	{
+		vehicleServices.delete(rentacarId, vehicleId);
+		return new ResponseEntity<Page<VehicleDTO>>(vehicleServices.findAllAndConvert(rentacarId, pageable),HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/showUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

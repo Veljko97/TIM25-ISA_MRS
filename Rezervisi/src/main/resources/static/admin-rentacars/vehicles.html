@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Edit Branch</title>
+    <title>Manage Rent a Car Vehicles</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -8,13 +8,12 @@
     <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
-    <script src="../model/branches.js"></script>
+    <script src="../model/vehicles.js"></script>
     <script>
       $(document).ready(function(){
         checkUserPermission();
         showAdminNavbar();
-        var index = getIndexFromUrl();
-        branches.show(index);
+        vehicles.init();
       });
     </script>
   </head>
@@ -27,18 +26,31 @@
     <div class="alert" id="warning-message">
     </div>
     <div class="container" style="max-width: 500px">
-      <h1>Edit Branch:</h1>
-      <form id="editBranchForm">
+      <h1>Add Vehicles:</h1>
+      <form id="vehicleForm">
         <div class="form-group">
+          <label for="vehicleName">Vehicle Name:</label>
+          <input type="text" class="form-control" id="vehicleName">
           <label for="branchName">Branch Name:</label>
-          <input type="text" class="form-control" id="branchName">
-          <label for="branchAddress">Branch Address:</label>
-          <input type="text" class="form-control" id="branchAddress">
-          <label for="destination">Branch Location:</label>
-          <select class="form-control" id="destination"></select>
+          <select class="form-control" id="branchName"></select>
         </div>
-        <input type="submit" class="btn btn-primary" value="Edit"><br><br>
+        <input type="submit" class="btn btn-primary" value="Add"><br><br>
       </form>
+    </div>
+    <div class="container">
+      <div class="table-header">
+        <h2>Vehicles:</h2>
+        <div class="pagination">
+          <a onclick="vehicles.switchPage(-1)">&laquo;</a>
+          <a onclick="vehicles.switchPage(1)">&raquo;</a>
+        </div>
+      </div>
+      <table class="table table-hover table-bordered" style="width:100%" id="vehiclesTable">
+        <tr>
+          <th>Name</th>
+          <th>Branch Name</th>   
+        </tr>
+      </table>
     </div>
   </body>
 </html>

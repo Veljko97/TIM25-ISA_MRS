@@ -45,11 +45,16 @@ Model.prototype.addCallback = function(e) {
   var obj = this.makeJSONObject();
   formData.append("image", image);
   formData.append("model", obj);
-  ajaxService.POSTFORM(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, formData, this.showAll.bind(this));
+  ajaxService.POSTFORM(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, formData, this.addSuccessCallback.bind(this), function() {handleErrorAction();});
+}
+
+Model.prototype.addSuccessCallback = function(data) {
+  handleSuccessAction();
+  this.showAll(data);
 }
 
 Model.prototype.deleteCallback = function(i) {
-  ajaxService.DELETE(this.urlApi.delete + i + '?page=' + this.currentPage + "&size=" + this.pageSize, this.showAll.bind(this));
+  ajaxService.DELETE(this.urlApi.delete + i + '?page=' + this.currentPage + "&size=" + this.pageSize, this.showAll.bind(this), function() {handleErrorAction();});
 }
 
 Model.prototype.editCallback = function(e) {
@@ -60,11 +65,11 @@ Model.prototype.editCallback = function(e) {
   }
 
   var obj = this.makeJSONObject();
-  ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace(window.location.host) });
+  ajaxService.PUT(this.urlApi.edit, obj, function() { window.location.replace(window.location.host);handleSuccessAction(); }, function() {handleErrorAction();});
 }
 
 Model.prototype.render = function(url = null) {
-  ajaxService.GET(url || (this.urlApi.showAll+ '?size='+this.pageSize+'&page=' + this.currentPage), this.showAll.bind(this));
+  ajaxService.GET(url || (this.urlApi.showAll+ '?size='+this.pageSize+'&page=' + this.currentPage), this.showAll.bind(this), function() {handleErrorAction();});
 }
 
 Model.prototype.addUserCallback = function(e){
@@ -79,7 +84,7 @@ Model.prototype.addUserCallback = function(e){
   var image = $("#profileImage")[0].files[0];
   formData.append("image", image);
   formData.append("model", JSON.stringify(admin));
-  ajaxService.POSTFORM(this.urlApi.addUser, formData, function(){location.reload()});
+  ajaxService.POSTFORM(this.urlApi.addUser, formData, function(){location.reload();}, function() {handleErrorAction();});
 }
 
 Model.prototype.showAll = function(data) {}

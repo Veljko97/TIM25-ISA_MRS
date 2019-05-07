@@ -26,6 +26,7 @@ function toDatetimeLocal(date) {
 function handleWrongInput() {
   $('#warning-message').html('Wrong input. Fill all of the required fields and check the input!');
   $('#warning-message').attr('style', 'display: block;');
+  $('#warning-message').addClass('alert-danger');
 
   window.scrollTo(0, 0);
 
@@ -39,6 +40,7 @@ function handleWrongInput() {
 
   setTimeout(function() {
     $('#warning-message').attr('style', 'display: none;');
+    $('#warning-message').removeClass('alert-danger');
     var inputs = $("input");
     for(var i = 0; i < inputs.length - 1; i++) {
       var input = inputs.eq(i);
@@ -47,6 +49,42 @@ function handleWrongInput() {
   }, 5000);
 
   return false;
+}
+
+function handleSuccessAction() {
+  $('#warning-message').html('Action was successful!');
+  $('#warning-message').attr('style', 'display: block;');
+  $('#warning-message').addClass('alert-success');
+  window.scrollTo(0, 0);
+
+  setTimeout(function() {
+    $('#warning-message').attr('style', 'display: none;');
+    $('#warning-message').removeClass('alert-danger');
+    var inputs = $("input");
+    for(var i = 0; i < inputs.length - 1; i++) {
+      var input = inputs.eq(i);
+      input.attr('style', 'border-color: none;');
+    }
+  }, 5000);
+
+  return false;
+}
+
+function handleErrorAction() {
+  $('#warning-message').html('Something went wrong. Please try again later.');
+  $('#warning-message').attr('style', 'display: block;');
+  $('#warning-message').addClass('alert-danger');
+  window.scrollTo(0, 0);
+
+  setTimeout(function() {
+    $('#warning-message').attr('style', 'display: none;');
+    $('#warning-message').removeClass('alert-danger');
+    var inputs = $("input");
+    for(var i = 0; i < inputs.length - 1; i++) {
+      var input = inputs.eq(i);
+      input.attr('style', 'border-color: none;');
+    }
+  }, 5000);
 }
 
 function checkUserPermission(){
@@ -94,7 +132,10 @@ function showAdminNavbar() {
       return;
     case 'ROLE_RENTACAR_ADMIN':
       navbar.html("\
-        <li><a href=\"/admin-rentacars/branches.html\">Branches</a></li>\
+        <div>\
+          <li><a href=\"/admin-rentacars/branches.html\">Branches</a></li>\
+          <li><a href=\"/admin-rentacars/vehicles.html\">Vehicles</a></li>\
+        </div>\
         <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
       ")
       return;

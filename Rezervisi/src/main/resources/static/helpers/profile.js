@@ -1,33 +1,150 @@
 function Profile(urlApis, activeTab) {
   this.urlApis = urlApis;
   this.activeTab = activeTab;
+  this.pageSize = 5;
+  this.currentPage = 0;
+  this.numberOfPages = 0;
+  this.index = 0;
 }
 
-Profile.prototype.show = function(index) {
-  ajaxService.GET(this.urlApis[this.activeTab] + index, this.showCallback.bind(this));
+Profile.prototype.show = function(index, activeTab) {
+  this.index = index;
+  this.activeTab = activeTab;
+  ajaxService.GET(this.urlApis[activeTab].show + index, this.showCallback.bind(this));
+  let showAllUrl = this.getShowAllURL(index, activeTab);
+  this.showList(showAllUrl);
+}
+
+Profile.prototype.showList = function(showAllUrl) {
+  if (showAllUrl) {
+    ajaxService.GET(showAllUrl+'?size='+this.pageSize+'&page=' + this.currentPage, this.showListCallback.bind(this));
+  }
 }
 
 Profile.prototype.showCallback = function(data) {
-  var resultsTable = $(".results").first();
+  var resultsTable = $(".result").first();
+  resultsTable.html("");
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
+  resultsTable.html(resultsTable.html() + this.getEntityHtml(data));
+}
+
+Profile.prototype.showListCallback = function(data) {
+  var resultsTable = $(".sub-list").first();
   resultsTable.html("");
   this.numberOfPages = data.totalPages || 0;
   data = data.content || data;
 
   for(let i = 0; i < data.length; i++) {
-    resultsTable.html(resultsTable.html() + this.getEntityTableRowHtml(data[i]));
+    resultsTable.html(resultsTable.html() + this.getSubEntityTableRowHtml(data[i]));
+  }
+}
+
+Profile.prototype.switchPage = function(dir) {
+  if ((dir == -1 && this.currentPage > 0) || (dir == 1 && this.currentPage < (this.numberOfPages - 1))) {
+    this.currentPage += dir;
+    this.showList(this.getShowAllURL(this.index));
+  }
+}
+
+Profile.prototype.getShowAllURL = function(index) {
+  switch(this.activeTab) {
+    case 'airline':
+      return `/app/airlines/${index}/showFlights`
+    case 'flight':
+      return "";
+    case 'hotel':
+      return `/app/hotels/${index}/showRooms`;
+    case 'rentacar':
+      return `/app/rentacar/${index}/showVehicles`;
+    default:
+      return "";
   }
 }
 
 Profile.prototype.getEntityHtml = function(data) {
   switch(this.activeTab) {
     case 'airline':
-      return ""
+      return "\
+      <img class=\"profile-img\" src=\""+(data.image || "../assets/images/airline.jpg")+"\"/>\
+      <h2 class=\"profile-headline\">" + data.airLineName + "</h2>\
+      <div class=\"about\">\
+        <span>Address: " + data.airLineAddress + "</span>\
+        <span class=\"description\">" + data.airLineDescription + "</span>\
+      </div>";
+    case 'flight':
+      return "\
+      <img class=\"profile-img\" src=\""+(data.image || "../assets/images/airline.jpg")+"\"/>\
+      <h2 class=\"profile-headline\">"+data.startDestinationName+"<->"+data.finalDestinationName+"</h2>\
+      <div class=\"about\">\
+        <span>Price: "+data.ticketPrice+"$</span>\
+        <span class=\"description\">This flight takes off at "+ data.takeOffDate +" and lands at " +data.landingDate+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
+      </div>";
+    case 'hotel':
+      return "\
+      <img class=\"profile-img\" src=\""+(data.image || "../assets/images/hotel.jpg")+"\"/>\
+      <h2 class=\"profile-headline\">" + data.hotelName + "</h2>\
+      <div class=\"about\">\
+        <span>Address: " + data.hotelAddress + "</span>\
+        <span class=\"description\">" + data.hotelDescription + "</span>\
+      </div>";
+    case 'rentacar':
+      return "\
+      <img class=\"profile-img\" src=\""+(data.image || "../assets/images/rentacar.jpg")+"\"/>\
+      <h2 class=\"profile-headline\">" + data.rentACarName + "</h2>\
+      <div class=\"about\">\
+        <span>Address: " + data.rentACarAddress + "</span>\
+        <span class=\"description\">" + data.rentACarDescription + "</span>\
+      </div>";
+    default:
+      return "";
+  }
+}
+
+Profile.prototype.getSubEntityTableRowHtml = function(data) {
+  switch(this.activeTab) {
+    case 'airline':
+      return "\
+      <div class=\"row search-result\">\
+        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+        <div class=\"search-content\">\
+          <div class=\"search-group\">\
+            <h4>"+data.startDestinationName+"<->"+data.finalDestinationName+"</h4>\
+            <span>Price: "+data.ticketPrice+"$</span>\
+          </div>\
+          <span class=\"text-overflow\">This flight takes off at "+ data.takeOffDate +" and lands at " +data.landingDate+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
+          <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"\">See more</a>\
+        </div>\
+      </div>";
     case 'flight':
       return "";
     case 'hotel':
-      return "";
+      return "\
+      <div class=\"row search-result\">\
+      <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+      <div class=\"search-content\">\
+        <div class=\"search-group\">\
+          <h4>Room Number: " + data.roomNumber + "</h4>\
+          <span>Price: "+data.price+"$</span>\
+          <span>Capacity: " + data.roomCapacity + "</span>\
+        </div>\
+        <span class=\"text-overflow\">" + data.roomDescription + "</span>\
+        <a class=\"see-more-link\" href=\"#\">Quick Reserve</a>\
+      </div>\
+    </div>";
     case 'rentacar':
-      return "";
+      return "\
+      <div class=\"row search-result\">\
+        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+        <div class=\"search-content\">\
+          <div class=\"search-group\">\
+            <h4>"+data.vehicleName+"</h4>\
+            <span>Grade: "+data.vehicleGrade+"$</span>\
+          </div>\
+          <a class=\"see-more-link\" href=\"#\">Quick Reserve</a>\
+        </div>\
+      </div>";
     default:
       return "";
   }
@@ -36,6 +153,6 @@ Profile.prototype.getEntityHtml = function(data) {
 var profile = new Profile({
   'flight': {'show': '/app/airlines/'+getUserServiceId()+'/getFlight/'},
   'hotel': {'show': '/app/hotels/getHotel/'},
-  'rentacar': {'show': '/app/rentacar/showRentACars'},
-  'airline': {'show': '/app/airlines/getAirline/', 'showFlights': '/app/airlines/search'}
+  'rentacar': {'show': '/app/rentacar/getRentacar/'},
+  'airline': {'show': '/app/airlines/getAirline/'}
 });

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Edit Airline</title>
+    <title>Edit Vehicle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../css/nav.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -8,36 +8,32 @@
     <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
-    <script src="../model/airlines.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="../model/vehicles.js"></script>
     <script>
       $(document).ready(function(){
-        checkUSerPermission();
+        checkUserPermission();
         showAdminNavbar();
         var index = getIndexFromUrl();
-        airlines.show(index);
+        vehicles.show(index);
       });
     </script>
   </head>
   <body>
     <span id="message"></span>
     <ul id="navigationBar">
-        <li><a href="/admin/airlines.html">Airlines</a></li>
-        <li><a href="/admin/hotels.html">Hotels</a></li>
-        <li><a href="/admin/rentacars.html">Rent a Car</a></li>
+      <li><a href="/admin-rentacars/branches.html">Branches</a></li>
+      <li><a href="/admin-rentacars/vehicles.html">Vehicles</a></li>
     </ul>
     <div class="alert" id="warning-message">
     </div>
     <div class="container" style="max-width: 500px">
-      <h1>Edit Airline:</h1>
-      <form id="editAirlineForm">
+      <h1>Edit Vehicle:</h1>
+      <form id="editVehicleForm">
         <div class="form-group">
-          <label for="airLineName">Name:</label>
-          <input type="text" class="form-control" id="airLineName">
-          <label for="airLineAddress">Address:</label>
-          <input type="text" class="form-control" id="airLineAddress">
-          <label for="airLineDescription">Description:</label>
-          <input type="text" class="form-control" id="airLineDescription">
+          <label for="vehicleName">Vehicle Name:</label>
+          <input type="text" class="form-control" id="vehicleName">
+          <label for="branchName">Branch Name:</label>
+          <select class="form-control" id="branchName"></select>
         </div>
         <input type="submit" class="btn btn-primary" value="Edit"><br><br>
       </form>

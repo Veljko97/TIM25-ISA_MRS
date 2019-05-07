@@ -1,5 +1,6 @@
 package siit.tim25.rezervisi.Services;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
-import siit.tim25.rezervisi.DTO.HotelDTO;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.Repository.BranchRepository;
 import siit.tim25.rezervisi.Repository.RentACarRepository;
@@ -50,6 +49,17 @@ public class BranchServices {
 		        return entity.convert();
 		    }
 		});
+	}
+	
+	public Set<RentACarBranchDTO> findAllAndConvert(Integer serviceId) {
+		Set<RentACarBranch> branchList = rentacarRepository.findOne(serviceId).getRentACarBranches();
+		Set<RentACarBranchDTO> s = new HashSet<RentACarBranchDTO>();
+
+		for(RentACarBranch br: branchList) {
+			s.add(br.convert());
+		}
+		
+		return s;
 	}
 	
 	

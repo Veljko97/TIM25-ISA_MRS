@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,7 +29,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
@@ -43,6 +45,7 @@ import siit.tim25.rezervisi.DTO.RegistrationUserDTO;
 import siit.tim25.rezervisi.DTO.RentACarAdminDTO;
 import siit.tim25.rezervisi.DTO.StandardUserDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
+import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.users.AirLineAdminServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.HotelAdminServices;
@@ -94,7 +97,10 @@ public class AuthenticationController {
 	private UserService userServices;
 	
 	@Autowired
-	private JavaMailSender mailSender;
+	private ImageServices imageServices;
+	
+	@Autowired
+	private ObjectMapper mapper;
 	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
@@ -128,7 +134,7 @@ public class AuthenticationController {
 			}else if(auth.getName().equals("ROLE_RENTACAR_ADMIN")) {
 				user = rentACarAdminServices.findOne(userId);
 				return ResponseEntity.ok(new RentACarAdminDTO((RentACarAdmin) user, new TokenState(jwt, expiresIn)));
-			}else if(auth.getName().equals("ROLE_RENTACAR_ADMIN")) {
+			}else if(auth.getName().equals("ROLE_USER")) {
 				user = standardUserServices.findOne(userId);
 				return ResponseEntity.ok(new StandardUserDTO((StandardUser) user, new TokenState(jwt, expiresIn)));
 			}else {
@@ -138,9 +144,15 @@ public class AuthenticationController {
 		return ResponseEntity.badRequest().build();
 	}
 	
-	@PostMapping(value="/registration", consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StandardUserDTO> addUser(@RequestBody @Valid RegistrationUserDTO userData) {
+	@PostMapping(value="/registration", consumes= {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StandardUserDTO> register(@RequestParam("image") MultipartFile image, @RequestParam("model") String a) {
 	 	StandardUser user = new StandardUser();
+	 	UserDTO userData;
+		try {
+			userData = mapper.readValue(a, UserDTO.class);
+		} catch (IOException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	 	user.setPassword(passwordEncoder.encode(userData.getPassword()));
 	 	user.setUsername(userData.getUsername());
 	 	user.setFirstName(userData.getFirstName());
@@ -149,7 +161,9 @@ public class AuthenticationController {
 	 	user.setEnabled(true);
 	 	user.setConfirmed(false);
 	 	user.setAuthorities(Arrays.asList(authorityServices.findOne(5)));
+	 	user.setImage(imageServices.getUserPath(image, user.getUsername()));
 	 	standardUserServices.save(user);
+	 	imageServices.saveUserImg(image, user.getUsername());
 		return new ResponseEntity<>(new StandardUserDTO(user, new TokenState()),HttpStatus.CREATED);
 	 }
 
@@ -164,12 +178,7 @@ public class AuthenticationController {
 	    
 		User user = this.userServices.findByUsername(username);
 	  
-	    List<User> allUsers = userServices.findAll();
-	    for (User u : allUsers) {
-			if(user.getEmail().equalsIgnoreCase(modifiedUser.getEmail())){
-				return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
-			}
-		}
+	    
 	    user.setUsername(modifiedUser.getUsername());
 	    user.setEmail(modifiedUser.getEmail());
 	    user = this.userServices.save(user);
@@ -228,11 +237,17 @@ public class AuthenticationController {
 		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/addUser",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path="/addUser",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<Boolean> addUser(@RequestBody UserDTO user){
+	public ResponseEntity<Boolean> addUser(@RequestParam("image") MultipartFile image, @RequestParam("model") String a) {
 		
-		User admin = new AirLineAdmin();
+		UserDTO user;
+		try {
+			user = mapper.readValue(a, UserDTO.class);
+		} catch (IOException e) {
+			return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
+		}
+		User admin = new User();
 		admin.setPassword(passwordEncoder.encode("123"));
 		admin.setUsername(user.getUsername());
 		admin.setFirstName(user.getFirstName());
@@ -241,7 +256,10 @@ public class AuthenticationController {
 		admin.setEnabled(true);
 		admin.setConfirmed(false);
 		admin.setAuthorities(Arrays.asList(authorityServices.findOne(1)));
-		userServices.save(admin);
+		admin.setImage(imageServices.getUserPath(image, admin.getUsername()));
+		admin = userServices.save(admin);
+		imageServices.saveUserImg(image, admin.getUsername()); 
+		
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	

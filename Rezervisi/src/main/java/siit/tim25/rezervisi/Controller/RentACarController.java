@@ -1,5 +1,6 @@
 package siit.tim25.rezervisi.Controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,14 +23,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import siit.tim25.rezervisi.Beans.AirLine;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.BranchServices;
+import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.security.model.TokenState;
@@ -53,12 +57,27 @@ public class RentACarController {
 	@Autowired
 	private AuthorityServices authorityServices;
 	
-	@PostMapping(path="/addRentACar", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@Autowired
+	private ImageServices imageServices;
+	
+	@Autowired
+	private ObjectMapper mapper;
+	
+	@PostMapping(path="/addRentACar", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<Page<RentACar>> addRentACar(Pageable pageable, @RequestBody RentACar rnt)  {
+	public ResponseEntity<Page<RentACar>> addRentACar(Pageable pageable, @RequestParam("image") MultipartFile image,
+													@RequestParam("model") String a )  {
+		RentACar rnt = null;
+		try {
+			rnt = mapper.readValue(a, RentACar.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if(rentACarServices.findOneByRentACarName(rnt.getRentACarName()) != null) {
 			return new ResponseEntity<Page<RentACar>>(HttpStatus.BAD_REQUEST);
 		}
+		rnt = rentACarServices.save(rnt);
+		rnt.setImage(imageServices.saveRentACarImg(image, rnt.getRentACarID()));
 		rentACarServices.save(rnt);
 		return new ResponseEntity<Page<RentACar>>(rentACarServices.findAll(pageable),HttpStatus.OK);
 	}
@@ -150,10 +169,16 @@ public class RentACarController {
 		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/addUser/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path="/addUser/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestBody UserDTO user){
-		
+	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestParam("image") MultipartFile image,
+											@RequestParam("model") String a) {
+		UserDTO user;
+		try {
+			user = mapper.readValue(a, UserDTO.class);
+		} catch (IOException e) {
+			return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
+		}
 		RentACar rentACar = rentACarServices.findOne(id);
 		RentACarAdmin admin = new RentACarAdmin();
 		admin.setPassword(passwordEncoder.encode("123"));
@@ -166,7 +191,11 @@ public class RentACarController {
 		admin.setRentACar(rentACar);
 		rentACar.getAdmins().add(admin);
 		admin.setAuthorities(Arrays.asList(authorityServices.findOne(4)));
-		rentACarServices.save(rentACar);
+		admin.setImage(imageServices.getUserPath(image, admin.getUsername()));
+		
+		rentACar = rentACarServices.save(rentACar);
+		
+		imageServices.saveUserImg(image, admin.getUsername());
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	

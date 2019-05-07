@@ -4,6 +4,18 @@ function Search(urlApis, activeTab) {
   this.pageSize = 5;
   this.currentPage = 0;
   this.numberOfPages = 0;
+  this.lastSearch = "";
+}
+
+addFriend = function(userId) {
+  var success = function(data){
+    alert("Added")
+    location.reload()};
+  ajaxService.POST("/app/users/sendRequest/"+userId,"",success);
+}
+
+errorImage = function(img) {
+  img.src = "../assets/images/no-image.png";
 }
 
 Search.prototype.switchTab = function(evt, tabName) {
@@ -24,7 +36,12 @@ Search.prototype.switchTab = function(evt, tabName) {
   this.activeTab = tabName;
   this.currentPage = 0;
   $("#section-home").height($('#' + tabName).height() + 200);
-  this.render(this.urlApis[this.activeTab].showAll + '?size='+this.pageSize+'&page=0');
+  if(this.urlApis[this.activeTab].showAll != ""){
+    this.lastSearch = this.urlApis[this.activeTab].showAll;
+    this.render(this.urlApis[this.activeTab].showAll + '?size='+this.pageSize+'&page=0');
+  }else{
+    $(".results").first().html("");
+  }
 }
 
 Search.prototype.switchMode = function(e, isAlreadyActive) {
@@ -41,7 +58,7 @@ Search.prototype.switchMode = function(e, isAlreadyActive) {
 Search.prototype.switchPage = function(dir) {
   if ((dir == -1 && this.currentPage > 0) || (dir == 1 && this.currentPage < (this.numberOfPages - 1))) {
     this.currentPage += dir;
-    this.render(this.urlApis[this.activeTab].showAll +'?size='+this.pageSize+'&page=' + this.currentPage);
+    this.render(this.lastSearch +'&size='+this.pageSize+'&page=' + this.currentPage);
   }
 }
 
@@ -67,6 +84,9 @@ Search.prototype.init = function() {
 }
 
 Search.prototype.render = function(url = null) {
+  if(url == null){
+    this.lastSearch = this.urlApis.Airlines.showAll + "?";
+  }
   ajaxService.GET(url || (this.urlApis.Airlines.showAll+ '?size='+this.pageSize+'&page=0'), this.showCallback.bind(this));
 }
 
@@ -76,6 +96,7 @@ Search.prototype.bindEvents = function() {
   // $(document).on('submit', '#flightFilterForm', this.filterFlightCallback.bind(this));
   $(document).on('submit', '#hotelSearchForm', this.searchHotelCallback.bind(this));
   $(document).on('submit', '#rentacarSearchForm', this.searchRentacarCallback.bind(this));
+  $(document).on('submit', '#userSearchForm', this.searchUserCallback.bind(this));
 }
 
 
@@ -84,7 +105,8 @@ Search.prototype.searchAirlineCallback = function(e) {
   e.preventDefault();
   var name = $("#airLineName").first().val();
   this.currentPage = 0;
-  ajaxService.GET(this.urlApis[this.activeTab].search + '?page=0&size='+this.pageSize+'&name=' + name, this.showCallback.bind(this));
+  this.lastSearch = this.urlApis[this.activeTab].search + '?name=' + name;
+  ajaxService.GET(this.lastSearch + '&page=0&size='+this.pageSize, this.showCallback.bind(this));
 }
 
 Search.prototype.searchFlightCallback = function(e) {
@@ -100,8 +122,8 @@ Search.prototype.searchFlightCallback = function(e) {
   });
   var from = $("#startDestinationName").first().val();
   var to = $("#finalDestinationName").first().val();
-  var takeOff = $("#takeOffDate").first().val();
-  var landing = $("#landingDate").first().val();
+  var takeOff = Date.parse($("#takeOffDate").first().val());
+  var landing = Date.parse($("#landingDate").first().val());
   var numberOfPeople = $("#numberOfPeople").first().val();
 
   var airLineName = $("#flAirlineName").first().val() || '';
@@ -109,11 +131,11 @@ Search.prototype.searchFlightCallback = function(e) {
 
   var priceFrom = $("#priceFrom").first().val();
   var priceTo = $("#priceTo").first().val();
-
-  ajaxService.GET('/app/airlines/searchFlights?page=0&size='+this.pageSize+'&type=' + type +
-    '&flightClass=' + flightClass + '&from=' + from + '&to=' + to + '&takeOff=' + takeOff + '&landing=' + landing +
-    '&numberOfPeople=' + numberOfPeople + '&airLineName=' + airLineName + '&flightLength=' + flightLength + '&priceFrom=' +
-    priceFrom + '&priceTo=' + priceTo, this.showCallback.bind(this));
+  this.lastSearch = this.urlApis[this.activeTab].search+ '?type=' + type +
+  '&flightClass=' + flightClass + '&from=' + from + '&to=' + to + '&takeOff=' + takeOff + '&landing=' + landing +
+  '&numberOfPeople=' + numberOfPeople + '&airLineName=' + airLineName + '&flightLength=' + flightLength + '&priceFrom=' +
+  priceFrom + '&priceTo=' + priceTo;
+  ajaxService.GET(this.lastSearch + '&page=0&size='+this.pageSize, this.showCallback.bind(this));
 
 }
 
@@ -122,15 +144,23 @@ Search.prototype.searchHotelCallback = function(e) {
   var destination = $("#destination").first().val();
   var hotelName = $("#hotelName").first().val();
   this.currentPage = 0;
-  ajaxService.GET(this.urlApis[this.activeTab].search + '?page=0&size='+this.pageSize+'&destination=' + destination + '&name=' + hotelName, this.showCallback.bind(this));
+  this.lastSearch = this.urlApis[this.activeTab].search + '?destination=' + destination + '&name=' + hotelName;
+  ajaxService.GET(this.lastSearch + '&page=0&size='+this.pageSize, this.showCallback.bind(this));
 }
 
 Search.prototype.searchRentacarCallback = function(e) {
   e.preventDefault();
   var destination = $("#destinationName").first().val();
   var serviceName = $("#serviceName").first().val();
+  this.lastSearch = this.urlApis[this.activeTab].search + '?destination=' + destination + '&name=' + serviceName;
+  ajaxService.GET(this.lastSearch + '&page=0&size='+this.pageSize, this.showCallback.bind(this));
+}
 
-  ajaxService.GET(this.urlApis[this.activeTab].search + '?page=0&size='+this.pageSize+'&destination=' + destination + '&name=' + serviceName, this.showCallback.bind(this))
+Search.prototype.searchUserCallback = function(e) {
+  e.preventDefault();
+  var searchParam = $("#searchParam").first().val();
+  this.lastSearch = this.urlApis[this.activeTab].search + '?serchParam=' + searchParam;
+  ajaxService.GET(this.lastSearch + '&page=0&size='+this.pageSize, this.showCallback.bind(this));
 }
 
 Search.prototype.showCallback = function(data) {
@@ -149,7 +179,7 @@ Search.prototype.getEntityTableRowHtml = function(data) {
     case 'Airlines':
       return "\
         <div class=\"row search-result\">\
-          <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+          <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
           <div class=\"search-content\">\
             <h4>"+data.airLineName+"</h4>\
             <span class=\"text-overflow\">"+ data.airLineDescription +"</span>\
@@ -159,20 +189,20 @@ Search.prototype.getEntityTableRowHtml = function(data) {
     case 'Flights':
       return "\
         <div class=\"row search-result\">\
-          <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+          <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
           <div class=\"search-content\">\
             <div class=\"search-group\">\
               <h4>"+data.startDestinationName+"<->"+data.finalDestinationName+"</h4>\
               <span>Price: "+data.ticketPrice+"$</span>\
             </div>\
-            <span class=\"text-overflow\">This flight takes off at "+ data.takeOffDate +" and lands at " +data.landingDate+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
+            <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
             <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"\">See more</a>\
           </div>\
         </div>";
     case 'Hotels':
       return "\
       <div class=\"row search-result\">\
-        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
         <div class=\"search-content\">\
           <div class=\"search-group\">\
             <h4>"+data.hotelName+"</h4>\
@@ -186,13 +216,30 @@ Search.prototype.getEntityTableRowHtml = function(data) {
     case 'Rentacar':
       return "\
       <div class=\"row search-result\">\
-          <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+          <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
           <div class=\"search-content\">\
             <h4>"+data.rentACarName+"</h4>\
             <span class=\"text-overflow\">"+ data.rentACarDescription +"</span>\
             <a class=\"see-more-link\" href=\"/guest/rentacar.html?id="+data.rentACarID+"\">See more</a>\
           </div>\
         </div>";
+    case 'Users':
+      let user = JSON.parse(sessionStorage.user);
+      var logdIn = "<a class=\"see-more-link\" href=\"#\" onclick=\"addFriend("+data.id+")\">Add Friend</a>";
+      var div = "\
+      <div class=\"row search-result\">\
+          <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+          <div class=\"search-content\">\
+            <h4>"+data.username+"</h4>\
+            <h4>First Name: "+data.firstName+"</h4>\
+            <h4>Last Name: "+data.lastName+"</h4>\
+            <h4>E-mail: "+data.email+"</h4>\
+            <a class=\"see-more-link\" href=\"/guest/user.html?id="+data.id+"\">See more</a>";
+      div += user? logdIn : "";
+      div +=    "</div>\
+              </div>";
+
+        return div;
     default:
       return "";
   }
@@ -202,5 +249,6 @@ var search = new Search({
   'Flights': {'showAll': '/app/airlines/showAllFlights', 'search': '/app/airlines/searchFlights'},
   'Hotels': {'showAll': '/app/hotels/showHotels', 'search': '/app/hotels/search'},
   'Rentacar': {'showAll': '/app/rentacar/showRentACars', 'search': '/app/rentacar/search'},
-  'Airlines': {'showAll': '/app/airlines/showAirLines', 'search': '/app/airlines/search'}
+  'Airlines': {'showAll': '/app/airlines/showAirLines', 'search': '/app/airlines/search'},
+  'Users': {'showAll': '', 'search': '/app/users/findUser'}
 }, 'Airlines');

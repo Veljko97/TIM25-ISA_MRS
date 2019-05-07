@@ -8,6 +8,28 @@ Flights.prototype.bindEvents = function() {
   $(document).on('submit', "#flightForm", this.addCallback.bind(this));
 }
 
+Flights.prototype.makeJSONObject = function() {
+  var object = {}
+  for(var i = 0; i < this.attributes.length; i++) {
+    if(this.attributes[i] == "takeOffDate" || this.attributes[i] == "landingDate") {
+      object[this.attributes[i]] = Date.parse($('#' + this.attributes[i]).val());
+    }else{
+      object[this.attributes[i]] = $('#' + this.attributes[i]).val() || $('#' + this.attributes[i]).first().val();
+    }
+  }
+  return JSON.stringify(object);
+}
+
+Flights.prototype.addCallback = function(e) {
+  e.preventDefault();
+
+  if (!this.validateInput()) {
+    return handleWrongInput();
+  }
+  var obj = this.makeJSONObject();
+  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.showAll.bind(this));
+}
+
 Flights.prototype.showAll = function(data) {
   var table = $("#flightsTable").first();
   table.html("<tr><th>Start Destination</th><th>End Destination</th><th>Take off Date</th><th>Landing Date</th><th>Flight Length</th></tr>");
@@ -19,12 +41,14 @@ Flights.prototype.showAll = function(data) {
   for(var i = 0; i < data.length; i++) {
     var flight = data[i];
     this.list.push(flight);
-    table.html(table.html() + "<tr><td>"+ (flight.startDestinationName ? flight.startDestinationName : 'No destination')  + "</td><td>" + (flight.finalDestinationName ? flight.finalDestinationName : 'No destination') + "</td><td>" + flight.takeOffDate + "</td><td>" + flight.landingDate + "</td><td>" + flight.flightLength + "</td><td><a class=\"btn btn-info\" href=\"edit-flight.html?id=" + 
+    table.html(table.html() + "<tr><td>"+ (flight.startDestinationName ? flight.startDestinationName : 'No destination')  + "</td><td>" + (flight.finalDestinationName ? flight.finalDestinationName : 'No destination')
+     + "</td><td>" + (new Date(flight.takeOffDate)).toDateString() + "</td><td>" + (new Date(flight.landingDate)).toDateString() + "</td><td>" + flight.flightLength + "</td><td><a class=\"btn btn-info\" href=\"edit-flight.html?id=" + 
     flight.idFlight + "\">Edit</a></td><td><a class=\"btn btn-danger\" onclick=\"flights.deleteCallback(" + flight.idFlight +")\">Delete</a></td></tr>");
   }
 }
 
 Flights.prototype.validateInput = function() {
+  return true;
   for(var i = 0; i < this.attributes.length; i++) {
     if ($('#' + this.attributes[i]).val() == ("")) {
       return false;
@@ -48,9 +72,13 @@ Flights.prototype.showCallback = function(flight) {
     for(var i = 0; i < inputs.length - 1; i++) {
       var input = inputs.eq(i);
       var inputName = input.attr("id");
-      input.attr("value", flight[inputName]);
+      if(inputName == "takeOffDate" || inputName == "landingDate"){
+        input.attr("value", toDatetimeLocal(new Date(flight[inputName])));
+      }else {
+        input.attr("value", flight[inputName]);
+      }
     }
-
+    
     var sourceChildren = $('#startDestinationName').children();
     var finalChildren = $("#finalDestinationName").children();
     

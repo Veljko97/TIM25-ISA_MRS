@@ -1,7 +1,5 @@
 package siit.tim25.rezervisi.Beans;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import siit.tim25.rezervisi.Beans.Grades.HotelGrade;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
-import siit.tim25.rezervisi.DTO.FlightDTO;
 import siit.tim25.rezervisi.DTO.HotelDTO;
 
 @Entity
@@ -39,6 +36,9 @@ public class Hotel {
 	
 	@Column
 	private String hotelDescription;
+	
+	@Column
+    private String image;
 	
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<HotelOffer> offersPriceList= new HashSet<HotelOffer>();
@@ -148,13 +148,9 @@ public class Hotel {
 		return destination;
 	}
 
-
-
 	public void setDestination(Destination destination) {
 		this.destination = destination;
 	}
-
-
 
 	public Set<HotelGrade> getGrades() {
 		return grades;
@@ -180,6 +176,14 @@ public class Hotel {
 		this.admins = admins;
 	}
 	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public Double getAverageGrade() {
 		if (this.grades.size() == 0) {
 			return 0.0;
@@ -188,12 +192,9 @@ public class Hotel {
 			for(HotelGrade g: this.grades) {
 				grade += g.getScore();
 			}
-			return grade;
+			return (grade * 1.0)/this.grades.size();
 		}
 	}
-	
-	
-	
 	
 	@Override
 	public String toString() {
@@ -216,7 +217,7 @@ public class Hotel {
 	}
 	
 	public HotelDTO convert() {
-		return new HotelDTO(this.hotelID.toString(), this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade().toString(), this.hotelEarning.toString());
+		return new HotelDTO(this.hotelID.toString(), this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade().toString(), this.hotelEarning.toString(), this.image);
 	}
 	
 }

@@ -26,6 +26,9 @@ public class Destination {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private AirLine airLine; 
+	
+	@Column
+    private String image;
 
 	public Destination() {
 		super();
@@ -72,6 +75,14 @@ public class Destination {
 
 	public void setIdDestination(Integer idDestination) {
 		this.idDestination = idDestination;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	@Override

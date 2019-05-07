@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,9 +36,11 @@ public class Flight {
 	private AirPlane airplane;
 	
 	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date takeOffDate;
 	
 	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date landingDate;
 	
 	@Column
@@ -227,9 +231,7 @@ public class Flight {
 	}
 	
 	public FlightDTO convert() {
-		DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-		format.format(this.takeOffDate);
-		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), format.format(this.takeOffDate), format.format(this.landingDate), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getFlightAverageGrade());
+		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getFlightAverageGrade());
 	}
 	
 }

@@ -31,6 +31,9 @@ public class AirLine {
 
 	@Column(name = "airLineDescription")
 	private String airLineDescription;
+	
+	@Column
+    private String image;
 
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -150,6 +153,14 @@ public class AirLine {
 
 	public void setAdmins(Set<AirLineAdmin> admins) {
 		this.admins = admins;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	@Override

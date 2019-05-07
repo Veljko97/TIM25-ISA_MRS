@@ -9,20 +9,10 @@ $(document).ready(function(){
         user.username = document.getElementById("username").value;
         user.password = document.getElementById("password").value;
         
-        $.ajax({
-            url: "/auth/registration",
-            method: "POST",
-            dataType: "json",
-            contentType:"application/json",
-            data: JSON.stringify(user),
-            success: function(data){
-                alert("Registration successfull!");
-                location.replace("LoginPage.html");
-            
-            },error: function(error){
-                alert("Error.");
-                console.log(error);
-            }
-        })
+        var formData = new FormData();
+        var image = $("#profileImage")[0].files[0];
+        formData.append("image", image);
+        formData.append("model", JSON.stringify(user));
+        ajaxService.POSTFORM("/auth/registration", formData, function(){location.replace("../LoginPage.html")});
     })
 })

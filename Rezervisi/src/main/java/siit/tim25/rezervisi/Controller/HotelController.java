@@ -1,9 +1,9 @@
 package siit.tim25.rezervisi.Controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import siit.tim25.rezervisi.Beans.AirLine;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
@@ -32,6 +34,7 @@ import siit.tim25.rezervisi.DTO.HotelDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.HotelServices;
+import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.RoomServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.security.model.TokenState;
@@ -58,10 +61,30 @@ public class HotelController {
 	@Autowired
 	private AuthorityServices authorityServices;
 	
-	@PostMapping(path="/addHotel", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@Autowired
+	private ImageServices imageServices;
+	
+	@Autowired
+	private ObjectMapper mapper;
+	
+	@PostMapping(path="/addHotel", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<Page<HotelDTO>> addHotel(Pageable pageable, @RequestBody HotelDTO hotel) throws ParseException  {	
-		hotelServices.save(hotel.convert(destinationServices.findAll()));
+	public ResponseEntity<Page<HotelDTO>> addHotel(Pageable pageable, @RequestParam("image") MultipartFile image,
+													@RequestParam("model") String a )  {
+		HotelDTO hotelDTO = null;
+		Hotel hotel = null;
+		try {
+			hotelDTO = mapper.readValue(a, HotelDTO.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			hotel = hotelServices.save(hotelDTO.convert(destinationServices.findAll()));
+		} catch (ParseException e) {
+			return new ResponseEntity<Page<HotelDTO>>(HttpStatus.BAD_REQUEST);
+		}
+		hotel.setImage(imageServices.saveHotelImg(image, hotel.getHotelID()));
+		hotelServices.save(hotel);
 		return new ResponseEntity<Page<HotelDTO>>(hotelServices.findAllAndConvert(pageable),HttpStatus.OK);
 	}
 	
@@ -147,9 +170,16 @@ public class HotelController {
 		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/addUser/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path="/addUser/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestBody UserDTO user){
+	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestParam("image") MultipartFile image,
+											@RequestParam("model") String a ){
+		UserDTO user;
+		try {
+		user = mapper.readValue(a, UserDTO.class);
+		} catch (IOException e) {
+		return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
+		}
 		
 		Hotel hotel = hotelServices.findOne(id);
 		HotelAdmin admin = new HotelAdmin();
@@ -162,8 +192,12 @@ public class HotelController {
 		admin.setConfirmed(false);
 		admin.setHotel(hotel);
 		hotel.getAdmins().add(admin);
-		admin.setAuthorities(Arrays.asList(authorityServices.findOne(2)));
-		hotelServices.save(hotel);
+		admin.setAuthorities(Arrays.asList(authorityServices.findOne(2)));		
+		admin.setImage(imageServices.getUserPath(image, admin.getUsername()));
+
+		hotel = hotelServices.save(hotel);
+		
+		imageServices.saveUserImg(image, admin.getUsername());
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 }

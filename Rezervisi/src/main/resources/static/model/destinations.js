@@ -9,6 +9,17 @@ Destinations.prototype.bindEvents = function() {
   $(document).on('submit', '#editDestinationForm', this.editCallback.bind(this));
 }
 
+Destinations.prototype.addCallback = function(e) {
+  e.preventDefault();
+
+  if (!this.validateInput()) {
+    return handleWrongInput();
+  }
+  var obj = this.makeJSONObject();
+
+  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.showAll.bind(this));
+}
+
 Destinations.prototype.showAll = function(data) {
   var table = $("#destinationsTable").first();
   table.html("<tr><th>Name</th><th>Description</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");

@@ -15,13 +15,14 @@ public class HotelDTO {
 	private String destination;
 	private String hotelGrade;
 	private String hotelEarning;
+	private String image;
 	
 	public HotelDTO() {
 		super();
 	}
 	
 	public HotelDTO(String hotelID, String hotelName, String hotelAddress, String hotelDescription, String destination,
-			String hotelGrade, String hotelEarning) {
+			String hotelGrade, String hotelEarning, String image) {
 		super();
 		this.hotelID = hotelID;
 		this.hotelName = hotelName;
@@ -30,6 +31,7 @@ public class HotelDTO {
 		this.destination = destination;
 		this.hotelGrade = hotelGrade;
 		this.hotelEarning = hotelEarning;
+		this.image = image;
 	}
 
 	
@@ -122,7 +124,13 @@ public class HotelDTO {
 		this.hotelEarning = hotelEarning;
 	}
 
+	public String getImage() {
+		return image;
+	}
 
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public Hotel convert(List<Destination> destinations) throws ParseException {
 		Hotel h = new Hotel();
@@ -133,7 +141,7 @@ public class HotelDTO {
 			}
 		}
 
-		
+		h.setImage(this.image);
 		h.setHotelName(this.hotelName);
 		h.setHotelAddress(this.hotelAddress);
 		h.setHotelDescription(this.hotelDescription);

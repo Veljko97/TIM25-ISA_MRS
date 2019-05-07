@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 
@@ -26,9 +28,11 @@ public class RoomReservation {
 	private StandardUser user;
 	
 	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date reservationStart;
 	
 	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date reservationEnd;
 	
 	@Column

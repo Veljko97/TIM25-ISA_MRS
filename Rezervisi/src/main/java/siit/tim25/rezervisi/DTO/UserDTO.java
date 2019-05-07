@@ -12,10 +12,11 @@ public class UserDTO {
 	private String password;
 	private String email;
 	private boolean enabled;
-	private static boolean confirmed;
-	private static Integer serviceId;
+	private boolean confirmed;
+	private Integer serviceId;
 	private String role;
-	private static TokenState token;
+	private TokenState token;
+	private String image;
 
 	public UserDTO() {
 		super();
@@ -33,7 +34,7 @@ public class UserDTO {
 	}
 
 	public UserDTO(Integer id, String username, String firstName, String lastName, String email, boolean enabled,
-			Integer serviceId,boolean confirmed, TokenState token) {
+			Integer serviceId,boolean confirmed, String image, TokenState token) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -45,6 +46,7 @@ public class UserDTO {
 		this.serviceId = serviceId;
 		this.token = token;
 		this.password = "";
+		this.image = image;
 	}
 
 	public UserDTO(User user, TokenState tokenState) {
@@ -70,8 +72,10 @@ public class UserDTO {
 			user.getLastName(),
 			user.getEmail(),
 			user.isEnabled(), 
-			serviceId, 
-			confirmed, token
+			-1, 
+			user.isConfirmed(),
+			user.getImage(),
+			new TokenState()
 			);
 	}
 	
@@ -162,6 +166,14 @@ public class UserDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 	
 }

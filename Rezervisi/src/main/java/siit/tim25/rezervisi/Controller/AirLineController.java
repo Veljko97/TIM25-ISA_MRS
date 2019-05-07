@@ -1,5 +1,6 @@
 package siit.tim25.rezervisi.Controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
@@ -35,6 +40,7 @@ import siit.tim25.rezervisi.Services.AirLineServices;
 import siit.tim25.rezervisi.Services.AirplaneServices;
 import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.FlightServices;
+import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.security.model.TokenState;
 import siit.tim25.rezervisi.security.model.User;
@@ -62,19 +68,38 @@ public class AirLineController {
 	@Autowired
 	private AuthorityServices authorityServices;
 	
+	@Autowired
+	private ImageServices imageServices;
+	
+	@Autowired
+	private ObjectMapper mapper;
+	
 	@GetMapping(path="/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<AirLine>> searchAirline(Pageable pageable, @RequestParam String name) {
 		return new ResponseEntity<Page<AirLine>>(airLineServices.findByName('%' + name + '%', pageable), HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.POST,path="/addAirline", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<Page<AirLine>> addAirline(Pageable pageable, @RequestBody AirLine airline )  {
-		
+	public ResponseEntity<Page<AirLine>> addAirline(Pageable pageable, @RequestParam("image") MultipartFile image,
+													@RequestParam("model") String a )  {
+		AirLine airline = new AirLine();
+		try {
+			airline = mapper.readValue(a, AirLine.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if(airLineServices.findOneByAirLineName(airline.getAirLineName()) != null)	{
 			return new ResponseEntity<Page<AirLine>>(HttpStatus.BAD_REQUEST);
 		}
-		airLineServices.save(airline);
+		AirLine air = airLineServices.save(airline);
+		String imgPath = imageServices.saveAirlineImg(image, air.getAirLineID());
+		if(imgPath.equals("")) {
+			airLineServices.delete(air.getAirLineID());
+			return new ResponseEntity<Page<AirLine>>(HttpStatus.BAD_REQUEST);
+		}
+		air.setImage(imgPath);
+		airLineServices.save(air);
 		return new ResponseEntity<Page<AirLine>>(airLineServices.findAll(pageable),HttpStatus.OK);
 	}
 	
@@ -152,7 +177,7 @@ public class AirLineController {
 	
 	@GetMapping(path="/searchFlights", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Set<FlightDTO>> searchFlights(Pageable pageable, @RequestParam String type, @RequestParam String flightClass, 
-			@RequestParam String from, @RequestParam String to, @RequestParam String takeOff, @RequestParam String landing, @RequestParam String numberOfPeople,
+			@RequestParam String from, @RequestParam String to, @RequestParam Long takeOff, @RequestParam Long landing, @RequestParam String numberOfPeople,
 			@RequestParam String airLineName, @RequestParam String flightLength, @RequestParam String priceFrom, @RequestParam String priceTo) throws ParseException {
 		return new ResponseEntity<Set<FlightDTO>>(flightServices.search(type, flightClass, from, to, takeOff, landing, numberOfPeople, airLineName, flightLength, priceFrom, priceTo, pageable), HttpStatus.OK);
 	}
@@ -203,7 +228,7 @@ public class AirLineController {
 		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(airlineId, pageable),HttpStatus.OK);
 	}
 	
-	@GetMapping(path="/showUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path="/showUser/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<ArrayList<UserDTO>> getUsers(@PathVariable Integer id){
 		ArrayList<UserDTO> users = new ArrayList<UserDTO>();
@@ -213,10 +238,16 @@ public class AirLineController {
 		return new ResponseEntity<ArrayList<UserDTO>>(users,HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/addUser/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path="/addUser/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")
-	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestBody UserDTO user){
-		
+	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestParam("image") MultipartFile image,
+											@RequestParam("model") String a ){
+		UserDTO user;
+		try {
+			user = mapper.readValue(a, UserDTO.class);
+		} catch (IOException e) {
+			return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
+		}
 		AirLine airline = airLineServices.findOne(id);
 		AirLineAdmin admin = new AirLineAdmin();
 		admin.setPassword(passwordEncoder.encode("123"));
@@ -229,7 +260,11 @@ public class AirLineController {
 		admin.setAirLine(airline);
 		airline.getAdmins().add(admin);
 		admin.setAuthorities(Arrays.asList(authorityServices.findOne(3)));
-		airLineServices.save(airline);
+		admin.setImage(imageServices.getUserPath(image, admin.getUsername()));
+		
+		airline = airLineServices.save(airline);
+		
+		imageServices.saveUserImg(image, admin.getUsername());
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 }

@@ -29,8 +29,8 @@ public class StandardUserServices {
 		return userRepository.exists(id);
 	}
 	
-	public Page<StandardUser> findMatch(String pram, Pageable page) {
-		return userRepository.findMatches(pram, page);
+	public Page<StandardUser> findMatch(String param, Integer myId, Pageable page) {
+		return userRepository.findMatches(param, myId, page);
 	}
 	
 }

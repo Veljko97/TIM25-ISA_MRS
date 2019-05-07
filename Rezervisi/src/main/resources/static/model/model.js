@@ -40,9 +40,12 @@ Model.prototype.addCallback = function(e) {
   if (!this.validateInput()) {
     return handleWrongInput();
   }
-
+  var formData = new FormData();
+  var image = $("#profileImage")[0].files[0];
   var obj = this.makeJSONObject();
-  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.addSuccessCallback.bind(this), function() {handleErrorAction();});
+  formData.append("image", image);
+  formData.append("model", obj);
+  ajaxService.POSTFORM(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, formData, this.addSuccessCallback.bind(this), function() {handleErrorAction();});
 }
 
 Model.prototype.addSuccessCallback = function(data) {
@@ -77,7 +80,11 @@ Model.prototype.addUserCallback = function(e){
     lastName  : $("#lastName").val(),
     email : $("#email").val()
   }
-  ajaxService.POST(this.urlApi.addUser,JSON.stringify(admin),function(){location.reload();}, function() {handleErrorAction();});
+  var formData = new FormData();
+  var image = $("#profileImage")[0].files[0];
+  formData.append("image", image);
+  formData.append("model", JSON.stringify(admin));
+  ajaxService.POSTFORM(this.urlApi.addUser, formData, function(){location.reload();}, function() {handleErrorAction();});
 }
 
 Model.prototype.showAll = function(data) {}

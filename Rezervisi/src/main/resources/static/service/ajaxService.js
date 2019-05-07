@@ -68,5 +68,17 @@ var ajaxService = {
       success: successCallback,
       error: errorCallback
     })
+  },
+  POSTFORM: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}){
+    this.SETTOKEN();
+    $.ajax({
+      method: "POST",
+      url: apiUrl,
+      data: dataObj,
+      processData: false,
+      contentType: false,
+      success: successCallback,
+      error: errorCallback
+    })
   }
 }

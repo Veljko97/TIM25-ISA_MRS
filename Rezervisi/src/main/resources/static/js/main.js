@@ -5,6 +5,24 @@ function getIndexFromUrl() {
   return pair[1];
 }
 
+// Date Fromating function
+function toDatetimeLocal(date) {
+  var
+    ten = function (i) {
+      return (i < 10 ? '0' : '') + i;
+    },
+    YYYY = date.getFullYear(),
+    MM = ten(date.getMonth() + 1),
+    DD = ten(date.getDate()),
+    HH = ten(date.getHours()),
+    II = ten(date.getMinutes()),
+    SS = ten(date.getSeconds())
+  ;
+  return YYYY + '-' + MM + '-' + DD + 'T' +
+            HH + ':' + II + ':' + SS;
+};
+
+
 function handleWrongInput() {
   $('#warning-message').html('Wrong input. Fill all of the required fields and check the input!');
   $('#warning-message').attr('style', 'display: block;');

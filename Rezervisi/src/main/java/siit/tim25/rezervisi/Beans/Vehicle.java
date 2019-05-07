@@ -33,6 +33,9 @@ public class Vehicle {
 
 	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<VehicleReservation> reservation = new HashSet<VehicleReservation>();
+	
+	@Column
+    private String image;
 
 	public Vehicle() {
 		this.vehicleName = "";
@@ -83,6 +86,22 @@ public class Vehicle {
 
 	public void setGrades(Set<VehicleGrade> grades) {
 		this.grades = grades;
+	}
+	
+	public Set<VehicleReservation> getReservation() {
+		return reservation;
+	}
+
+	public void setReservation(Set<VehicleReservation> reservation) {
+		this.reservation = reservation;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	@Override

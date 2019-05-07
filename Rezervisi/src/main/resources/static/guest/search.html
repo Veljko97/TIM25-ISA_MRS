@@ -73,6 +73,9 @@
               <button class="tablinks" onclick="search.switchTab(event, 'Rentacar')">
                 <div class="pb_icon"><i class="ion-android-car pb_icon-gradient"></i></div>
               </button>
+              <button class="tablinks" onclick="search.switchTab(event, 'Users')">
+                <div class="pb_icon"><i class="ion-android-contact pb_icon-gradient"></i></div>
+              </button>
             </div>
             
             <div class="relative align-self-center" style="width: 70%;">
@@ -124,11 +127,11 @@
                   </div>
 
                   <div class="form-group">
-                    <input type="text" id="takeOffDate" name="takeOffDate" class="form-control pb_height-50 reverse" placeholder="Take off time">
+                    <input type="datetime-local" id="takeOffDate" name="takeOffDate" class="form-control pb_height-50 reverse" placeholder="Take off time">
                   </div>
 
                   <div class="form-group">
-                    <input type="text" id="landingDate" name="landingDate" class="form-control pb_height-50 reverse" placeholder="Landing time">
+                    <input type="datetime-local" id="landingDate" name="landingDate" class="form-control pb_height-50 reverse" placeholder="Landing time">
                   </div>
                   <div class="checkboxes">
                     <label class="checkbox-container">Business
@@ -217,6 +220,19 @@
                     <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Search">
                   </div>
                 </form>
+              </div>
+
+              <div id="Users" class="tabcontent" >
+                <form action="#" class="bg-white rounded pb_form_v1" id="userSearchForm">
+                  <h3 class="mb-4 mt-0 text-center">Search Users:</h3>
+                  <div class="form-group">
+                    <input type="text" id="searchParam" name="searchParam" class="form-control pb_height-50 reverse" placeholder="searchParam">
+                  </div>
+                  <div class="form-group">
+                    <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Search">
+                  </div>
+                </form>
+      
               </div>
             </div>
               

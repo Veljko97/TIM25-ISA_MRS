@@ -1,8 +1,6 @@
 package siit.tim25.rezervisi.Services;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,11 +74,10 @@ public class FlightServices {
 		});
 	}
 	
-	public Set<FlightDTO> search(String type, String flightClass, String from, String to, String takeOff, String landing, 
+	public Set<FlightDTO> search(String type, String flightClass, String from, String to, Long takeOff, Long landing, 
 			String numberOfPeople, String airLineName, String flightLength, String priceFrom, String priceTo, Pageable pageable) throws ParseException {
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-		Date date1 = takeOff.equals("") ? null : formatter.parse(takeOff);
-		Date date2 = landing.equals("") ? null : formatter.parse(landing);
+		Date date1 = new Date(takeOff);
+		Date date2 = new Date(landing);
 		Page<Flight> flist = flightRepository.search(FlightType.valueOf(type), FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, pageable);
 		Set<FlightDTO> listConvertedFlights = new HashSet<FlightDTO>();
 		for(Flight f: flist) {

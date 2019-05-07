@@ -8,7 +8,7 @@ public class RentACarAdminDTO extends UserDTO{
 	
 	public RentACarAdminDTO(RentACarAdmin admin, TokenState token) {
 		super(admin.getId(), admin.getUsername(), admin.getFirstName(), admin.getLastName(),
-				admin.getEmail(), admin.isEnabled(), admin.getRentACar().getRentACarID(), admin.isConfirmed(), token);
+				admin.getEmail(), admin.isEnabled(), admin.getRentACar().getRentACarID(), admin.isConfirmed(), admin.getImage(), token);
 		for(Object au : admin.getAuthorities()) {
 			this.setRole(((Authority) au).getName());
 		}

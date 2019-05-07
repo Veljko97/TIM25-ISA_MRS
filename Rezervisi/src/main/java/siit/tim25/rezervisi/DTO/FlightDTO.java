@@ -1,8 +1,7 @@
 package siit.tim25.rezervisi.DTO;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -15,8 +14,8 @@ import siit.tim25.rezervisi.Beans.FlightType;
 public class FlightDTO {
 	private String startDestinationName;
 	private String finalDestinationName;
-	private String takeOffDate;
-	private String landingDate;
+	private Long takeOffDate;
+	private Long landingDate;
 	private String flightLength;
 	private int numberOfStops;
 	private int numberOfSeats;
@@ -33,7 +32,7 @@ public class FlightDTO {
 	}
 	
 	
-	public FlightDTO(Integer idFlight, String startDestinationName, String finalDestinationName, String takeOffDate, String landingDate,
+	public FlightDTO(Integer idFlight, String startDestinationName, String finalDestinationName, Long takeOffDate, Long landingDate,
 			String flightLength, int numberOfStops, int numberOfSeats, String flightClass, String type, String airplane, Double ticketPrice,
 			Double flightAverageGrade) {
 		super();
@@ -63,16 +62,16 @@ public class FlightDTO {
 	public void setFinalDestinationName(String finalDestinationName) {
 		this.finalDestinationName = finalDestinationName;
 	}
-	public String getTakeOffDate() {
+	public Long getTakeOffDate() {
 		return takeOffDate;
 	}
-	public void setTakeOffDate(String takeOffDate) {
+	public void setTakeOffDate(Long takeOffDate) {
 		this.takeOffDate = takeOffDate;
 	}
-	public String getLandingDate() {
+	public Long getLandingDate() {
 		return landingDate;
 	}
-	public void setLandingDate(String landingDate) {
+	public void setLandingDate(Long landingDate) {
 		this.landingDate = landingDate;
 	}
 	public String getFlightLength() {
@@ -157,7 +156,6 @@ public class FlightDTO {
 	
 	public Flight convert(Set<Destination> destinations, List<AirPlane> airplanes) throws ParseException {
 		Flight f = new Flight();
-		DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		for(Destination d: destinations) {
 			if (d.getDestinationName().equals(this.getStartDestinationName())) {
 				f.setStartDestination(d);
@@ -173,8 +171,8 @@ public class FlightDTO {
 			}
 		}
 		
-		f.setTakeOffDate(format.parse(this.takeOffDate));
-		f.setLandingDate(format.parse(this.landingDate));
+		f.setTakeOffDate(new Date(this.takeOffDate));
+		f.setLandingDate(new Date(this.landingDate));
 		f.setFlightLength(this.flightLength);
 		f.setTicketPrice(this.getTicketPrice());
 		f.setNumberOfStops(this.numberOfStops);

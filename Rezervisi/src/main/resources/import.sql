@@ -4,11 +4,11 @@ INSERT INTO USER (id, username, password, first_name, last_name, email, enabled,
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (3, 'airline', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Mile', 'Milic', 'mile@example.com', true, true);
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (4, 'rentacar', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikolina', 'Nikolic', 'niki@example.com', true, true);
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (5, 'user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
-INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (6, 'user2', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
-INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (7, 'user3', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
-INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (8, 'user4', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
-INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (9, 'user5', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
-INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (10, 'user6', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U@example.com', true, true);
+INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (6, 'user2', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U2@example.com', true, true);
+INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (7, 'user3', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U3@example.com', true, true);
+INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (8, 'user4', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U4@example.com', true, true);
+INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (9, 'user5', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U5@example.com', true, true);
+INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (10, 'user6', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U6@example.com', true, true);
 
 INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning) VALUES ('1', 'fasf', 'fasf', 'Name', '0');
 INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid) VALUES ('1', 'Description neki', 'Destinacija', '1');

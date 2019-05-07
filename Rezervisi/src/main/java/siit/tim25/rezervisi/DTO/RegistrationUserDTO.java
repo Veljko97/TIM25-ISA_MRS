@@ -19,7 +19,7 @@ public class RegistrationUserDTO extends UserDTO {
 
 	public RegistrationUserDTO(Integer id, String username, String firstName, String lastName, String email,
 			boolean enabled, Integer serviceId, boolean confirmed, TokenState token) {
-		super(id, username, firstName, lastName, email, enabled, serviceId, confirmed, token);
+		super(id, username, firstName, lastName, email, enabled, serviceId, confirmed, "", token);
 		// TODO Auto-generated constructor stub
 	}
 

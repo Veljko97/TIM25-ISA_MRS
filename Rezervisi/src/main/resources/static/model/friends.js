@@ -4,6 +4,11 @@ function Friends(varName) {
     this.confirmation = [];
     this.varName = varName;
 
+    this.acceptedPg = 0;
+    this.pendingPg = 0;
+    this.confirmationPg = 0;
+    this.pageSize = 2;
+
     this.foundUsers = [];
     this.pageNumber = [];
 };
@@ -14,7 +19,7 @@ Friends.prototype.arivedCallback = function(data){
     var flag = false;
     $.each(this.pending, function(index, item){
         if(item.id === data.id){
-            $("#pendingTable > tbody > tr")[index].remove();
+            $("#pendingTable")[index].remove();
             friends.pending.splice(index,1);
             flag = true;
             return false;
@@ -35,7 +40,7 @@ Friends.prototype.responseCallback = function(data) {
     var friends = this;
     $.each(this.pending, function(index, item){
         if(item.id === data.friendRequest.id){
-            $("#pendingTable > tbody > tr")[index].remove();
+            $("#pendingTable")[index].remove();
             friends.pending.splice(index,1);
             return false;
         }
@@ -54,7 +59,7 @@ Friends.prototype.deleteCallback = function(data) {
     var friends = this;
     $.each(this.accepted, function(index, item){
         if(item.id === data.id){
-            $("#acceptedTable > tbody > tr")[index].remove();
+            $("#acceptedTable")[index].remove();
             friends.accepted.splice(index,1);
             return false;
         }
@@ -63,78 +68,86 @@ Friends.prototype.deleteCallback = function(data) {
 }
 
 Friends.prototype.renderTable = function(tableId, collection) {
-    var table = $("#"+tableId+" > tbody").empty();
-    $.each(collection, function(index, item){
-        var row = $("<tr></tr>");
-        row.append("<td>"+item.other.username+"</td>");
-        row.append("<td>"+item.other.firstName+"</td>");
-        row.append("<td>"+item.other.lastName+"</td>");
-        row.append("<td>"+item.other.email+"</td>");
-        table.append(row);
-    })
+    var res = $("#"+tableId).empty();
+    var friends = this;
+    var page = this.pendingPg * this.pageSize;
+    for(var i = page; i < page+this.pageSize; i++){
+        var item = collection[i];
+        var div = "\
+        <div class=\"row search-result\" style=\"background-color: steelblue;\">\
+            <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+            <div class=\"search-content\">\
+            <h4>"+item.other.username+"</h4>\
+            <h4>First Name: "+item.other.firstName+"</h4>\
+            <h4>Last Name: "+item.other.lastName+"</h4>\
+            <h4>E-mail: "+item.other.email+"</h4>\
+            <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.other.id+"\">See more</a>";
+        div +=    "</div>\
+                </div>";
+        res.append(div);
+    }
 }
 
 Friends.prototype.renderAcceptedTable = function(collection) {
-    var table = $("#acceptedTable > tbody").empty();
+    var res = $("#acceptedTable").empty();
     var friends = this;
-    $.each(collection, function(index, item){
-        var row = $("<tr></tr>");
-        row.append("<td>"+item.other.username+"</td>");
-        row.append("<td>"+item.other.firstName+"</td>");
-        row.append("<td>"+item.other.lastName+"</td>");
-        row.append("<td>"+item.other.email+"</td>");
-        var addBtn = $("<button onclick=\"" + friends.varName + ".deleteFriend("+item.id+")\">Remove</button>");
-        row.append(addBtn);
-        table.append(row);
-    })
+    var page = this.acceptedPg * this.pageSize;
+    for(var i = page; i < page+this.pageSize; i++){
+        var item = collection[i];
+        var div = "\
+        <div class=\"row search-result\">\
+            <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+            <div class=\"search-content\">\
+            <h4>"+item.other.username+"</h4>\
+            <h4>First Name: "+item.other.firstName+"</h4>\
+            <h4>Last Name: "+item.other.lastName+"</h4>\
+            <h4>E-mail: "+item.other.email+"</h4>\
+            <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.other.id+"\">See more</a>";
+        div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".deleteFriend("+item.id+")\">Remove</a>";
+        div +=    "</div>\
+                </div>";
+        res.append(div);
+    }
 }
 
-Friends.prototype.renderUserTable = function(collection) {
-    var table = $("#userTable > tbody").empty();
-    var friends = this;
-    $.each(collection, function(index, item){
-        var row = $("<tr></tr>");
-        row.append("<td>"+item.username+"</td>");
-        row.append("<td>"+item.firstName+"</td>");
-        row.append("<td>"+item.lastName+"</td>");
-        row.append("<td>"+item.email+"</td>");
-        var addBtn = $("<button onclick=\"" + friends.varName + ".addUser("+item.id+")\">Add Friend</button>");
-        row.append(addBtn);
-        table.append(row);
-    })
-}
 
 Friends.prototype.renderConfirmationTable = function(collection) {
-    var table = $("#confirmationTable > tbody").empty();
+    var res = $("#confirmationTable").empty();
     var friends = this;
-    $.each(collection, function(index, item){
-        var row = $("<tr></tr>");
-        row.append("<td>"+item.other.username+"</td>");
-        row.append("<td>"+item.other.firstName+"</td>");
-        row.append("<td>"+item.other.lastName+"</td>");
-        row.append("<td>"+item.other.email+"</td>");
-        var acBtn = $("<button onclick=\"" + friends.varName + ".acceptRequest("+item.id+")\">Accept</button>");
-        var refuseBtn = $("<button onclick=\"" + friends.varName + ".refuseRequest("+item.id+")\">Refuse</button>");
-        row.append(acBtn);
-        row.append(refuseBtn);
-        table.append(row);
-    })
+    var page = this.confirmationPg * this.pageSize;
+    for(var i = page; i < page+this.pageSize; i++){
+        var item = collection[i];
+        var div = "\
+        <div class=\"row search-result\">\
+            <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+            <div class=\"search-content\">\
+            <h4>"+item.other.username+"</h4>\
+            <h4>First Name: "+item.other.firstName+"</h4>\
+            <h4>Last Name: "+item.other.lastName+"</h4>\
+            <h4>E-mail: "+item.other.email+"</h4>\
+            <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.id+"\">See more</a>";
+        div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".acceptRequest("+item.id+")\">Accept</a>";
+        div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".refuseRequest("+item.id+")\">Refuse</a>";
+        div +=    "</div>\
+                </div>";
+        res.append(div);
+    }
 }
 
 Friends.prototype.loadFriends = function(){
-    ajaxService.GET("/app/friends/myFriends", this.fillTablesCallback.bind(this));
+    ajaxService.GET("/app/users/myFriends", this.fillTablesCallback.bind(this));
 }
 
 Friends.prototype.refuseRequest = function(requestId){
-    ajaxService.DELETE("/app/friends/removeFriend/"+requestId, this.refuseCallback.bind(this));
+    ajaxService.DELETE("/app/users/removeFriend/"+requestId, this.refuseCallback.bind(this));
 }
 
 Friends.prototype.deleteFriend = function(requestId){
-    ajaxService.DELETE("/app/friends/deleteFriend/"+requestId, this.deleteFriendCallback.bind(this));
+    ajaxService.DELETE("/app/users/deleteFriend/"+requestId, this.deleteFriendCallback.bind(this));
 }
 
 Friends.prototype.acceptRequest = function(requestId)   {
-    ajaxService.PUT("/app/friends/confirmeRequest/"+requestId.toString(), "", this.acceptedCallback.bind(this));
+    ajaxService.PUT("/app/users/confirmeRequest/"+requestId.toString(), "", this.acceptedCallback.bind(this));
 }
 
 Friends.prototype.findUsers = function(event){
@@ -142,7 +155,7 @@ Friends.prototype.findUsers = function(event){
 
     var param = $("#serchParam").val();
 
-    ajaxService.GET("/app/friends/findUser?serchParam="+param, this.findUsersCallback.bind(this))
+    ajaxService.GET("/app/users/findUser?serchParam="+param, this.findUsersCallback.bind(this))
 }
 
 Friends.prototype.addUser = function(userId){
@@ -152,7 +165,7 @@ Friends.prototype.addUser = function(userId){
     var error = function(data){
         console.log("er")
         location.reload()};
-    ajaxService.POST("/app/friends/sendRequest/"+userId,"",success,error);
+    ajaxService.POST("/app/users/sendRequest/"+userId,"",success,error);
 }
 
 Friends.prototype.fillTablesCallback = function(data){
@@ -170,7 +183,7 @@ Friends.prototype.refuseCallback = function(data){
     var friends = this;
     $.each(this.confirmation, function(index, item){
         if(item.id === data){
-            $("#confirmationTable > tbody > tr")[index].remove();
+            $("#confirmationTable > .row")[index].remove();
             friends.confirmation.splice(index,1);
             return false;
         }
@@ -182,7 +195,7 @@ Friends.prototype.acceptedCallback = function(data){
     var friends = this;
     $.each(this.confirmation, function(index, item){
         if(item.id === data.id){
-            $("#confirmationTable > tbody > tr")[index].remove();
+            $("#confirmationTable > .row")[index].remove();
             friends.confirmation.splice(index,1);
             return false;
         }
@@ -196,7 +209,7 @@ Friends.prototype.deleteFriendCallback = function(data){
     var friends = this;
     $.each(this.accepted, function(index, item){
         if(item.id === data){
-            $("#acceptedTable > tbody > tr")[index].remove();
+            $("#acceptedTable > .row")[index].remove();
             friends.accepted.splice(index,1);
             return false;
         }
@@ -208,4 +221,40 @@ Friends.prototype.findUsersCallback = function(data){
     this.foundUsers = data.content;
 
     this.renderUserTable.call(this,this.foundUsers);
+}
+
+Friends.prototype.switchPagePanding = function(direction) {
+    var next = this.pendingPg + direction
+    if(next < 0){
+        return;
+    }
+    if((this.pendingPg + 1 ) * this.pageSize > this.pending.length && direction == 1){
+        return;
+    }
+    this.pendingPg = next;
+    this.renderTable("pendingTable",this.pending);
+}
+
+Friends.prototype.switchPageAcept = function(direction) {
+    var next = this.acceptedPg + direction
+    if(next < 0){
+        return;
+    }
+    if((this.acceptedPg + 1 ) * this.pageSize > this.accepted.length && direction == 1){
+        return;
+    }
+    this.acceptedPg = next;
+    this.renderAcceptedTable.call(this,this.accepted);
+}
+
+Friends.prototype.switchPageConf = function(direction) {
+    var next = this.confirmationPg + direction
+    if(next < 0){
+        return;
+    }
+    if((this.confirmationPg + 1 ) * this.pageSize > this.confirmation.length && direction == 1){
+        return;
+    }
+    this.confirmationPg = next;
+    this.renderConfirmationTable.call(this,this.confirmation);
 }

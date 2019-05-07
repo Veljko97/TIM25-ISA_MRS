@@ -32,6 +32,9 @@ public class RentACar {
 	@Column(name = "rentACarDescription")
 	private String rentACarDescription;
 	
+	@Column
+    private String image;
+	
 	@OneToMany(mappedBy = "service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<RentACarOffer> offersPriceList = new HashSet<RentACarOffer>();
 	
@@ -123,7 +126,14 @@ public class RentACar {
 	public void setAdmins(Set<RentACarAdmin> admins) {
 		this.admins = admins;
 	}
-
+	
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
 	@Override
 	public String toString() {
 		return "RentACar [rentACarID=" + rentACarID + ", rentACarName=" + rentACarName + ", rentACarAddress="

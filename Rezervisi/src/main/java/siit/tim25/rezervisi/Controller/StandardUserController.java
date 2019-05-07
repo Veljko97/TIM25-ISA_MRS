@@ -34,7 +34,7 @@ import siit.tim25.rezervisi.security.TokenUtils;
 import siit.tim25.rezervisi.security.model.TokenState;
 
 @RestController
-@RequestMapping(path="/app/friends")
+@RequestMapping(path="/app/users")
 public class StandardUserController {
 
 	@Autowired
@@ -138,14 +138,22 @@ public class StandardUserController {
 	}
 	
 	@GetMapping(path = "/findUser", params = "serchParam", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<StandardUserDTO>> findUsers(@RequestParam("serchParam") String serchParam){
-		Pageable pagable = new PageRequest(0, 10);
-		Page<StandardUser> page = userServices.findMatch(serchParam, pagable);
-		List<StandardUserDTO> listDTO = new ArrayList<StandardUserDTO>();
-		for(StandardUser user : page.getContent()) {
-			listDTO.add(new StandardUserDTO(user, new TokenState()));
+	public ResponseEntity<Page<StandardUserDTO>> findUsers(@RequestParam("serchParam") String serchParam, Pageable pageable, HttpServletRequest request){
+		String token = tokenUtils.getToken(request);
+		Integer myId;
+		if(token != null) {
+			StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+			myId = user.getId();
+		}else {
+			myId = -1;
 		}
-		return new ResponseEntity<Page<StandardUserDTO>>(new PageImpl<StandardUserDTO>(listDTO,pagable,page.getTotalElements()), HttpStatus.OK);
+		
+		Page<StandardUser> page = userServices.findMatch(serchParam, myId, pageable);
+		List<StandardUserDTO> listDTO = new ArrayList<StandardUserDTO>();
+		for(StandardUser userr : page.getContent()) {
+			listDTO.add(new StandardUserDTO(userr, new TokenState()));
+		}
+		return new ResponseEntity<Page<StandardUserDTO>>(new PageImpl<StandardUserDTO>(listDTO,pageable ,page.getTotalElements()), HttpStatus.OK);
 	}
 	
 }

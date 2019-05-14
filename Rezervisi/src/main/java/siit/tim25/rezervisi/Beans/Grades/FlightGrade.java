@@ -8,11 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import siit.tim25.rezervisi.Beans.AirLine;
+import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 
 @Entity
-public class AirLineGrade {
+public class FlightGrade {
+	
 	@Id
 	@GeneratedValue
 	private Integer id;
@@ -21,18 +22,24 @@ public class AirLineGrade {
 	private int score;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private AirLine airLine;
+	private Flight flight;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private StandardUser user;
 
-	public AirLineGrade(){}
+	public FlightGrade() {
+		super();
+		this.id = null;
+		this.score = -1;
+		this.flight = null;
+		this.user = null;
+	}
 	
-	public AirLineGrade(Integer id, int score, AirLine airLine, StandardUser user) {
+	public FlightGrade(Integer id, int score, Flight flight, StandardUser user) {
 		super();
 		this.id = id;
 		this.score = score;
-		this.airLine = airLine;
+		this.flight = flight;
 		this.user = user;
 	}
 
@@ -52,12 +59,12 @@ public class AirLineGrade {
 		this.score = score;
 	}
 
-	public AirLine getAirLine() {
-		return airLine;
+	public Flight getFlight() {
+		return flight;
 	}
 
-	public void setAirLine(AirLine airLine) {
-		this.airLine = airLine;
+	public void setFlight(Flight flight) {
+		this.flight = flight;
 	}
 
 	public StandardUser getUser() {

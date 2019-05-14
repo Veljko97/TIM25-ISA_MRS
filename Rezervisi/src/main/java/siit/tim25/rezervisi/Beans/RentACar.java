@@ -48,6 +48,9 @@ public class RentACar {
 	@Column(name = "rentACarEarning")
 	private Double rentACarEarning;
 	
+	@Column
+	private Double averageGrade;
+	
 	@OneToMany(mappedBy = "rentACar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<RentACarAdmin> admins = new HashSet<RentACarAdmin>();
@@ -132,6 +135,14 @@ public class RentACar {
 	}
 	public void setImage(String image) {
 		this.image = image;
+	}
+	
+	public Double getAverageGrade() {
+		return averageGrade;
+	}
+	
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
 	}
 	
 	@Override

@@ -35,6 +35,10 @@ public class RoomServices {
 		return room;
 	}
 	
+	public Room findOne(Integer id) {
+		return roomRepository.findOne(id);
+	}
+	
 	public List<Room> findAll(Integer hotelId){
 		Hotel h = hotelRepository.findOne(hotelId);
 		ArrayList<Room> list = new ArrayList<Room>();

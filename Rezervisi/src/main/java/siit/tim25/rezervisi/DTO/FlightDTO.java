@@ -176,7 +176,7 @@ public class FlightDTO {
 		f.setFlightLength(this.flightLength);
 		f.setTicketPrice(this.getTicketPrice());
 		f.setNumberOfStops(this.numberOfStops);
-		f.setFlightAverageGrade(this.flightAverageGrade);
+		f.setAverageGrade(this.flightAverageGrade);
 		f.setType(FlightType.valueOf(this.type));
 		f.setFlightClass(FlightClass.valueOf(this.flightClass));
 		return f;

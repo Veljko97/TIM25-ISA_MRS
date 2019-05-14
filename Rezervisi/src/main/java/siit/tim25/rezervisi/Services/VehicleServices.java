@@ -77,6 +77,10 @@ public class VehicleServices {
 		return null;
 	}
 	
+	public Vehicle findOne(Integer id){
+		return vehicleRepository.findOne(id);
+	}
+	
 	public Vehicle update(Integer serviceId, Vehicle vehicle) {
 		RentACar r = rentacarRepository.findOne(serviceId);
 		Vehicle vh = null;

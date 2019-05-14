@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Flights Report</title>
+    <link type="text/css" rel="stylesheet" href="../css/jqx.base.css" />
+    <style type="text/css">
+        .labels {
+            font-size: smaller;
+        }
+    </style>
+   
+   
+   <script src="../js/jquery.min.js"></script>
+   <script src="../js/jqxcore.js"></script>
+   <script src="../js/jqxdata.js"></script>
+   <script src="../js/jqxdraw.js"></script>
+   <script src="../js/jqxchart.core.js"></script>
+   <script>
+        $(document).ready(function () {
+                var source = {
+                    datatype: "json",
+                    datafields: [{
+                        name: 'id_flight',
+                        type: 'int'
+                    }, {
+                        name: 'flight_average_grade',
+                        type: 'float'
+                    }],
+                    url: '/app/chart/getFlights',
+                    type: 'POST',
+                    async: true
+                };
+                var dataAdapter = new $.jqx.dataAdapter(source, { async: false, autoBind: true, loadError: function (xhr, status, error) { alert('Error loading "' + source.url + '" : ' + error); } });
+                var settings = {
+                    title: "Flights report",
+                    description: "Flight average grade",
+                    showLegend: true,
+                    enableAnimations: true,
+                    padding: { left: 5, top: 5, right: 5, bottom: 5 },
+                    titlePadding: { left: 90, top: 0, right: 0, bottom: 10 },
+                    source: dataAdapter,
+                    xAxis: {
+                        dataField: 'id_flight',
+                        displayText: 'Flight ID',
+                        gridLines: {
+                            visible: true
+                        },
+                        valuesOnTicks: false,
+                        type: 'basic',
+                        labels: {
+                            class: 'labels',
+                            angle: 90,
+                            formatFunction: function (value) {
+                                return value.replace(/\?/g, '');
+                            }
+                        },
+                        flip: false
+                    },
+                    colorScheme: 'scheme01',
+                    seriesGroups:
+                        [
+                            {
+                                type: 'column',
+                                valueAxis:
+                                {
+                                    visible: true,
+                                    unitInterval: 5000,
+                                    title: { text: 'GDP & Debt per Capita($)<br>' }
+                                },
+                                series: [
+                                        { dataField: 'idFlight', displayText: 'GDP per Capita' }
+                                    ]
+                            },
+                            {
+                                type: 'line',
+                                valueAxis:
+                                {
+                                    visible: true,
+                                    position: 'right',
+                                    unitInterval: 10,
+                                    title: { text: 'Debt (% of GDP)' },
+                                    gridLines: { visible: false },
+                                    labels: { horizontalAlignment: 'left' }
+                                },
+                                series: [
+                                        { dataField: 'DebtPercent', displayText: 'Debt (% of GDP)' }
+                                    ]
+                            }
+                        ]
+                };
+                $('#chartContainer').jqxChart(settings);
+            });
+    </script>
+</head>
+<body>
+    <div id='chartContainer' style="width: 860px; height: 600px; margin-bottom: 25px;"></div>
+</body>
+</html>

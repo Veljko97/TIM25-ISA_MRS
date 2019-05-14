@@ -26,6 +26,14 @@ INSERT INTO standard_user (id) values (8);
 INSERT INTO standard_user (id) values (9);
 INSERT INTO standard_user (id) values (10);
 
+
+INSERT INTO flight (id_flight,flight_average_grade,landing_date,take_off_date) VALUES ('1','9.15','11.2.2019','10.2.2019');
+INSERT INTO flight (id_flight,flight_average_grade,landing_date,take_off_date) VALUES ('2','8.20','15.4.2019','14.2.2019');
+INSERT INTO flight (id_flight,flight_average_grade,landing_date,take_off_date) VALUES ('3','10.00','17.6.2019','17.6.2019');
+INSERT INTO flight (id_flight,flight_average_grade,landing_date,take_off_date) VALUES ('4','5.30','11.11.2019','10.11.2019');
+INSERT INTO flight (id_flight,flight_average_grade,landing_date,take_off_date) VALUES ('5','7.40','13.2.2019','13.2.2019');
+
+
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('1', 'Boeing 787', '30');
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('2', 'Airbus A220', '42');
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('3', 'Boeing 777', '48');

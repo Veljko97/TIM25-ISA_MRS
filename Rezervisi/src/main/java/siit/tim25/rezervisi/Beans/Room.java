@@ -50,6 +50,9 @@ public class Room {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private StandardUser user;
 	
+	@Column
+	private Double averageGrade;
+	
 	public Integer getRoomID() {
 		return roomID;
 	}
@@ -105,6 +108,30 @@ public class Room {
 
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
+	}
+	
+	public Set<RoomReservation> getReservation() {
+		return reservation;
+	}
+
+	public void setReservation(Set<RoomReservation> reservation) {
+		this.reservation = reservation;
+	}
+
+	public StandardUser getUser() {
+		return user;
+	}
+
+	public void setUser(StandardUser user) {
+		this.user = user;
+	}
+
+	public Double getAverageGrade() {
+		return averageGrade;
+	}
+
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
 	}
 
 	public Room(Integer roomID, String roomNumber, String roomDescription, String roomCapacity,

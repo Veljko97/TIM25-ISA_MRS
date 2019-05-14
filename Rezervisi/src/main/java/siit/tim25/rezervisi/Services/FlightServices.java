@@ -66,6 +66,11 @@ public class FlightServices {
 		return fl;
 	}
 	
+	public Flight findOne(Integer id)
+	{
+		return flightRepository.findOne(id);
+	}
+	
 	public FlightDTO findOneAndConvert(Integer airLineId, Integer flightId)
 	{
 		Flight fl = this.findOne(airLineId, flightId);

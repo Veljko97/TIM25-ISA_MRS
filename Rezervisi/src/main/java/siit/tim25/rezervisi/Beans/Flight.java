@@ -19,9 +19,12 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import siit.tim25.rezervisi.Beans.Grades.FlightGrade;
 import siit.tim25.rezervisi.DTO.FlightDTO;
+
 @Entity
 public class Flight {
+	
 	@Id
 	@GeneratedValue
 	private Integer idFlight;
@@ -65,8 +68,11 @@ public class Flight {
 	@JsonIgnore
 	private Set<Ticket> flightTickets = new HashSet<Ticket>();
 	
+	@OneToMany(mappedBy = "flight", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<FlightGrade> grades = new HashSet<FlightGrade>();
+	
 	@Column
-	private Double flightAverageGrade;
+	private Double averageGrade;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -75,7 +81,7 @@ public class Flight {
 	
 	public Flight() {
 		super();
-		this.flightAverageGrade = 0.0;
+		this.averageGrade = 0.0;
 	}
 
 	public Flight(Destination startDestination, Destination finalDestination, Date takeOffDate, Date landingDate,
@@ -94,7 +100,7 @@ public class Flight {
 		this.ticketPrice = ticketPrice;
 		this.stopLocations = stopLocations;
 		this.flightTickets = flightTickets;
-		this.flightAverageGrade = flightAverageGrade;
+		this.averageGrade = flightAverageGrade;
 	}
 
 	public Integer getIdFlight() {
@@ -147,11 +153,12 @@ public class Flight {
 		this.airLine = airLine;
 	}
 
-	public Double getFlightAverageGrade() {
-		return flightAverageGrade;
+	public Double getAverageGrade() {
+		return averageGrade;
 	}
-	public void setFlightAverageGrade(Double flightAverageGrade) {
-		this.flightAverageGrade = flightAverageGrade;
+
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
 	}
 
 	public Destination getStartDestination() {
@@ -206,12 +213,20 @@ public class Flight {
 		this.type = type;
 	}
 
+	public Set<FlightGrade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(Set<FlightGrade> grades) {
+		this.grades = grades;
+	}
+
 	@Override
 	public String toString() {
 		return "Flight [startDestination=" + startDestination + ", finalDestination=" + finalDestination
 				+ ", takeOffDate=" + takeOffDate + ", landingDate=" + landingDate + ", flightLength=" + flightLength
 				+ ", numberOfStops=" + numberOfStops + ", stopLocations=" + stopLocations + ", flightTicket="
-				+ flightTickets + ", flightAverageGrade=" + flightAverageGrade + "]";
+				+ flightTickets + ", flightAverageGrade=" + averageGrade + "]";
 	}
 	
 	@Override
@@ -234,7 +249,7 @@ public class Flight {
 	}
 	
 	public FlightDTO convert() {
-		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getFlightAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
+		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
 	}
 	
 }

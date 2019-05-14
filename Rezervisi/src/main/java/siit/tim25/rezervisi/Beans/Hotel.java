@@ -60,6 +60,9 @@ public class Hotel {
 	@Column
 	private Double hotelEarning;
 	
+	@Column
+	private Double averageGrade;
+	
 	public Hotel() {
 		super();
 		this.hotelEarning = 0.0;
@@ -81,11 +84,6 @@ public class Hotel {
 		this.roomConfig = roomConfig;
 		this.hotelEarning = 0.0;
 	}
-
-
-
-
-
 
 	public Integer getHotelID() {
 		return hotelID;
@@ -185,17 +183,13 @@ public class Hotel {
 	}
 
 	public Double getAverageGrade() {
-		if (this.grades.size() == 0) {
-			return 0.0;
-		} else {
-			Double grade = 0.0;
-			for(HotelGrade g: this.grades) {
-				grade += g.getScore();
-			}
-			return (grade * 1.0)/this.grades.size();
-		}
+		return averageGrade;
 	}
-	
+
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
+	}
+
 	@Override
 	public String toString() {
 		return "Hotel [hotelID=" + hotelID + ", hotelName=" + hotelName + ", hotelAddress=" + hotelAddress

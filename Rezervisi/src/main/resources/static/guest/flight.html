@@ -37,8 +37,9 @@
   <script>
     $(document).ready(function() {
       getMainPageNavBar();
-      var index = getIndexFromUrl();
-      profile.show(index, 'flight');
+      var index = getParamFromUrl('id');
+      var airLineIndex = getParamFromUrl('airlineId');
+      profile.show([index, airLineIndex], 'flight');
     });
   </script>
 	<body data-spy="scroll" data-target="#pb-navbar" data-offset="200">
@@ -71,7 +72,6 @@
         </div>
         <div class="result">
         </div>
-        <p class="mb-5 mt-3"><a class="btn btn-success btn-lg pb_btn-pill smoothscroll" href="#"><span class="pb_font-14 text-uppercase pb_letter-spacing-1">Reserve</span></a></p>
       </div>
     </section>
     <!-- END section -->

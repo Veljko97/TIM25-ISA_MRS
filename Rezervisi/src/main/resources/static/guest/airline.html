@@ -37,7 +37,7 @@
   <script>
     $(document).ready(function() {
       getMainPageNavBar();
-      var index = getIndexFromUrl();
+      var index = getParamFromUrl('id');
       profile.show(index, 'airline');
     });
   </script>

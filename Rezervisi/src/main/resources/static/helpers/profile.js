@@ -7,11 +7,11 @@ function Profile(urlApis, activeTab) {
   this.index = 0;
 }
 
-Profile.prototype.show = function(index, activeTab) {
-  this.index = index;
+Profile.prototype.show = function(indexParams, activeTab) {
+  this.index = indexParams[0] || indexParams;
   this.activeTab = activeTab;
-  ajaxService.GET(this.urlApis[activeTab].show + index, this.showCallback.bind(this));
-  let showAllUrl = this.getShowAllURL(index, activeTab);
+  ajaxService.GET(this.getGETURL(indexParams, activeTab), this.showCallback.bind(this));
+  let showAllUrl = this.getShowAllURL(indexParams, activeTab);
   this.showList(showAllUrl);
 }
 
@@ -63,6 +63,16 @@ Profile.prototype.getShowAllURL = function(index) {
   }
 }
 
+Profile.prototype.getGETURL = function(indexParams, activeTab) {
+  console.log(indexParams);
+  switch(this.activeTab) {
+    case 'flight':
+      return `/app/airlines/${indexParams[0]}/getFlight/${indexParams[1]}`;
+    default:
+      return this.urlApis[activeTab].show + indexParams;
+  }
+}
+
 Profile.prototype.getEntityHtml = function(data) {
   switch(this.activeTab) {
     case 'airline':
@@ -79,8 +89,10 @@ Profile.prototype.getEntityHtml = function(data) {
       <h2 class=\"profile-headline\">"+data.startDestinationName+"<->"+data.finalDestinationName+"</h2>\
       <div class=\"about\">\
         <span>Price: "+data.ticketPrice+"$</span>\
-        <span class=\"description\">This flight takes off at "+ data.takeOffDate +" and lands at " +data.landingDate+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
-      </div>";
+        <span class=\"description\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " +(new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
+      </div>\
+      <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/flight.html?id="+data.idFlight+"&airlineId="+data.airLineId+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Reserve</span></a></p>\
+      ";
     case 'hotel':
       return "\
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/hotel.jpg")+"\"/>\
@@ -114,7 +126,7 @@ Profile.prototype.getSubEntityTableRowHtml = function(data) {
             <span>Price: "+data.ticketPrice+"$</span>\
           </div>\
           <span class=\"text-overflow\">This flight takes off at "+ data.takeOffDate +" and lands at " +data.landingDate+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
-          <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"\">See more</a>\
+          <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"&airlineId=" + data.airLineId +"\">See more</a>\
         </div>\
       </div>";
     case 'flight':

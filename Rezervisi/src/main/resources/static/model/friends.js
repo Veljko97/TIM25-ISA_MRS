@@ -139,11 +139,11 @@ Friends.prototype.loadFriends = function(){
 }
 
 Friends.prototype.refuseRequest = function(requestId){
-    ajaxService.DELETE("/app/users/removeFriend/"+requestId, this.refuseCallback.bind(this));
+    ajaxService.DELETE("/app/users/removeFriend/"+requestId, {}, this.refuseCallback.bind(this));
 }
 
 Friends.prototype.deleteFriend = function(requestId){
-    ajaxService.DELETE("/app/users/deleteFriend/"+requestId, this.deleteFriendCallback.bind(this));
+    ajaxService.DELETE("/app/users/deleteFriend/"+requestId, {}, this.deleteFriendCallback.bind(this));
 }
 
 Friends.prototype.acceptRequest = function(requestId)   {

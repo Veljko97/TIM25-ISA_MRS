@@ -54,8 +54,8 @@
 }
 
 .nav-tabs {
-  margin-bottom: 10px;
-  width: 30%;
+  margin-bottom: 10px !important;
+  width: 45%;
   align-items: center;
 }
 
@@ -65,4 +65,13 @@ a:hover {
 
 .see-more-link {
   padding-top: 5px;
+}
+
+.nav-blue {
+  background: -moz-linear-gradient(45deg, #665fee 0%, #27c2de 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(45deg, #665fee 0%, #27c2de 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: -o-linear-gradient(45deg, #665fee 0%, #27c2de 100%);
+  background: linear-gradient(45deg, #665fee 0%, #27c2de 100%);
 }

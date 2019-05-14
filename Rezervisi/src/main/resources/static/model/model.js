@@ -54,7 +54,7 @@ Model.prototype.addSuccessCallback = function(data) {
 }
 
 Model.prototype.deleteCallback = function(i) {
-  ajaxService.DELETE(this.urlApi.delete + i + '?page=' + this.currentPage + "&size=" + this.pageSize, this.showAll.bind(this), function() {handleErrorAction();});
+  ajaxService.DELETE(this.urlApi.delete + i + '?page=' + this.currentPage + "&size=" + this.pageSize, {}, this.showAll.bind(this), function() {handleErrorAction();});
 }
 
 Model.prototype.editCallback = function(e) {

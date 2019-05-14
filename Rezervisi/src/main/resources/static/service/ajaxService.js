@@ -34,11 +34,12 @@ var ajaxService = {
       error: errorCallback
     })
   },
-  DELETE: function(apiUrl, successCallback = function() {}, errorCallback = function() {}) {
+  DELETE: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
     this.SETTOKEN();
     $.ajax({
       method: "DELETE",
       url: apiUrl,
+      data: dataObj,
       contentType:"application/json; charset=utf-8",
       dataType: "json",
       success: successCallback,

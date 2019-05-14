@@ -196,7 +196,7 @@ Search.prototype.getEntityTableRowHtml = function(data) {
               <span>Price: "+data.ticketPrice+"$</span>\
             </div>\
             <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
-            <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"\">See more</a>\
+            <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"&airlineId=" + data.airLineId +"\">See more</a>\
           </div>\
         </div>";
     case 'Hotels':

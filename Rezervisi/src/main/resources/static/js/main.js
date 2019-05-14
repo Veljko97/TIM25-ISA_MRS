@@ -1,8 +1,11 @@
-function getIndexFromUrl() {
+function getParamFromUrl(param) {
   var search = window.location.search.substring(1);
   var vars = search.split("&");
-  var pair = vars[0].split("=");
-  return pair[1];
+  for(let i = 0; i < vars.length; i++) {
+    if (vars[i].split("=")[0] == param) {
+      return vars[i].split("=")[1]; // return value of that param
+    }
+  }
 }
 
 // Date Fromating function

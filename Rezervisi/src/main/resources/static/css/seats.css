@@ -48,6 +48,8 @@ ol {
   justify-content: flex-start;
 }
 .seat {
+  cursor: pointer;
+  width: 50px;
   display: flex;
   flex: 0 0 14.28571%;
   padding: 5px;

@@ -8,7 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import siit.tim25.rezervisi.Beans.users.StandardUser;
+import siit.tim25.rezervisi.DTO.FlightDTO;
+import siit.tim25.rezervisi.DTO.TicketDTO;
+
 
 @Entity
 public class Ticket {
@@ -20,31 +25,53 @@ public class Ticket {
 	private Double ticketPrice;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Flight flight;
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private AirLine airLine;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private StandardUser user;
+
+	@Column
+	private String seat;
+	
+	@Column
+	private String firstName;
+	
+	@Column
+	private String lastName;
+	
+	@Column
+	private String email;
+	
+	@Column
+	private String passport;
+	
+	@Column
+	private TicketStatus status;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Flight flight;
+	
 	
 	public Ticket() {
 		super();
 	}
 	
-	public Ticket(Double ticketPrice, Flight flight) {
+	
+	
+	public Ticket(Double ticketPrice, String seat, String firstName, String lastName, String passport,
+			TicketStatus status, Flight flight, String email) {
 		super();
 		this.ticketPrice = ticketPrice;
+		this.seat = seat;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.passport = passport;
+		this.status = status;
 		this.flight = flight;
-	}
-	
-	public AirLine getAirLine() {
-		return airLine;
+		this.email = email;
 	}
 
-	public void setAirLine(AirLine airLine) {
-		this.airLine = airLine;
-	}
 
 	public Double getTicketPrice() {
 		return ticketPrice;
@@ -69,20 +96,110 @@ public class Ticket {
 	public void setIdTicket(Integer idTicket) {
 		this.idTicket = idTicket;
 	}
+	
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+
+	public AirLine getAirLine() {
+		return airLine;
+	}
+
+
+
+	public void setAirLine(AirLine airLine) {
+		this.airLine = airLine;
+	}
+
+
+
+	public StandardUser getUser() {
+		return user;
+	}
+
+
+
+	public void setUser(StandardUser user) {
+		this.user = user;
+	}
+
+
+
+	public String getSeat() {
+		return seat;
+	}
+
+
+
+	public void setSeat(String seat) {
+		this.seat = seat;
+	}
+
+
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+
+	public String getPassport() {
+		return passport;
+	}
+
+
+
+	public void setPassport(String passport) {
+		this.passport = passport;
+	}
+
+
+
+	public TicketStatus getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(TicketStatus status) {
+		this.status = status;
+	}
+
+
 
 	@Override
 	public String toString() {
 		return "Ticket [ticketPrice=" + ticketPrice + ", flight=" + flight + "]";
 	}
 	
-	public StandardUser getUser() {
-		return user;
-	}
-
-	public void setUser(StandardUser user) {
-		this.user = user;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
@@ -94,6 +211,10 @@ public class Ticket {
 	}
 	
 	
+
+	public TicketDTO convert() {
+		return new TicketDTO(String.valueOf(ticketPrice), seat, firstName, lastName, email, passport, status, this.getFlight().getIdFlight(), this.getFlight().getStartDestination().getDestinationName(), this.getFlight().getFinalDestination().getDestinationName());
+	}
 	
 	
 	

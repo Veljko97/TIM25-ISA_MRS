@@ -42,6 +42,10 @@ public class UserService  {
 		return userRepository.findbyRole(role);
 	}
 	
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+	
 	public UserDTO create(RegistrationUserDTO t) {
 		if(userRepository.findByUsername(t.getUsername())==null)
 		{

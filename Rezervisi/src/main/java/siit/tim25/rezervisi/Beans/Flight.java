@@ -1,9 +1,9 @@
 package siit.tim25.rezervisi.Beans;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -62,6 +62,7 @@ public class Flight {
 	private Set<Destination> stopLocations = new HashSet<Destination>();
 	
 	@OneToMany(mappedBy = "flight", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Set<Ticket> flightTickets = new HashSet<Ticket>();
 	
 	@Column
@@ -189,13 +190,6 @@ public class Flight {
 	public void setNumberOfStops(int numberOfStops) {
 		this.numberOfStops = numberOfStops;
 	}
-	public Set<Ticket> getFlightTicket() {
-		return flightTickets;
-	}
-	public void setFlightTicket(Set<Ticket> flightTickets) {
-		this.flightTickets = flightTickets;
-	}
-
 	public AirPlane getAirplane() {
 		return airplane;
 	}
@@ -230,8 +224,17 @@ public class Flight {
 		return o.idFlight == this.idFlight;
 	}
 	
+	public List<String> getTakenSeatNames() {
+		List<String> seats = new ArrayList<String>();
+
+		for(Ticket t: this.flightTickets) {
+			seats.add(t.getSeat());
+		}
+		return seats;
+	}
+	
 	public FlightDTO convert() {
-		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getFlightAverageGrade());
+		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getFlightAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
 	}
 	
 }

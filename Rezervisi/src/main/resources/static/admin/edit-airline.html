@@ -14,7 +14,7 @@
       $(document).ready(function(){
         checkUSerPermission();
         showAdminNavbar();
-        var index = getIndexFromUrl();
+        var index = getParamFromUrl('id');
         airlines.show(index);
       });
     </script>

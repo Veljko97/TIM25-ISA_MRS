@@ -142,27 +142,27 @@ Flights.prototype.showSeats = function(airlineId, flightId) {
         <li class=\"row row--"+i+"\">\
           <ol class=\"seats\" type=\"A\">\
             <li class=\"seat\">\
-              <input type=\"checkbox\" id=\""+i+"A\"/>\
+              <input onclick=\"modal.show(event, '"+i+"A');\" " + (flight.seats.includes(i + 'A') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"A\"/>\
               <label for=\""+i+"A\">"+i+"A</label>\
             </li>\
             <li class=\"seat\">\
-              <input type=\"checkbox\" id=\""+i+"B\"/>\
-              <label for=\""+i+"1B\">"+i+"B</label>\
+              <input onclick=\"modal.show(event, '"+i+"B');\" " + (flight.seats.includes(i + 'B') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"B\"/>\
+              <label for=\""+i+"B\">"+i+"B</label>\
             </li>\
             <li class=\"seat\">\
-              <input type=\"checkbox\" id=\""+i+"C\"/>\
+              <input onclick=\"modal.show(event, '"+i+"C');\" " + (flight.seats.includes(i + 'C') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"C\"/>\
               <label for=\""+i+"C\">"+i+"C</label>\
             </li>\
             <li class=\"seat\">\
-              <input type=\"checkbox\" id=\""+i+"D\"/>\
+              <input onclick=\"modal.show(event, '"+i+"D');\" " + (flight.seats.includes(i + 'D') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"D\"/>\
               <label for=\""+i+"D\">"+i+"D</label>\
             </li>\
             <li class=\"seat\">\
-              <input type=\"checkbox\" id=\""+i+"E\"/>\
+              <input onclick=\"modal.show(event, '"+i+"E');\" " + (flight.seats.includes(i + 'E') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"E\"/>\
               <label for=\""+i+"E\">"+i+"E</label>\
             </li>\
             <li class=\"seat\">\
-              <input type=\"checkbox\" id=\""+i+"F\"/>\
+              <input onclick=\"modal.show(event, '"+i+"F');\" " + (flight.seats.includes(i + 'F') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"F\"/>\
               <label for=\""+i+"F\">"+i+"F</label>\
             </li>\
           </ol>\

@@ -1,11 +1,15 @@
 package siit.tim25.rezervisi.Controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -16,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,17 +38,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
+import siit.tim25.rezervisi.Beans.InvitationResponseType;
+import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FlightDTO;
+import siit.tim25.rezervisi.DTO.FriendsDTO;
+import siit.tim25.rezervisi.DTO.FriendsListsDTO;
+import siit.tim25.rezervisi.DTO.ReservationUserDTO;
+import siit.tim25.rezervisi.DTO.TicketDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.AirLineServices;
 import siit.tim25.rezervisi.Services.AirplaneServices;
 import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.FlightServices;
 import siit.tim25.rezervisi.Services.ImageServices;
+import siit.tim25.rezervisi.Services.ProducerServices;
+import siit.tim25.rezervisi.Services.TicketServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
+import siit.tim25.rezervisi.Services.users.StandardUserServices;
+import siit.tim25.rezervisi.security.TokenUtils;
 import siit.tim25.rezervisi.security.model.TokenState;
 import siit.tim25.rezervisi.security.model.User;
+import siit.tim25.rezervisi.security.servicce.UserService;
 
 @RestController
 @RequestMapping(path="app/airlines")
@@ -62,6 +79,18 @@ public class AirLineController {
 	private AirplaneServices airplaneServices;
 	
 	@Autowired
+	private ProducerServices producerServices;
+	
+	@Autowired
+	private UserService userServices;
+	
+	@Autowired
+	private StandardUserServices stdUserServices;
+	
+	@Autowired
+	private TicketServices ticketServices;
+	
+	@Autowired
 	@Lazy
 	private PasswordEncoder passwordEncoder;
 	
@@ -73,6 +102,9 @@ public class AirLineController {
 	
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	TokenUtils tokenUtils;
 	
 	@GetMapping(path="/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<AirLine>> searchAirline(Pageable pageable, @RequestParam String name) {
@@ -228,6 +260,77 @@ public class AirLineController {
 		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(airlineId, pageable),HttpStatus.OK);
 	}
 	
+	@PostMapping(path="/{airlineId}/buyticket/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
+	public ResponseEntity<Integer> buyTicket(@PathVariable Integer airlineId, @PathVariable Integer flightId, HttpServletRequest request, @RequestBody ReservationUserDTO user) throws UnknownHostException
+	{
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		User loggedUser = this.userServices.findByUsername(username);
+
+		switch(user.getUserType()) {
+		case CURRENT:		    
+			return new ResponseEntity<Integer>(flightServices.addTicket(airlineId, flightId, user, loggedUser), HttpStatus.OK);
+		case UNREGISTERED:
+			User registered = userServices.findByEmail(user.getEmail());
+			if (registered == null) {
+				return new ResponseEntity<Integer>(flightServices.addTicket(airlineId, flightId, user), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Integer>(-1, HttpStatus.BAD_REQUEST);
+			}
+		case REGISTERED:
+			StandardUser standardLoggedUser = stdUserServices.findByUsername(username);
+			FriendsListsDTO friends = new FriendsListsDTO(standardLoggedUser);
+			User registeredUser = userServices.findByEmail(user.getEmail());
+			for (FriendsDTO f: friends.getAccepted()) {
+				if (f.getOther().getEmail().equals(user.getEmail())) {
+					return new ResponseEntity<Integer>(flightServices.addTicket(airlineId, flightId, user, registeredUser), HttpStatus.OK);
+				}
+			}
+		default:
+			return new ResponseEntity<Integer>(-1, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@DeleteMapping(path="/{airlineId}/cancelReservation/{flightId}")
+	public void cancelReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody List<Integer> ids){
+		for(Integer id: ids) {
+			this.flightServices.deleteTicket(flightId, id);
+		}
+	}
+	
+	@PostMapping(path="/{airlineId}/continueReservation/{flightId}")
+	public void continueReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, HttpServletRequest request, @RequestBody List<Integer> ids){
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		User loggedUser = this.userServices.findByUsername(username);
+
+		for(Integer id: ids) {
+			Ticket t = this.ticketServices.findOne(id);
+			String text = "You have a new invitation for a trip with your friend " + 
+					loggedUser.getFirstName() + " " + loggedUser.getLastName() + " on Reservify platform. Please follow this link to proceed: http://localhost:8888/invitation/flight.html?ticketId=" + t.getIdTicket();
+			this.producerServices.sendEmailTo(t.getEmail(), text);
+		}
+	}
+	
+	@GetMapping(path="/getTicket/{ticketId}")
+	public ResponseEntity<TicketDTO> getTicket(@PathVariable Integer ticketId) {
+		return new ResponseEntity<TicketDTO>(this.ticketServices.findOne(ticketId).convert(), HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/reservationResponse/{ticketId}")
+	public void respond(@PathVariable Integer ticketId, @RequestBody InvitationResponseType type){
+		switch(type) {
+		case ACCEPTED:
+			flightServices.changeTicketStatus(ticketId);
+			break;
+		case DECLINED:
+			flightServices.deleteTicket(this.ticketServices.findOne(ticketId).getFlight().getIdFlight(), ticketId);
+			break;
+		}
+	}
+	
+	
 	@GetMapping(path="/showUser/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<ArrayList<UserDTO>> getUsers(@PathVariable Integer id){
@@ -267,4 +370,7 @@ public class AirLineController {
 		imageServices.saveUserImg(image, admin.getUsername());
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
+	
+	
+	
 }

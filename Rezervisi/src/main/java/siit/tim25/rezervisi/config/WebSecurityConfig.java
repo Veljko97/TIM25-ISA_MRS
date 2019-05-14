@@ -67,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/admin/hotels","/admin/rentacars", "/admin/edit-rentacar", 
 					"/admin/add-admin-airline","/admin/add-admin-hotel","/admin/add-admin-rentACar").hasRole("SYS_ADMIN")
 			.antMatchers("/admin-rentacars/index","/admin-rentacars/branches", "/admin-rentacars/edit-branch").hasRole("RENTACAR_ADMIN")
-			.antMatchers("/app/friends/**", "/user/friends").hasRole("USER")
+			.antMatchers("/app/friends/**", "/user/friends", "/reserve/**").hasRole("USER")
 			.and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 

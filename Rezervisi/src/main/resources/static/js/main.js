@@ -125,12 +125,14 @@ function showAdminNavbar() {
   let navbar = $("#navigationBar");
   switch(user.role) {
     case 'ROLE_AIRLINE_ADMIN':
-      navbar.html("\
-        <div>\
+      navbar.html("<div>\
           <li><a href=\"/admin-airlines/destinations.html\">Destinations</a></li>\
           <li><a href=\"/admin-airlines/flights.html\">Flights</a></li>\
         </div>\
-        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+        <div>\
+    	  <li><a href=\"/editProfile.html\">Edit profile</a></li>\
+    	  <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+    	</div>\
       ")
       return;
     case 'ROLE_RENTACAR_ADMIN':
@@ -139,13 +141,19 @@ function showAdminNavbar() {
           <li><a href=\"/admin-rentacars/branches.html\">Branches</a></li>\
           <li><a href=\"/admin-rentacars/vehicles.html\">Vehicles</a></li>\
         </div>\
-        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+        <div>\
+    	  <li><a href=\"/editProfile.html\">Edit profile</a></li>\
+    	  <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+    	</div>\
       ")
       return;
     case 'ROLE_HOTEL_ADMIN':
       navbar.html("\
         <li><a href=\"/admin-hotels/rooms.html\">Rooms</a></li>\
-        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+        <div>\
+    	  <li><a href=\"/editProfile.html\">Edit profile</a></li>\
+    	  <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+    	</div>\
       ")
       return;
     case 'ROLE_SYS_ADMIN':
@@ -156,7 +164,10 @@ function showAdminNavbar() {
         <li><a href=\"/admin/rentacars.html\">Rent a Car</a></li>\
         <li><a href=\"/admin/add-admin-sys.html\">System Admins</a></li>\
       </div>\
-      <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      <div>\
+		<li><a href=\"/editProfile.html\">Edit profile</a></li>\
+		<li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      </div>\
       ")
       return;
     default:

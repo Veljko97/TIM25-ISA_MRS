@@ -18,6 +18,41 @@ errorImage = function(img) {
   img.src = "../assets/images/no-image.png";
 }
 
+Search.prototype.showSearchOptions = function() {
+	let user = JSON.parse(sessionStorage.user);
+	if (user) {
+		$("#options").html("<button class=\"tablinks active\" onclick=\"search.switchTab(event, 'Airlines')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-plane pb_icon-gradient\"></i></div>\
+              </button>\
+              <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Flights')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-globe pb_icon-gradient\"></i></div>\
+              </button>\
+              <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Hotels')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-home pb_icon-gradient\"></i></div>\
+              </button>\
+              <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Rentacar')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-car pb_icon-gradient\"></i></div>\
+              </button>\
+              <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Users')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-contact pb_icon-gradient\"></i></div>\
+              </button>");
+	}
+	else {
+		$("#options").html("<button class=\"tablinks active\" onclick=\"search.switchTab(event, 'Airlines')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-plane pb_icon-gradient\"></i></div>\
+              </button>\
+              <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Flights')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-globe pb_icon-gradient\"></i></div>\
+              </button>\
+              <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Hotels')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-home pb_icon-gradient\"></i></div>\
+              </button>\
+              <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Rentacar')\">\
+                <div class=\"pb_icon\"><i class=\"ion-android-car pb_icon-gradient\"></i></div>\
+              </button>")
+	}
+}
+
 Search.prototype.switchTab = function(evt, tabName) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
@@ -81,6 +116,7 @@ Search.prototype.tick = function(e, checkBoxType) {
 Search.prototype.init = function() {
   this.render();
   this.bindEvents();
+  this.showSearchOptions();
 }
 
 Search.prototype.render = function(url = null) {

@@ -36,6 +36,9 @@ public class Vehicle {
 	
 	@Column
     private String image;
+	
+	@Column
+	private Double averageGrade;
 
 	public Vehicle() {
 		this.vehicleName = "";
@@ -102,6 +105,14 @@ public class Vehicle {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public Double getAverageGrade() {
+		return averageGrade;
+	}
+
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
 	}
 
 	@Override

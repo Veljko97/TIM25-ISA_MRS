@@ -55,6 +55,9 @@ public class AirLine {
 	@Column(name = "airlineEarning", nullable = false)
 	private Double airlineEarning;
 
+	@Column
+	private Double averageGrade;
+	
 	public AirLine() {
 		super();
 		this.airlineEarning = 0.0;
@@ -161,6 +164,14 @@ public class AirLine {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public Double getAverageGrade() {
+		return averageGrade;
+	}
+
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
 	}
 
 	@Override

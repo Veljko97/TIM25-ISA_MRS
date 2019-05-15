@@ -10,12 +10,13 @@ import javax.persistence.OneToMany;
 
 import siit.tim25.rezervisi.Beans.RoomReservation;
 import siit.tim25.rezervisi.Beans.Ticket;
+import siit.tim25.rezervisi.Beans.VehicleReservation;
 import siit.tim25.rezervisi.Beans.Grades.AirLineGrade;
+import siit.tim25.rezervisi.Beans.Grades.FlightGrade;
 import siit.tim25.rezervisi.Beans.Grades.HotelGrade;
 import siit.tim25.rezervisi.Beans.Grades.RentACarGrade;
 import siit.tim25.rezervisi.Beans.Grades.RoomGrade;
 import siit.tim25.rezervisi.Beans.Grades.VehicleGrade;
-import siit.tim25.rezervisi.Beans.VehicleReservation;
 import siit.tim25.rezervisi.security.model.User;
 
 @Entity
@@ -37,6 +38,9 @@ public class StandardUser extends User {
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<VehicleGrade> vehicleGrades = new HashSet<VehicleGrade>();
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<FlightGrade> flightGrades = new HashSet<FlightGrade>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Ticket> airLineTickets = new HashSet<Ticket>();
@@ -135,5 +139,13 @@ public class StandardUser extends User {
 
 	public void setReceivedRequests(Set<Friends> receivedRequests) {
 		this.receivedRequests = receivedRequests;
+	}
+
+	public Set<FlightGrade> getFlightGrades() {
+		return flightGrades;
+	}
+
+	public void setFlightGrades(Set<FlightGrade> flightGrades) {
+		this.flightGrades = flightGrades;
 	}
 }

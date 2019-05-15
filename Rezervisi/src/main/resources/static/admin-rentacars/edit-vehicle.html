@@ -13,7 +13,7 @@
       $(document).ready(function(){
         checkUserPermission();
         showAdminNavbar();
-        var index = getIndexFromUrl();
+        var index = getParamFromUrl('id');
         vehicles.show(index);
       });
     </script>

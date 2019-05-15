@@ -19,13 +19,29 @@ public class RentACarGrade {
 	private Integer id;
 	
 	@Column
-	private Double score;
+	private int score;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private RentACar rentACar;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private StandardUser user;
+
+	public RentACarGrade() {
+		super();
+		this.id = null;
+		this.score = -1;
+		this.rentACar = null;
+		this.user = null;
+	}
+	
+	public RentACarGrade(Integer id, int score, RentACar rentACar, StandardUser user) {
+		super();
+		this.id = id;
+		this.score = score;
+		this.rentACar = rentACar;
+		this.user = user;
+	}
 
 	public Integer getId() {
 		return id;
@@ -35,11 +51,11 @@ public class RentACarGrade {
 		this.id = id;
 	}
 
-	public Double getScore() {
+	public int getScore() {
 		return score;
 	}
 
-	public void setScore(Double score) {
+	public void setScore(int score) {
 		this.score = score;
 	}
 

@@ -19,13 +19,29 @@ public class RoomGrade {
 	private Integer id;
 	
 	@Column
-	private Double score;
+	private int score;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Room room;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private StandardUser user;
+
+	public RoomGrade() {
+		super();
+		this.id = null;
+		this.score = -1;
+		this.room = null;
+		this.user = null;
+	}
+	
+	public RoomGrade(Integer id, int score, Room room, StandardUser user) {
+		super();
+		this.id = id;
+		this.score = score;
+		this.room = room;
+		this.user = user;
+	}
 
 	public Integer getId() {
 		return id;
@@ -35,11 +51,11 @@ public class RoomGrade {
 		this.id = id;
 	}
 
-	public Double getScore() {
+	public int getScore() {
 		return score;
 	}
 
-	public void setScore(Double score) {
+	public void setScore(int score) {
 		this.score = score;
 	}
 

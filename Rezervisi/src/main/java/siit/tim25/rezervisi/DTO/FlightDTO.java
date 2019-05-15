@@ -25,6 +25,8 @@ public class FlightDTO {
 	private Integer idFlight;
 	private String type;
 	private String flightClass;
+	private int airLineId;
+	private List<String> seats;
 
 	
 	public FlightDTO() {
@@ -34,7 +36,7 @@ public class FlightDTO {
 	
 	public FlightDTO(Integer idFlight, String startDestinationName, String finalDestinationName, Long takeOffDate, Long landingDate,
 			String flightLength, int numberOfStops, int numberOfSeats, String flightClass, String type, String airplane, Double ticketPrice,
-			Double flightAverageGrade) {
+			Double flightAverageGrade, int airLineId, List<String> seats) {
 		super();
 		this.idFlight = idFlight;
 		this.startDestinationName = startDestinationName;
@@ -49,6 +51,8 @@ public class FlightDTO {
 		this.flightAverageGrade = flightAverageGrade;
 		this.type = type;
 		this.flightClass = flightClass;
+		this.airLineId = airLineId;
+		this.seats = seats;
 	}
 	public String getStartDestinationName() {
 		return startDestinationName;
@@ -67,6 +71,12 @@ public class FlightDTO {
 	}
 	public void setTakeOffDate(Long takeOffDate) {
 		this.takeOffDate = takeOffDate;
+	}
+	public int getAirLineId() {
+		return airLineId;
+	}
+	public void setAirLineId(int airLineId) {
+		this.airLineId = airLineId;
 	}
 	public Long getLandingDate() {
 		return landingDate;
@@ -136,6 +146,16 @@ public class FlightDTO {
 	}
 
 
+	public List<String> getSeats() {
+		return seats;
+	}
+
+
+	public void setSeats(List<String> seats) {
+		this.seats = seats;
+	}
+
+
 	public String getFlightClass() {
 		return flightClass;
 	}
@@ -176,7 +196,7 @@ public class FlightDTO {
 		f.setFlightLength(this.flightLength);
 		f.setTicketPrice(this.getTicketPrice());
 		f.setNumberOfStops(this.numberOfStops);
-		f.setFlightAverageGrade(this.flightAverageGrade);
+		f.setAverageGrade(this.flightAverageGrade);
 		f.setType(FlightType.valueOf(this.type));
 		f.setFlightClass(FlightClass.valueOf(this.flightClass));
 		return f;

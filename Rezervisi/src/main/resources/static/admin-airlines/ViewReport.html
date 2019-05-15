@@ -18,13 +18,13 @@
    <script src="../js/jqxchart.core.js"></script>
    <script>
         $(document).ready(function () {
-                var source = {
+        	var source = {
                     datatype: "json",
                     datafields: [{
-                        name: 'id_flight',
+                        name: 'idFlight',
                         type: 'int'
                     }, {
-                        name: 'flight_average_grade',
+                        name: 'flightAverageGrade',
                         type: 'float'
                     }],
                     url: '/app/chart/getFlights',
@@ -32,68 +32,60 @@
                     async: true
                 };
                 var dataAdapter = new $.jqx.dataAdapter(source, { async: false, autoBind: true, loadError: function (xhr, status, error) { alert('Error loading "' + source.url + '" : ' + error); } });
-                var settings = {
-                    title: "Flights report",
-                    description: "Flight average grade",
-                    showLegend: true,
-                    enableAnimations: true,
-                    padding: { left: 5, top: 5, right: 5, bottom: 5 },
-                    titlePadding: { left: 90, top: 0, right: 0, bottom: 10 },
-                    source: dataAdapter,
-                    xAxis: {
-                        dataField: 'id_flight',
-                        displayText: 'Flight ID',
-                        gridLines: {
-                            visible: true
+        var settings = {
+            title: "Fitness & exercise weekly scorecard",
+            description: "Time spent in vigorous exercise",
+			enableAnimations: true,
+            showLegend: true,
+            padding: { left: 5, top: 5, right: 5, bottom: 5 },
+            titlePadding: { left: 90, top: 0, right: 0, bottom: 10 },
+			source: dataAdapter,
+            xAxis:
+                {
+                    dataField: 'idFlight',
+                    showGridLines: true
+                },
+            colorScheme: 'scheme01',
+            seriesGroups:
+                [
+                    {
+                        type: 'column',
+                        columnsGapPercent: 50,
+                        seriesGapPercent: 0,
+                        valueAxis:
+                        {
+                            unitInterval: 10,
+                            minValue: 0,
+                            maxValue: 10,
+                            displayValueAxis: true,
+                            description: 'Grade',
+                            axisSize: 'auto',
+                            tickMarksColor: '#888888'
                         },
-                        valuesOnTicks: false,
-                        type: 'basic',
-                        labels: {
-                            class: 'labels',
-                            angle: 90,
-                            formatFunction: function (value) {
-                                return value.replace(/\?/g, '');
-                            }
-                        },
-                        flip: false
-                    },
-                    colorScheme: 'scheme01',
-                    seriesGroups:
-                        [
-                            {
-                                type: 'column',
-                                valueAxis:
-                                {
-                                    visible: true,
-                                    unitInterval: 5000,
-                                    title: { text: 'GDP & Debt per Capita($)<br>' }
-                                },
-                                series: [
-                                        { dataField: 'idFlight', displayText: 'GDP per Capita' }
-                                    ]
-                            },
-                            {
-                                type: 'line',
-                                valueAxis:
-                                {
-                                    visible: true,
-                                    position: 'right',
-                                    unitInterval: 10,
-                                    title: { text: 'Debt (% of GDP)' },
-                                    gridLines: { visible: false },
-                                    labels: { horizontalAlignment: 'left' }
-                                },
-                                series: [
-                                        { dataField: 'DebtPercent', displayText: 'Debt (% of GDP)' }
-                                    ]
-                            }
-                        ]
-                };
-                $('#chartContainer').jqxChart(settings);
+                        series: [
+                                { dataField: 'flightAverageGrade', displayText: 'Flight Average Grade'}
+                            ]
+                    }
+                ]
+        };
+        
+        // setup the chart
+        $('#jqxChart').jqxChart(settings);
             });
     </script>
 </head>
-<body>
-    <div id='chartContainer' style="width: 860px; height: 600px; margin-bottom: 25px;"></div>
+<body class='default'>
+	<div style='height: 600px; width: 682px;'>
+    <div id='host' style="margin: 0 auto; width:850px; height:400px;">
+		<div id='jqxChart' style="width:850px; height:400px; position: relative; left: 0px; top: 0px;">
+		</div>
+	</div>
+    </div>
+     <div class="example-description">
+       <br />
+       <h2>Description</h2>
+       <br />
+       This is an example of JavaScript Chart Column series with local data.
+    </div>
 </body>
 </html>

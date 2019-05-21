@@ -10,11 +10,42 @@ INSERT INTO USER (id, username, password, first_name, last_name, email, enabled,
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (9, 'user5', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U5@example.com', true, true);
 INSERT INTO USER (id, username, password, first_name, last_name, email, enabled, confirmed) VALUES (10, 'user6', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'user', 'user', 'U6@example.com', true, true);
 
-INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning) VALUES ('1', 'fasf', 'fasf', 'Name', '0');
-INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid) VALUES ('1', 'Description neki', 'Destinacija', '1');
-INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name) VALUES ('1', 'neka', 'super', '0', 'Ime');
-INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination) VALUES ('1', 'adresa', 'valja', '0', 'ime', '1');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning, image) VALUES ('1', '1 Harborside Dr, Boston, MA 02128, USA', 'Good Airport', 'BostonAir', '0','/assets/images/airlines/1.jpg');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning, image) VALUES ('2', '08820 El Prat de Llobregat, Barcelona, Spain, France', 'Good', 'Barcelona–El Prat Airport', '0','/assets/images/airlines/2.jpg');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning, image) VALUES ('3', 'Alameda das Comunidades Portuguesas, 1700-111 Lisboa, Portugal', 'Good One', 'Lisbon Portela Airport', '0','/assets/images/airlines/3.jpg');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning, image) VALUES ('4', 'dubai airport', 'Top', 'Dubai International Airport', '0','/assets/images/airlines/4.jpg');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning, image) VALUES ('5', 'Queens, NY 11430, USA', 'Good','John F. Kennedy International Airport','0','/assets/images/airlines/5.jpg');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning, image) VALUES ('6', 'Evert van de Beekstraat 202, 1118 CP Schiphol, Netherlands', 'Good','Amsterdam Airport Schiphol','0','/assets/images/airlines/6.jpg');
+INSERT INTO air_line (air_lineid, air_line_address,  air_line_description, air_line_name, airline_earning, image) VALUES ('7', '95700 Roissy-en-France, France', 'Good','Charles de Gaulle Airport','0','/assets/images/airlines/7.jpg');
 
+
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid, image) VALUES ('1', 'Dobra destinacija', 'Pariz', '7','/assets/images/destinations/1.jpg');
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid, image) VALUES ('2', 'Dobra destinacija', 'Amsterdam', '6','/assets/images/destinations/2.jpg');
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid, image) VALUES ('3', 'Dobra destinacija', 'Boston', '1','/assets/images/destinations/3.jpg');
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid, image) VALUES ('4', 'Dobra destinacija', 'New York', '5','/assets/images/destinations/4.jpg');
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid, image) VALUES ('5', 'Dobra destinacija', 'Dubai', '4','/assets/images/destinations/5.jpg');
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid, image) VALUES ('6', 'Dobra destinacija', 'Barcelona', '2','/assets/images/destinations/6.jpg');
+INSERT INTO destination (id_destination, destination_description, destination_name, air_line_air_lineid, image) VALUES ('7', 'Dobra destinacija', 'Lisabon', '3','/assets/images/destinations/7.jpg');
+
+
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name, image) VALUES ('1', '1403 S 3rd St, Mabank, TX 75147', 'cool', '0', 'Enterprise','/assets/images/rentacars/1.jpg');
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name, image) VALUES ('2', '1612A Bel Air Rd, Fallston, MD 21047', 'great', '0', 'Rent Point','/assets/images/rentacars/2.png');
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name, image) VALUES ('3', '686, Burnside Avenue, Inwood, USA, 11096', 'super', '0', 'Rent Smart', '/assets/images/rentacars/3.jpg');
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name, image) VALUES ('4', '6401 Passyunk Ave, Philadelphia, PA 19153', 'good', '0', 'Rent A Car','/assets/images/rentacars/4.jpeg');
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name, image) VALUES ('5', '11419 Reisterstown Rd, Owings Mills, MD 21117', 'very good', '0', 'Sixt Rent A Car','/assets/images/rentacars/5.jpeg');
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name, image) VALUES ('6', '5368 Telephone Rd, Warrenton, VA 20187', 'excellent', '0', 'Student Rent A Car','/assets/images/rentacars/6.jpg');
+INSERT INTO rentacar (rentacarid, rentacar_address,  rentacar_description, rentacar_earning, rentacar_name, image) VALUES ('7', '741 N Broadway, East Providence, RI 02914', 'excellent', '0', 'Leisure Car Rental','/assets/images/rentacars/7.jpg');
+
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('1', '2 Rue Scribe, 75009 Paris, France', 'valja', '0', 'InterContinental Paris - Le Grand', '2','/assets/images/hotels/1.jpg');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('2', 'Spaarndammerdijk 302, 1013 ZX Amsterdam, Netherlands', 'valja', '0', 'Art Hotel Amsterdam', '3','/assets/images/hotels/2.jpg');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('3', '505 Washington Street, Theatre District, Boston, MA 02111, USA', 'valja', '0', 'The Godfrey Hotel Boston', '1','/assets/images/hotels/3.jpg');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('4', '870 7th Ave, New York, NY 10019, USA', 'valja', '0', 'Park Central Hotel', '4','/assets/images/hotels/4.jpg');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('5', '3 Sheikh Zayed Rd - Dubai - United Arab Emirates', 'valja', '0', 'Sheraton Grand Hotel, Dubai', '5','/assets/images/hotels/5.jpg');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('6', 'Avinguda Diagonal, 1, 08019 Barcelona, Spain', 'valja', '0', 'Hotel Barcelona Princess', '6','/assets/images/hotels/6.jpg');
+INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('7', 'R. Castilho 149, 1099-034 Lisboa, Portugal', 'valja', '0', 'InterContinental Lisbon', '7','/assets/images/hotels/7.jpg');
+
+INSERT INTO flight (id_flight, average_grade, flight_class, flight_length, landing_date, number_of_stops, take_off_date, ticket_price, air_line_air_lineid, airplane_id, final_destination_id_destination, start_destination_id_destination)  
+VALUES ('1','10.00','1','1200','2019-11-13 13:23:44','0','20019-11-12 13:23:44','2500','1','2','2','1')
 
 INSERT INTO air_line_admin(id, air_line_air_lineid) VALUES (3, 1);
 INSERT INTO hotel_admin (id, hotel_hotelid) VALUES (2, 1);

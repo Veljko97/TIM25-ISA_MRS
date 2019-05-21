@@ -1,5 +1,7 @@
 package siit.tim25.rezervisi.Beans;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,11 +9,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import siit.tim25.rezervisi.Beans.users.StandardUser;
-import siit.tim25.rezervisi.DTO.FlightDTO;
 import siit.tim25.rezervisi.DTO.TicketDTO;
 
 
@@ -25,6 +28,7 @@ public class Ticket {
 	private Double ticketPrice;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private AirLine airLine;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -45,6 +49,10 @@ public class Ticket {
 	@Column
 	private String passport;
 	
+	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date created;
+	
 	@Column
 	private TicketStatus status;
 	
@@ -60,7 +68,7 @@ public class Ticket {
 	
 	
 	public Ticket(Double ticketPrice, String seat, String firstName, String lastName, String passport,
-			TicketStatus status, Flight flight, String email) {
+			TicketStatus status, Flight flight, String email, AirLine a) {
 		super();
 		this.ticketPrice = ticketPrice;
 		this.seat = seat;
@@ -70,6 +78,8 @@ public class Ticket {
 		this.status = status;
 		this.flight = flight;
 		this.email = email;
+		this.created = new Date();
+		this.airLine = a;
 	}
 
 
@@ -195,6 +205,18 @@ public class Ticket {
 
 
 
+	public Date getCreated() {
+		return created;
+	}
+
+
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "Ticket [ticketPrice=" + ticketPrice + ", flight=" + flight + "]";
@@ -213,7 +235,8 @@ public class Ticket {
 	
 
 	public TicketDTO convert() {
-		return new TicketDTO(String.valueOf(ticketPrice), seat, firstName, lastName, email, passport, status, this.getFlight().getIdFlight(), this.getFlight().getStartDestination().getDestinationName(), this.getFlight().getFinalDestination().getDestinationName());
+		Integer airLineId = this.airLine != null ? this.airLine.getAirLineID() : null;
+		return new TicketDTO(airLineId, this.idTicket, String.valueOf(ticketPrice), seat, firstName, lastName, email, passport, status, this.getFlight().getIdFlight(), this.getFlight().getStartDestination().getDestinationName(), this.getFlight().getFinalDestination().getDestinationName());
 	}
 	
 	

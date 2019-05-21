@@ -1,6 +1,6 @@
 function Reserve() {
   this.reservations = [];
-
+  this.tickets = [];
 }
 
 Reserve.prototype.reserveFlight = function(e, userType) {
@@ -15,6 +15,41 @@ Reserve.prototype.reserveFlightCallback = function(data) {
   $('#' + modal.seat).prop("onclick", null).off("click");
   $('#' + modal.seat).click(function(e) { e.preventDefault();return false; });
   modal.close();
+}
+
+Reserve.prototype.getReservations = function() {
+  let user = JSON.parse(sessionStorage.user);
+  ajaxService.GET('/app/reservations/' + user.id + '/getTickets', this.showTicketReservationsCallback.bind(this));
+}
+
+Reserve.prototype.showTicketReservationsCallback = function(response) {
+  $("#ticket-results").html("");
+  if (!response.length) {return;}
+  for(let i = 0; i < response.length; i++) {
+    let data = response[i];
+    $("#ticket-results").html($("#ticket-results").html() + "<div class=\"row search-result\">\
+    <div class=\"search-content\">\
+      <div class=\"search-group\">\
+        <h4>"+data.srcDestName+"<->"+data.targetDestName+"</h4>\
+        <span>Price: "+data.ticketPrice+"$</span>\
+      </div>\
+      <span class=\"text-overflow\">Seat: " + data.seat + "</span>\
+      <span class=\"text-overflow\">Reservation Type: Flight</span>\
+      <p class=\"mb-5 mt-3 ml-3\">\
+        <a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"\" onclick=\"reserve.deleteTicketReservation(event,"+ data.airlineId + "," + data.idFlight + "," + data.ticketId+")\">\
+          <span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">\
+            Cancel\
+          </span>\
+        </a>\
+      </p>\
+    </div>\
+    </div>");
+  }
+}
+
+Reserve.prototype.deleteTicketReservation = function(e, airlineid, flightid, ticketid) {
+  e.preventDefault();
+  ajaxService.DELETE('/app/airlines/' + airlineid + '/cancelReservation/' + flightid, JSON.stringify([ticketid]), this.getReservations.bind(this));
 }
 
 Reserve.prototype.makeJSONFlightObject = function(userType) {

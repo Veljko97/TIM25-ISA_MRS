@@ -1,4 +1,8 @@
 ﻿/*Rounded Corners*/
+
+.labels {
+  font-size: smaller;
+}
 /*top-left rounded Corners*/
 .jqx-rc-tl
 {

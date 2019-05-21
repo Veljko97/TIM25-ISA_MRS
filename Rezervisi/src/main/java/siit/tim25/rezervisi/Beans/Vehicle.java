@@ -115,6 +115,13 @@ public class Vehicle {
 		this.averageGrade = averageGrade;
 	}
 
+	
+	@Override
+	public String toString() {
+		return "Vehicle [idVehicle=" + idVehicle + ", vehicleName=" + vehicleName + ", branch=" + branch + ", grades="
+				+ grades + ", reservation=" + reservation + ", image=" + image + ", averageGrade=" + averageGrade + "]";
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
@@ -126,7 +133,7 @@ public class Vehicle {
 	}
 	
 	public VehicleDTO convert() {
-		return new VehicleDTO(this.vehicleName, this.idVehicle, this.branch.getBranchName());
+		return new VehicleDTO(this.vehicleName, this.idVehicle, this.branch.getBranchName(), this.getAverageGrade());
 	}
 	
 	

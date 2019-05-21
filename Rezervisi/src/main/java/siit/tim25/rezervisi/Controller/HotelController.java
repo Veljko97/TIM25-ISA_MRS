@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -126,6 +127,11 @@ public class HotelController {
 	@GetMapping(path="/{hotelId}/showRooms", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<Room>> getRooms(Pageable pageable, @PathVariable Integer hotelId) {
 		return new ResponseEntity<Page<Room>>(roomServices.findAll(hotelId, pageable),HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{hotelId}/showAllRooms", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Room>> getAllRooms(@PathVariable Integer hotelId) {
+		return new ResponseEntity<List<Room>>(roomServices.findAll(hotelId),HttpStatus.OK);
 	}
 
 	@PostMapping(path="/{hotelId}/addRoom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

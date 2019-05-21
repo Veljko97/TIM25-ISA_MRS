@@ -43,7 +43,8 @@ Flights.prototype.showAll = function(data) {
     this.list.push(flight);
     table.html(table.html() + "<tr><td>"+ (flight.startDestinationName ? flight.startDestinationName : 'No destination')  + "</td><td>" + (flight.finalDestinationName ? flight.finalDestinationName : 'No destination')
      + "</td><td>" + (new Date(flight.takeOffDate)).toDateString() + "</td><td>" + (new Date(flight.landingDate)).toDateString() + "</td><td>" + flight.flightLength + "</td><td><a class=\"btn btn-info\" href=\"edit-flight.html?id=" + 
-    flight.idFlight + "\">Edit</a></td><td><a class=\"btn btn-danger\" onclick=\"flights.deleteCallback(" + flight.idFlight +")\">Delete</a></td></tr>");
+    flight.idFlight + "\">Edit</a></td></td><td><a class=\"btn btn-info\" href=\"addStopDestination.html?id=" + 
+    flight.idFlight + "\">Add stop destination</a></td></td><td><a class=\"btn btn-danger\" onclick=\"flights.deleteCallback(" + flight.idFlight +")\">Delete</a></td></tr>");
   }
 }
 

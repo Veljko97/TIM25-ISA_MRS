@@ -75,7 +75,7 @@ Profile.prototype.getGETURL = function(indexParams, activeTab) {
 Profile.prototype.getEntityHtml = function(data) {
   switch(this.activeTab) {
     case 'airline':
-      return "\
+      return "<iframe  width=1110px height=300px src=\"https://wego.here.com/directions/mix//"+ data.airLineAddress + "\"/>\
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/airline.jpg")+"\"/>\
       <h2 class=\"profile-headline\">" + data.airLineName + "</h2>\
       <div class=\"about\">\
@@ -101,7 +101,7 @@ Profile.prototype.getEntityHtml = function(data) {
         <span class=\"description\">" + data.hotelDescription + "</span>\
       </div>";
     case 'rentacar':
-      return "\
+      return "<iframe  width=1110px height=300px src=\"https://wego.here.com/directions/mix//"+ data.rentACarAddress + "\"/>\
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/rentacar.jpg")+"\"/>\
       <h2 class=\"profile-headline\">" + data.rentACarName + "</h2>\
       <div class=\"about\">\

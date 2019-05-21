@@ -245,6 +245,12 @@ public class AirLineController {
 		return new ResponseEntity<FlightDTO>(flightServices.findOneAndConvert(airlineId, flightId), HttpStatus.OK);
 	}
 	
+	@GetMapping(path="/{airlineId}/addStopDestination/{flightId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<Destination>> addStopDestination (Pageable pageable, @PathVariable Integer flightId, @RequestBody Destination destination) {
+		destinationServices.save(flightId, destination);
+		return new ResponseEntity<Page<Destination>> (destinationServices.findAll(flightId, pageable), HttpStatus.OK);
+	}
+	
 	@PutMapping(path="/{airlineId}/editFlight/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Flight> editFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody FlightDTO modifiedFlight) throws ParseException

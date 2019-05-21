@@ -100,7 +100,8 @@ Profile.prototype.getEntityHtml = function(data) {
       <div class=\"about\">\
         <span>Address: " + data.hotelAddress + "</span>\
         <span class=\"description\">" + data.hotelDescription + "</span>\
-      </div>";
+      </div>\
+      <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/fast/room.html?id="+data.hotelID+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Fast Reserve</span></a></p>";
     case 'rentacar':
       return "\
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/rentacar.jpg")+"\"/>\
@@ -108,7 +109,8 @@ Profile.prototype.getEntityHtml = function(data) {
       <div class=\"about\">\
         <span>Address: " + data.rentACarAddress + "</span>\
         <span class=\"description\">" + data.rentACarDescription + "</span>\
-      </div>";
+      </div>\
+      <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/fast/vehicle.html?id="+data.rentACarID+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Fast Reserve</span></a></p>";
     default:
       return "";
   }

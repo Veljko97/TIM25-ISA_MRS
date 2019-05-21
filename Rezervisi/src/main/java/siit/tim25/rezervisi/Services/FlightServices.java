@@ -89,9 +89,15 @@ public class FlightServices {
 	
 	public Set<FlightDTO> search(String type, String flightClass, String from, String to, Long takeOff, Long landing, 
 			String numberOfPeople, String airLineName, String flightLength, String priceFrom, String priceTo, Pageable pageable) throws ParseException {
-		Date date1 = new Date(takeOff);
-		Date date2 = new Date(landing);
-		Page<Flight> flist = flightRepository.search(FlightType.valueOf(type), FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, pageable);
+		Date date1 = null;
+		Date date2 = null;
+		if(!takeOff.equals(new Long(0))) {
+			date1 = new Date(takeOff);
+		}
+		if(!landing.equals(new Long(0))) {
+			date2 = new Date(landing);
+		}
+		Page<Flight> flist = flightRepository.search(type.equals("")? null : FlightType.valueOf(type), flightClass.equals("")? null : FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, pageable);
 		Set<FlightDTO> listConvertedFlights = new HashSet<FlightDTO>();
 		for(Flight f: flist) {
 			listConvertedFlights.add(f.convert());
@@ -195,5 +201,13 @@ public class FlightServices {
 		a.getAirLineFlights().remove(f);
 		airLineRepository.save(a);
 		flightRepository.delete(f);
+	}
+	
+	public void makeFastTicket(Ticket ticket) {
+		ticketRepository.save(ticket);
+	}
+	
+	public Flight lockFlight(Integer id) {
+		return flightRepository.findFlight(id);
 	}
 }

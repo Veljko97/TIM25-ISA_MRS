@@ -37,6 +37,17 @@ public class VehicleReservation {
 	
 	@Column
 	private Double price;
+	
+	@Column
+	private TicketStatus status;
+	
+	@Column
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date made;
+	
+	public VehicleReservation() {
+		this.made = new Date();
+	}
 
 	public Integer getId() {
 		return Id;
@@ -84,5 +95,21 @@ public class VehicleReservation {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public TicketStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TicketStatus status) {
+		this.status = status;
+	}
+
+	public Date getMade() {
+		return made;
+	}
+
+	public void setMade(Date made) {
+		this.made = made;
 	}
 }

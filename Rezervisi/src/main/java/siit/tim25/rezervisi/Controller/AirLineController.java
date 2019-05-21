@@ -1,7 +1,6 @@
 package siit.tim25.rezervisi.Controller;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,6 +40,7 @@ import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.InvitationResponseType;
 import siit.tim25.rezervisi.Beans.Ticket;
+import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FlightDTO;
@@ -104,7 +105,7 @@ public class AirLineController {
 	private ObjectMapper mapper;
 	
 	@Autowired
-	TokenUtils tokenUtils;
+	private TokenUtils tokenUtils;
 	
 	@GetMapping(path="/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<AirLine>> searchAirline(Pageable pageable, @RequestParam String name) {
@@ -371,6 +372,53 @@ public class AirLineController {
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
+	@PostMapping(path = "/makeFastTicket/{airlineId}/{flightId}")
+	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
+	@Transactional
+	public ResponseEntity<Void> makeFastTicket(@PathVariable Integer flightId, @PathVariable Integer airlineId, @RequestBody TicketDTO ticket){
+		Flight flight = flightServices.lockFlight(flightId);
+		AirLine airline = airLineServices.findOne(airlineId);
+		Ticket t = new Ticket(Double.parseDouble(ticket.getTicketPrice()), ticket.getSeat(), "",
+							"", "", TicketStatus.FAST, flight, "");
+		t.setAirLine(airline);
+		ticketServices.save(t);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 	
+	@PutMapping(path = "/reserveFastTicket/{ticketId}")
+	@PreAuthorize("hasRole('USER')")
+	@Transactional
+	public ResponseEntity<Void> takeFastTicket(@PathVariable Integer ticketId, @RequestBody ReservationUserDTO res, HttpServletRequest request){
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		StandardUser loggedUser = stdUserServices.findByUsername(username);
+		
+		Ticket ticket = ticketServices.lockTicket(ticketId);
+		
+		if(ticket.getStatus().getValue() != 3) {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+		
+		ticket.setEmail(loggedUser.getEmail());
+		ticket.setFirstName(loggedUser.getFirstName());
+		ticket.setLastName(loggedUser.getLastName());
+		ticket.setPassport(res.getPassport());
+		ticket.setStatus(TicketStatus.ACCEPTED);
+		ticket.setUser(loggedUser);
+		ticketServices.save(ticket);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/allFastTickets/{airlineId}")
+	@PreAuthorize("hasRole('USER') or hasRole('AIRLINE_ADMIN')")
+	public ResponseEntity<Page<TicketDTO>> getAllFastTicket(@PathVariable Integer airlineId,Pageable pageable)	{
+		Page<Ticket> tickets = ticketServices.findAllByStatus(airlineId,TicketStatus.FAST, pageable);
+		List<TicketDTO> ticketsDTO = new ArrayList<TicketDTO>();
+		for(Ticket t : tickets.getContent()) {
+			ticketsDTO.add(t.convert());
+		}
+		return new ResponseEntity<Page<TicketDTO>>(new PageImpl<TicketDTO>(ticketsDTO),
+												HttpStatus.OK);
+	}
 	
 }

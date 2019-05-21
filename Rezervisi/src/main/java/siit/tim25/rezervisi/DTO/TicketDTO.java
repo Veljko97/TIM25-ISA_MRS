@@ -23,6 +23,8 @@ public class TicketDTO {
 	
 	private String targetDestName;
 
+	public TicketDTO() {}
+	
 	public TicketDTO(String ticketPrice, String seat, String firstName, String lastName, String email, String passport,
 			TicketStatus status, Integer idFlight, String srcDestName, String targetDestName) {
 		super();

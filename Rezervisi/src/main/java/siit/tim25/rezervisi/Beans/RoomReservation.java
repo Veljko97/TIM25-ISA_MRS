@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 
 @Entity
@@ -22,6 +24,7 @@ public class RoomReservation {
 	private Integer Id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Room room;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -37,7 +40,18 @@ public class RoomReservation {
 	
 	@Column
 	private Double price;
+	
+	@Column
+	private TicketStatus status;
+	
+	@Column
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date made;
 
+	public RoomReservation() {
+		this.made = new Date();
+	}
+	
 	public Integer getId() {
 		return Id;
 	}
@@ -77,4 +91,29 @@ public class RoomReservation {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+
+	public StandardUser getUser() {
+		return user;
+	}
+
+	public void setUser(StandardUser user) {
+		this.user = user;
+	}
+
+	public TicketStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TicketStatus status) {
+		this.status = status;
+	}
+
+	public Date getMade() {
+		return made;
+	}
+
+	public void setMade(Date made) {
+		this.made = made;
+	}
 }
+

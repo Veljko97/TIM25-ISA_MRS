@@ -1,19 +1,15 @@
 package siit.tim25.rezervisi.Services;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.Hotel;
-import siit.tim25.rezervisi.DTO.FlightDTO;
 import siit.tim25.rezervisi.DTO.HotelDTO;
 import siit.tim25.rezervisi.Repository.HotelRepository;
 
@@ -40,6 +36,10 @@ public class HotelServices {
 		        return entity.convert();
 		    }
 		});
+	}
+	
+	public Page<Hotel> findAll(Pageable pageable){
+		return hotelRepository.findAll(pageable);
 	}
 	
 	public Page<HotelDTO> search(String name, String destination, Pageable pageable) {

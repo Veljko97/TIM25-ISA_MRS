@@ -4,18 +4,23 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,16 +36,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
+import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
+import siit.tim25.rezervisi.Beans.VehicleReservation;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
+import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Services.BranchServices;
 import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
+import siit.tim25.rezervisi.Services.VehicleReservationServices;
 import siit.tim25.rezervisi.Services.VehicleServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
+import siit.tim25.rezervisi.Services.users.StandardUserServices;
+import siit.tim25.rezervisi.security.TokenUtils;
 import siit.tim25.rezervisi.security.model.TokenState;
 import siit.tim25.rezervisi.security.model.User;
 
@@ -70,6 +82,15 @@ public class RentACarController {
 	
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	private VehicleReservationServices vrServices;
+	
+	@Autowired
+	private StandardUserServices stdUserServices;
+	
+	@Autowired
+	private TokenUtils tokenUtils;
 	
 	@PostMapping(path="/addRentACar", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasRole('SYS_ADMIN')")
@@ -192,6 +213,13 @@ public class RentACarController {
 		return new ResponseEntity<VehicleDTO>(vehicleServices.findOne(rentacarId, vehicleId).convert(), HttpStatus.OK);
 	}
 	
+	@GetMapping(path="/getVehicle/{vehicleId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<VehicleDTO> getVehicle(@PathVariable Integer vehicleId)
+	{
+		return new ResponseEntity<VehicleDTO>(vehicleServices.findOne(vehicleId).convert(), HttpStatus.OK);
+	}
+	
 	@PutMapping(path="/{rentacarId}/editVehicle/{vehicleId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
 	public ResponseEntity<VehicleDTO> editVehicle(@PathVariable Integer rentacarId, @PathVariable Integer vehicleId, @RequestBody VehicleDTO modifiedVehicle) throws ParseException
@@ -250,4 +278,56 @@ public class RentACarController {
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
+	@PostMapping(path = "/makeFastReservation/{vehicleId}")
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	@Transactional
+	public ResponseEntity<Void> makeFastReservation(@RequestBody FastReservationDTO res,
+													@PathVariable Integer vehicleId) {
+		Vehicle vehicle = vehicleServices.lockVehicle(vehicleId);
+		Date endRes = new Date(res.getEnd());
+		Date startRes = new Date(res.getStart());
+		for(VehicleReservation vr : vehicle.getReservation()) {
+			if(vr.getReservationStart().compareTo(startRes) <= 0 && vr.getReservationEnd().compareTo(startRes) >= 0) {
+				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			}
+			if(vr.getReservationStart().compareTo(endRes)<= 0 && vr.getReservationEnd().compareTo(endRes) >= 0) {
+				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		VehicleReservation reservation = new VehicleReservation();
+		reservation.setPrice(res.getPrice());
+		reservation.setVehicle(vehicle);
+		reservation.setReservationStart(startRes);
+		reservation.setReservationEnd(endRes);
+		reservation.setStatus(TicketStatus.FAST);
+		vrServices.save(reservation);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@PutMapping(path = "/takeFastReservation/{resId}")
+	@PreAuthorize("hasRole('USER')")
+	@Transactional
+	public ResponseEntity<Void> takeFastReservation(@PathVariable Integer resId, HttpServletRequest request){
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		StandardUser loggedUser = stdUserServices.findByUsername(username);
+		VehicleReservation res = vrServices.lockReservation(resId);
+		res.setUser(loggedUser);
+		loggedUser.getVehicleReservation().add(res);
+		res.setStatus(TicketStatus.ACCEPTED);
+		vrServices.save(res);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/allFastReservation/{rentACarId}")
+	@PreAuthorize("hasRole('USER') or hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<Page<FastReservationDTO>> getAllFastTicket(@PathVariable Integer rentACarId,Pageable pageable)	{
+		Page<VehicleReservation> reservations = vrServices.findAllByStatus(rentACarId, TicketStatus.FAST, pageable);
+		List<FastReservationDTO> fasts = new ArrayList<FastReservationDTO>();
+		for(VehicleReservation res : reservations) {
+			fasts.add(new FastReservationDTO(res));
+		}
+		return new ResponseEntity<Page<FastReservationDTO>>(new PageImpl<FastReservationDTO>(fasts,reservations.nextPageable(),reservations.getTotalElements()),
+												HttpStatus.OK);
+	}
 }

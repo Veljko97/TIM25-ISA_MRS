@@ -190,6 +190,7 @@ public class Hotel {
 		this.averageGrade = averageGrade;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Hotel [hotelID=" + hotelID + ", hotelName=" + hotelName + ", hotelAddress=" + hotelAddress
@@ -211,7 +212,7 @@ public class Hotel {
 	}
 	
 	public HotelDTO convert() {
-		return new HotelDTO(this.hotelID.toString(), this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade().toString(), this.hotelEarning.toString(), this.image);
+		return new HotelDTO(this.hotelID, this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade(), this.hotelEarning, this.image);
 	}
 	
 }

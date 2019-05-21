@@ -11,6 +11,7 @@ public class VehicleDTO {
 	private String vehicleName;
 	private Integer idVehicle;
 	private String branchName;
+	private Double averageGrade;
 	
 	public VehicleDTO() {
 		super();
@@ -21,6 +22,13 @@ public class VehicleDTO {
 		this.vehicleName = vehicleName;
 		this.idVehicle = idVehicle;
 		this.branchName = branchName;
+	}
+	
+	public VehicleDTO(Vehicle veh) {
+		this.vehicleName = veh.getVehicleName();
+		this.idVehicle = veh.getId();
+		this.branchName = veh.getBranch().getBranchName();
+		this.averageGrade = veh.getAverageGrade();
 	}
 
 	public String getVehicleName() {
@@ -61,4 +69,11 @@ public class VehicleDTO {
 		return v;
 	}
 
+	public Double getAverageGrade() {
+		return averageGrade;
+	}
+
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
+	}
 }

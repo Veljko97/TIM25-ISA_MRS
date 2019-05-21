@@ -43,6 +43,7 @@ public class AirLine {
 	private Set<Flight> airLineFlights = new HashSet<Flight>();
 
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Ticket> offers = new HashSet<Ticket>();
 
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

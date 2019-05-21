@@ -13,7 +13,7 @@ public class HotelDTO {
 	private String hotelAddress;
 	private String hotelDescription;
 	private String destination;
-	private Double hotelGrade;
+	private Double averageGrade;
 	private Double hotelEarning;
 	private String image;
 	
@@ -23,7 +23,7 @@ public class HotelDTO {
 	
 
 	public HotelDTO(Integer hotelID, String hotelName, String hotelAddress, String hotelDescription, String destination,
-			Double hotelGrade, Double hotelEarning, String image) {
+			Double averageGrade, Double hotelEarning, String image) {
 		super();
 		this.hotelID = hotelID;
 		this.hotelName = hotelName;
@@ -41,7 +41,7 @@ public class HotelDTO {
 		this.hotelAddress = hotel.getHotelAddress();
 		this.hotelDescription = hotel.getHotelDescription();
 		this.destination = hotel.getDestination().getDestinationName();
-		this.hotelGrade = hotel.getAverageGrade();
+		this.averageGrade = hotel.getAverageGrade();
 		this.hotelEarning = hotel.getHotelEarning();
 		this.image = hotel.getImage();
 	}
@@ -112,14 +112,14 @@ public class HotelDTO {
 
 
 
-	public Double getHotelGrade() {
-		return hotelGrade;
+	public Double getAverageGrade() {
+		return averageGrade;
 	}
 
 
 
-	public void setHotelGrade(Double hotelGrade) {
-		this.hotelGrade = hotelGrade;
+	public void setAverageGrade(Double hotelGrade) {
+		this.averageGrade = hotelGrade;
 	}
 
 

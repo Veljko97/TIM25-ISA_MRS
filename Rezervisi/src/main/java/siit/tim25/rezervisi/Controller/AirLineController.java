@@ -398,8 +398,7 @@ public class AirLineController {
 		Flight flight = flightServices.lockFlight(flightId);
 		AirLine airline = airLineServices.findOne(airlineId);
 		Ticket t = new Ticket(Double.parseDouble(ticket.getTicketPrice()), ticket.getSeat(), "",
-							"", "", TicketStatus.FAST, flight, "");
-		t.setAirLine(airline);
+							"", "", TicketStatus.FAST, flight, "", airline);
 		ticketServices.save(t);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

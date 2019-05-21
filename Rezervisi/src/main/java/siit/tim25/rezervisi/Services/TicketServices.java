@@ -52,7 +52,8 @@ public class TicketServices {
 	
 	public Page<Ticket> findAllByStatus(Integer airlineId,TicketStatus status, Pageable pageable){
 		return ticketRepository.findAllByStatus(airlineId, status, pageable);
-
+	}
+	
 	public List<TicketReportDTO> getDailyReport(Integer airlineId) {
 		return ticketRepository.getDailyReport(airlineId);
 	}

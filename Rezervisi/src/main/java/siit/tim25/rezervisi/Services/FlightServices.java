@@ -16,13 +16,10 @@ import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.FlightClass;
 import siit.tim25.rezervisi.Beans.FlightType;
 import siit.tim25.rezervisi.Beans.Ticket;
-import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.DTO.FlightDTO;
-import siit.tim25.rezervisi.DTO.ReservationUserDTO;
 import siit.tim25.rezervisi.Repository.AirLineRepository;
 import siit.tim25.rezervisi.Repository.FlightRepository;
 import siit.tim25.rezervisi.Repository.TicketRepository;
-import siit.tim25.rezervisi.security.model.User;
 
 @Component
 public class FlightServices {
@@ -31,6 +28,9 @@ public class FlightServices {
 	
 	@Autowired
 	private FlightRepository flightRepository;
+	
+	@Autowired
+	private TicketRepository ticketRepository;
 	
 	
 	public Flight save(Integer airLineId, Flight f) {

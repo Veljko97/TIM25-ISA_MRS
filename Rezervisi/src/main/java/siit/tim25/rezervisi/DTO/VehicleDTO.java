@@ -56,8 +56,6 @@ public class VehicleDTO {
 		this.branchName = branchName;
 	}
 	
-	
-	
 	public Double getAverageGrade() {
 		return averageGrade;
 	}
@@ -65,7 +63,7 @@ public class VehicleDTO {
 	public void setAverageGrade(Double averageGrade) {
 		this.averageGrade = averageGrade;
 	}
-
+	
 	public Vehicle convert(Set<RentACarBranch> branches) throws ParseException {
 		Vehicle v = new Vehicle();
 		for(RentACarBranch b: branches) {
@@ -78,15 +76,6 @@ public class VehicleDTO {
 		v.setIdVehicle(idVehicle);
 		
 		return v;
-	}
-
-
-	public Double getAverageGrade() {
-		return averageGrade;
-	}
-
-	public void setAverageGrade(Double averageGrade) {
-		this.averageGrade = averageGrade;
 	}
   
 	@Override

@@ -211,7 +211,7 @@ public class Hotel {
 	}
 	
 	public HotelDTO convert() {
-		return new HotelDTO(this.hotelID.toString(), this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade().toString(), this.hotelEarning.toString(), this.image);
+		return new HotelDTO(this.hotelID.toString(), this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade(), this.hotelEarning.toString(), this.image);
 	}
 	
 }

@@ -13,7 +13,7 @@ public class HotelDTO {
 	private String hotelAddress;
 	private String hotelDescription;
 	private String destination;
-	private String hotelGrade;
+	private Double averageGrade;
 	private String hotelEarning;
 	private String image;
 	
@@ -22,14 +22,14 @@ public class HotelDTO {
 	}
 	
 	public HotelDTO(String hotelID, String hotelName, String hotelAddress, String hotelDescription, String destination,
-			String hotelGrade, String hotelEarning, String image) {
+			Double averageGrade, String hotelEarning, String image) {
 		super();
 		this.hotelID = hotelID;
 		this.hotelName = hotelName;
 		this.hotelAddress = hotelAddress;
 		this.hotelDescription = hotelDescription;
 		this.destination = destination;
-		this.hotelGrade = hotelGrade;
+		this.averageGrade = averageGrade;
 		this.hotelEarning = hotelEarning;
 		this.image = image;
 	}
@@ -40,7 +40,7 @@ public class HotelDTO {
 	@Override
 	public String toString() {
 		return "HotelDTO [hotelName=" + hotelName + ", hotelAddress=" + hotelAddress + ", hotelDescription="
-				+ hotelDescription + ", destination=" + destination + ", hotelGrade=" + hotelGrade + ", hotelEarning="
+				+ hotelDescription + ", destination=" + destination + ", averageGrade=" + averageGrade + ", hotelEarning="
 				+ hotelEarning + "]";
 	}
 
@@ -102,17 +102,13 @@ public class HotelDTO {
 
 
 
-	public String getHotelGrade() {
-		return hotelGrade;
+	public Double getAverageGrade() {
+		return averageGrade;
 	}
 
-
-
-	public void setHotelGrade(String hotelGrade) {
-		this.hotelGrade = hotelGrade;
+	public void setAverageGrade(Double averageGrade) {
+		this.averageGrade = averageGrade;
 	}
-
-
 
 	public String getHotelEarning() {
 		return hotelEarning;

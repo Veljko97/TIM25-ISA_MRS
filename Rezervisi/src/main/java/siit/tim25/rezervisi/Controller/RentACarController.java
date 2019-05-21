@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
-import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
@@ -176,6 +175,11 @@ public class RentACarController {
 	@GetMapping(path="/{rentacarId}/showVehicles", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<VehicleDTO>> getVehicles(Pageable pageable, @PathVariable Integer rentacarId) {
 		return new ResponseEntity<Page<VehicleDTO>>(vehicleServices.findAllAndConvert(rentacarId, pageable), HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{rentacarId}/showAllVehicles", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<VehicleDTO>> getAllVehicles(@PathVariable Integer rentacarId) {
+		return new ResponseEntity<Set<VehicleDTO>>(vehicleServices.findAllAndConvert(rentacarId), HttpStatus.OK);
 	}
 	
 	@PostMapping(path="/{rentacarId}/addVehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

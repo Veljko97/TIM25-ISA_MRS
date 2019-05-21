@@ -64,7 +64,6 @@ Profile.prototype.getShowAllURL = function(index) {
 }
 
 Profile.prototype.getGETURL = function(indexParams, activeTab) {
-  console.log(indexParams);
   switch(this.activeTab) {
     case 'flight':
       return `/app/airlines/${indexParams[0]}/getFlight/${indexParams[1]}`;

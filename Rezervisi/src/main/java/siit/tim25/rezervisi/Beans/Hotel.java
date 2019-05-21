@@ -213,6 +213,7 @@ public class Hotel {
 	
 	public HotelDTO convert() {
 		return new HotelDTO(this.hotelID, this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade(), this.hotelEarning, this.image);
+
 	}
 	
 }

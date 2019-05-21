@@ -25,6 +25,13 @@ function toDatetimeLocal(date) {
             HH + ':' + II + ':' + SS;
 };
 
+Date.prototype.getWeek = function () {
+  const today = new Date();
+  const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+  const pastDaysOfYear = (today - firstDayOfYear) / 86400000;
+  console.log({firstDayOfYear, pastDaysOfYear});
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+};
 
 function handleWrongInput() {
   $('#warning-message').html('Wrong input. Fill all of the required fields and check the input!');
@@ -125,12 +132,15 @@ function showAdminNavbar() {
   let navbar = $("#navigationBar");
   switch(user.role) {
     case 'ROLE_AIRLINE_ADMIN':
-      navbar.html("\
-        <div>\
+      navbar.html("<div>\
           <li><a href=\"/admin-airlines/destinations.html\">Destinations</a></li>\
           <li><a href=\"/admin-airlines/flights.html\">Flights</a></li>\
+          <li><a href=\"/admin-airlines/report.html\">Report</a></li>\
         </div>\
-        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+        <div>\
+    	  <li><a href=\"/editProfile.html\">Edit profile</a></li>\
+    	  <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+    	</div>\
       ")
       return;
     case 'ROLE_RENTACAR_ADMIN':
@@ -138,14 +148,24 @@ function showAdminNavbar() {
         <div>\
           <li><a href=\"/admin-rentacars/branches.html\">Branches</a></li>\
           <li><a href=\"/admin-rentacars/vehicles.html\">Vehicles</a></li>\
+          <li><a href=\"/admin-rentacars/report.html\">Report</a></li>\
         </div>\
-        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+        <div>\
+    	  <li><a href=\"/editProfile.html\">Edit profile</a></li>\
+    	  <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+    	</div>\
       ")
       return;
     case 'ROLE_HOTEL_ADMIN':
       navbar.html("\
-        <li><a href=\"/admin-hotels/rooms.html\">Rooms</a></li>\
-        <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+        <div>\
+          <li><a href=\"/admin-hotels/rooms.html\">Rooms</a></li>\
+          <li><a href=\"/admin-hotels/report.html\">Report</a></li>\
+        </div>\
+        <div>\
+          <li><a href=\"/editProfile.html\">Edit profile</a></li>\
+          <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+    	</div>\
       ")
       return;
     case 'ROLE_SYS_ADMIN':
@@ -156,7 +176,10 @@ function showAdminNavbar() {
         <li><a href=\"/admin/rentacars.html\">Rent a Car</a></li>\
         <li><a href=\"/admin/add-admin-sys.html\">System Admins</a></li>\
       </div>\
-      <li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      <div>\
+		<li><a href=\"/editProfile.html\">Edit profile</a></li>\
+		<li><a href=\"#\" onclick=\"return logout(event)\">Logout</a></li>\
+      </div>\
       ")
       return;
     default:

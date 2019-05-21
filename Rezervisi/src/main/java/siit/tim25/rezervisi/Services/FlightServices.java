@@ -32,8 +32,6 @@ public class FlightServices {
 	@Autowired
 	private FlightRepository flightRepository;
 	
-	@Autowired
-	private TicketRepository ticketRepository;
 	
 	public Flight save(Integer airLineId, Flight f) {
 		AirLine a = airLineRepository.findOne(airLineId);
@@ -124,48 +122,6 @@ public class FlightServices {
 		});
 	}
 	
-	public void deleteTicket(Integer flightId, Integer ticketId) {
-		Flight f = flightRepository.findOne(flightId);
-		Ticket ticket = null;
-		for(Ticket t: f.getFlightTickets()) {
-			if (t.getIdTicket() == ticketId) {
-				ticket = t;
-			}
-		}
-		ticket.setFlight(null);
-		f.getFlightTickets().remove(ticket);
-		flightRepository.save(f);
-		ticketRepository.delete(ticket);
-	}
-	
-	public Integer addTicket(Integer airlineId, Integer flightId, ReservationUserDTO userDto, User user) {
-		Flight f = this.flightRepository.findFlight(flightId);
-		System.out.println(user);
-		boolean hasEmail = userDto.getEmail() != null && !userDto.getEmail().equals("");
-		Ticket t = new Ticket(f.getTicketPrice(), userDto.getSeat(), user.getFirstName(), user.getLastName(), userDto.getPassport(), userDto.getStatus(), f, hasEmail ? userDto.getEmail() : user.getEmail());
-		f.getFlightTickets().add(t);
-		Ticket newTicket = ticketRepository.save(t);
-		return newTicket.getIdTicket();
-	}
-	
-	public void changeTicketStatus(Integer ticketId) {
-		Ticket t = ticketRepository.findOne(ticketId);
-		Flight f = flightRepository.findOne(t.getFlight().getIdFlight());
-		for(Ticket ticket: f.getFlightTickets()) {
-			if (ticket.getIdTicket() == ticketId) {
-				ticket.setStatus(TicketStatus.ACCEPTED);
-			}
-		}
-		flightRepository.save(f);
-	}
-	
-	public Integer addTicket(Integer airlineId, Integer flightId, ReservationUserDTO user) {
-		Flight f = this.flightRepository.findFlight(flightId);
-		Ticket t = new Ticket(f.getTicketPrice(), user.getSeat(), user.getFirstName(), user.getLastName(), user.getPassport(), user.getStatus(), f, user.getEmail());
-		f.getFlightTickets().add(t);
-		Ticket newTicket = ticketRepository.save(t);
-		return newTicket.getIdTicket();
-	}
 	
 	public Flight update(Integer airlineId, Flight f) {
 		AirLine a = airLineRepository.findOne(airlineId);

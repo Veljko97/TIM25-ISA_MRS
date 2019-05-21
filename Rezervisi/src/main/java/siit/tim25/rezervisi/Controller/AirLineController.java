@@ -13,7 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+
 import org.springframework.data.domain.PageImpl;
+
+import org.springframework.data.domain.PageRequest;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -220,6 +224,11 @@ public class AirLineController {
 		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(airlineId, pageable),HttpStatus.OK);
 	}
 	
+	@GetMapping(path="/{airlineId}/showAllFlights", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<FlightDTO>> getAllFlights(@PathVariable Integer airlineId) {
+		return new ResponseEntity<Set<FlightDTO>>(flightServices.findAllAndConvert(airlineId), HttpStatus.OK);
+	}
+	
 	@GetMapping(path="/showAllFlights", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<FlightDTO>> getAllPagedFlights(Pageable pageable) {
 		return new ResponseEntity<Page<FlightDTO>>(flightServices.findAllAndConvert(pageable),HttpStatus.OK);
@@ -239,6 +248,12 @@ public class AirLineController {
 	public ResponseEntity<FlightDTO> getFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId)
 	{
 		return new ResponseEntity<FlightDTO>(flightServices.findOneAndConvert(airlineId, flightId), HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{airlineId}/addStopDestination/{flightId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<Destination>> addStopDestination (Pageable pageable, @PathVariable Integer flightId, @RequestBody Destination destination) {
+		destinationServices.save(flightId, destination);
+		return new ResponseEntity<Page<Destination>> (destinationServices.findAll(flightId, pageable), HttpStatus.OK);
 	}
 	
 	@PutMapping(path="/{airlineId}/editFlight/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -271,11 +286,11 @@ public class AirLineController {
 
 		switch(user.getUserType()) {
 		case CURRENT:		    
-			return new ResponseEntity<Integer>(flightServices.addTicket(airlineId, flightId, user, loggedUser), HttpStatus.OK);
+			return new ResponseEntity<Integer>(ticketServices.addTicket(airlineId, flightId, user, loggedUser), HttpStatus.OK);
 		case UNREGISTERED:
 			User registered = userServices.findByEmail(user.getEmail());
 			if (registered == null) {
-				return new ResponseEntity<Integer>(flightServices.addTicket(airlineId, flightId, user), HttpStatus.OK);
+				return new ResponseEntity<Integer>(ticketServices.addTicket(airlineId, flightId, user), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Integer>(-1, HttpStatus.BAD_REQUEST);
 			}
@@ -285,7 +300,7 @@ public class AirLineController {
 			User registeredUser = userServices.findByEmail(user.getEmail());
 			for (FriendsDTO f: friends.getAccepted()) {
 				if (f.getOther().getEmail().equals(user.getEmail())) {
-					return new ResponseEntity<Integer>(flightServices.addTicket(airlineId, flightId, user, registeredUser), HttpStatus.OK);
+					return new ResponseEntity<Integer>(ticketServices.addTicket(airlineId, flightId, user, registeredUser), HttpStatus.OK);
 				}
 			}
 		default:
@@ -294,10 +309,11 @@ public class AirLineController {
 	}
 	
 	@DeleteMapping(path="/{airlineId}/cancelReservation/{flightId}")
-	public void cancelReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody List<Integer> ids){
+	public ResponseEntity<Integer> cancelReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody List<Integer> ids){
 		for(Integer id: ids) {
-			this.flightServices.deleteTicket(flightId, id);
+			this.ticketServices.deleteTicket(flightId, id);
 		}
+		return new ResponseEntity<Integer>(-1, HttpStatus.NO_CONTENT);
 	}
 	
 	@PostMapping(path="/{airlineId}/continueReservation/{flightId}")
@@ -320,13 +336,16 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/reservationResponse/{ticketId}")
-	public void respond(@PathVariable Integer ticketId, @RequestBody InvitationResponseType type){
+	public void respond(@PathVariable Integer ticketId, @RequestBody InvitationResponseType type, HttpServletRequest request){
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		User loggedUser = this.userServices.findByUsername(username);
 		switch(type) {
 		case ACCEPTED:
-			flightServices.changeTicketStatus(ticketId);
+			ticketServices.changeTicketStatus(ticketId, loggedUser.getId());
 			break;
 		case DECLINED:
-			flightServices.deleteTicket(this.ticketServices.findOne(ticketId).getFlight().getIdFlight(), ticketId);
+			ticketServices.deleteTicket(this.ticketServices.findOne(ticketId).getFlight().getIdFlight(), ticketId);
 			break;
 		}
 	}

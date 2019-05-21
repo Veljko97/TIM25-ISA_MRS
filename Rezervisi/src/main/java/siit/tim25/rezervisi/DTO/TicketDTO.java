@@ -1,9 +1,14 @@
 package siit.tim25.rezervisi.DTO;
 
+import java.util.Date;
+
+import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 
 public class TicketDTO {
 	private String ticketPrice;
+	
+	private Integer ticketId;
 
 	private String seat;
 	
@@ -23,11 +28,52 @@ public class TicketDTO {
 	
 	private String targetDestName;
 
-	public TicketDTO() {}
+
+	private Double totalPrice;
 	
-	public TicketDTO(String ticketPrice, String seat, String firstName, String lastName, String email, String passport,
+	private Integer airlineId;
+	
+	private Date created;
+	
+	public TicketDTO(Ticket t) {
+		
+		this.ticketPrice = String.valueOf(t.getTicketPrice());
+		this.seat = t.getSeat();
+		this.firstName = t.getFirstName();
+		this.lastName = t.getLastName();
+		this.email = t.getEmail();
+		this.passport = t.getPassport();
+		this.status = t.getStatus();
+		this.idFlight = t.getFlight().getIdFlight();
+		this.srcDestName = t.getFlight().getStartDestination().getDestinationName();
+		this.targetDestName = t.getFlight().getFinalDestination().getDestinationName();
+		this.created = t.getCreated();
+		this.airlineId = t.getAirLine() != null ? t.getAirLine().getAirLineID() : null;
+		this.ticketId = t.getIdTicket();
+	}
+	
+	public TicketDTO(Ticket t, Double totalPrice) {
+		
+		this.ticketPrice = String.valueOf(t.getTicketPrice());
+		this.seat = t.getSeat();
+		this.firstName = t.getFirstName();
+		this.lastName = t.getLastName();
+		this.email = t.getEmail();
+		this.passport = t.getPassport();
+		this.status = t.getStatus();
+		this.idFlight = t.getFlight().getIdFlight();
+		this.srcDestName = t.getFlight().getStartDestination().getDestinationName();
+		this.targetDestName = t.getFlight().getFinalDestination().getDestinationName();
+		this.created = created;
+		this.ticketId = t.getIdTicket();
+		this.airlineId = t.getAirLine() != null ? t.getAirLine().getAirLineID() : null;
+		this.totalPrice = totalPrice;
+	}
+	public TicketDTO(Integer airlineId, Integer ticketId, String ticketPrice, String seat, String firstName, String lastName, String email, String passport,
 			TicketStatus status, Integer idFlight, String srcDestName, String targetDestName) {
 		super();
+		this.airlineId = airlineId;
+		this.ticketId = ticketId;
 		this.ticketPrice = ticketPrice;
 		this.seat = seat;
 		this.firstName = firstName;
@@ -50,6 +96,16 @@ public class TicketDTO {
 
 	public String getSeat() {
 		return seat;
+	}
+	
+	
+
+	public Integer getAirlineId() {
+		return airlineId;
+	}
+
+	public void setAirlineId(Integer airlineId) {
+		this.airlineId = airlineId;
 	}
 
 	public void setSeat(String seat) {
@@ -76,6 +132,24 @@ public class TicketDTO {
 		return email;
 	}
 
+	public Integer getTicketId() {
+		return ticketId;
+	}
+	public void setTicketId(Integer ticketId) {
+		this.ticketId = ticketId;
+	}
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	public Date getCreated() {
+		return created;
+	}
+	public void setCreated(Date created) {
+		this.created = created;
+	}
 	public void setEmail(String email) {
 		this.email = email;
 	}

@@ -12,40 +12,44 @@
 		
     var editURL = "/auth/editUserProfile"
     
-    $(document).on('submit',"#EditProfileForm",function(e){
-			var user = {};
-			e.preventDefault();
-			user.username = $("#newUsername").val();
-			user.password = $("#newPassword").val();
-			user.email = $("#newEmail").val();
-			
+    $(document).on('submit', "#editProfileForm",function(e){
+      e.preventDefault();
+			var user = {
+        username: $("#username").val(),
+        password: $("#password").val(),
+        email: $("#email").val()
+      };
 			var userObj = JSON.stringify(user);	
-			console.log(userObj) //pokupio dobro
 			
 			var success =  function(data) { 
 				if (data != null) {
-					console.log(data);
-					alert("success!");
 					sessionStorage.setItem('user',JSON.stringify(data));
-				} else {
-					alert("Error");
-				}	
+				}
 			}
-			
-			ajaxService.PUT("/auth/editUserProfile",userObj,success);
+			ajaxService.PUT(editURL,userObj,success);
 			
 		})
 	</script>
 </head>
 
 <body>
-	<form id="EditProfileForm">
-  		
-  		New username: <input type="text" id="newUsername"><br><br>
-  		New password: <input type="password" id="newPassword"> <br><br>
-  		New email address: <input type="text" id="newEmail"> <br><br>
-  	
-  	 	<input type="submit" id="editButton" value="Edit Profile">
-  	 </form>
+    <div class="col-md-5 relative align-self-center">
+      <form id="registerForm" action="#" class="bg-white rounded pb_form_v1" style="margin-top: 7em;">
+        <h2 class="mb-4 mt-0 text-center">Edit Profile</h2>
+        <div class="form-group">
+          <input type="text" class="form-control" id="email" placeholder="Email">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Register">
+        </div>
+      </form>
+
+    </div>
 </body>
 </html>

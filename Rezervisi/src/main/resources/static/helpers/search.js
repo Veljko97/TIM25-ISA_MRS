@@ -158,8 +158,8 @@ Search.prototype.searchFlightCallback = function(e) {
   });
   var from = $("#startDestinationName").first().val();
   var to = $("#finalDestinationName").first().val();
-  var takeOff = Date.parse($("#takeOffDate").first().val());
-  var landing = Date.parse($("#landingDate").first().val());
+  var takeOff = Date.parse($("#takeOffDate").first().val()) || 0;
+  var landing = Date.parse($("#landingDate").first().val()) || 0;
   var numberOfPeople = $("#numberOfPeople").first().val();
 
   var airLineName = $("#flAirlineName").first().val() || '';

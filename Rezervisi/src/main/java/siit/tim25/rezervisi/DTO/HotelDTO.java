@@ -8,21 +8,22 @@ import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Hotel;
 
 public class HotelDTO {
-	private String hotelID;
+	private Integer hotelID;
 	private String hotelName;
 	private String hotelAddress;
 	private String hotelDescription;
 	private String destination;
 	private Double averageGrade;
-	private String hotelEarning;
+	private Double hotelEarning;
 	private String image;
 	
 	public HotelDTO() {
 		super();
 	}
 	
-	public HotelDTO(String hotelID, String hotelName, String hotelAddress, String hotelDescription, String destination,
-			Double averageGrade, String hotelEarning, String image) {
+
+	public HotelDTO(Integer hotelID, String hotelName, String hotelAddress, String hotelDescription, String destination,
+			Double averageGrade, Double hotelEarning, String image) {
 		super();
 		this.hotelID = hotelID;
 		this.hotelName = hotelName;
@@ -34,7 +35,16 @@ public class HotelDTO {
 		this.image = image;
 	}
 
-	
+	public HotelDTO(Hotel hotel) {
+		this.hotelID = hotel.getHotelID();
+		this.hotelName = hotel.getHotelName();
+		this.hotelAddress = hotel.getHotelAddress();
+		this.hotelDescription = hotel.getHotelDescription();
+		this.destination = hotel.getDestination().getDestinationName();
+		this.averageGrade = hotel.getAverageGrade();
+		this.hotelEarning = hotel.getHotelEarning();
+		this.image = hotel.getImage();
+	}
 
 
 	@Override
@@ -82,11 +92,11 @@ public class HotelDTO {
 
 
 
-	public String getHotelID() {
+	public Integer getHotelID() {
 		return hotelID;
 	}
 
-	public void setHotelID(String hotelID) {
+	public void setHotelID(Integer hotelID) {
 		this.hotelID = hotelID;
 	}
 
@@ -106,17 +116,21 @@ public class HotelDTO {
 		return averageGrade;
 	}
 
-	public void setAverageGrade(Double averageGrade) {
-		this.averageGrade = averageGrade;
+
+
+	public void setAverageGrade(Double hotelGrade) {
+		this.averageGrade = hotelGrade;
 	}
 
-	public String getHotelEarning() {
+
+
+	public Double getHotelEarning() {
 		return hotelEarning;
 	}
 
 
 
-	public void setHotelEarning(String hotelEarning) {
+	public void setHotelEarning(Double hotelEarning) {
 		this.hotelEarning = hotelEarning;
 	}
 
@@ -141,7 +155,7 @@ public class HotelDTO {
 		h.setHotelName(this.hotelName);
 		h.setHotelAddress(this.hotelAddress);
 		h.setHotelDescription(this.hotelDescription);
-		h.setHotelEarning(this.hotelEarning != null ? Double.parseDouble(this.hotelEarning) : 0);
+		h.setHotelEarning(this.hotelEarning);
 
 		return h;
 	}

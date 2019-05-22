@@ -9,6 +9,16 @@ Vehicles.prototype.bindEvents = function() {
   $(document).on('submit', '#editVehicleForm', this.editCallback.bind(this));
 }
 
+Vehicles.prototype.addCallback = function(e) {
+  e.preventDefault();
+
+  if (!this.validateInput()) {
+    return handleWrongInput();
+  }
+  var obj = this.makeJSONObject();
+  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.showAll.bind(this));
+}
+
 Vehicles.prototype.showAll = function(data) {
   var table = $("#vehiclesTable").first();
   table.html("<tr><th>Name</th><th>Branch Name</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");

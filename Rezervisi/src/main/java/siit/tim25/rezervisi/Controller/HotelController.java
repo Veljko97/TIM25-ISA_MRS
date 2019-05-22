@@ -4,17 +4,25 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,14 +38,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
+import siit.tim25.rezervisi.Beans.RoomReservation;
+import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
+import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.HotelDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.HotelServices;
 import siit.tim25.rezervisi.Services.ImageServices;
+import siit.tim25.rezervisi.Services.RoomReservationServices;
 import siit.tim25.rezervisi.Services.RoomServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
+import siit.tim25.rezervisi.Services.users.StandardUserServices;
+import siit.tim25.rezervisi.security.TokenUtils;
 import siit.tim25.rezervisi.security.model.TokenState;
 import siit.tim25.rezervisi.security.model.User;
 
@@ -67,6 +82,15 @@ public class HotelController {
 	
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	private RoomReservationServices rrServices;
+	
+	@Autowired
+	private StandardUserServices stdUserServices;
+	
+	@Autowired
+	private TokenUtils tokenUtils;
 	
 	@PostMapping(path="/addHotel", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasRole('SYS_ADMIN')")
@@ -104,7 +128,12 @@ public class HotelController {
 	@GetMapping(path="/showHotels", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<HotelDTO>> showHotels(Pageable pageable)
 	{
-		return new ResponseEntity<Page<HotelDTO>>(hotelServices.findAllAndConvert(pageable),HttpStatus.OK);
+		Page<Hotel> hotels = hotelServices.findAll(pageable);
+		List<HotelDTO> hdto = new ArrayList<HotelDTO>();
+		for(Hotel ho : hotels) {
+			hdto.add(new HotelDTO(ho));
+		}
+		return new ResponseEntity<Page<HotelDTO>>(new PageImpl<HotelDTO>(hdto,hotels.nextPageable(),hotels.getTotalElements()),HttpStatus.OK);
 		
 	}
 	
@@ -205,6 +234,59 @@ public class HotelController {
 		
 		imageServices.saveUserImg(image, admin.getUsername());
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/makeFastReservation/{roomId}")
+	@PreAuthorize("hasRole('HOTEL_ADMIN')")
+	@Transactional
+	public ResponseEntity<Void> makeFastReservation(@RequestBody FastReservationDTO res,
+													@PathVariable Integer roomId) {
+		Room room = roomServices.lockRoom(roomId);
+		Date endRes = new Date(res.getEnd());
+		Date startRes = new Date(res.getStart());
+		for(RoomReservation rr : room.getReservation()) {
+			if(rr.getReservationStart().compareTo(startRes) <= 0 && rr.getReservationEnd().compareTo(startRes) >= 0) {
+				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			}
+			if(rr.getReservationStart().compareTo(endRes) <= 0 && rr.getReservationEnd().compareTo(endRes) >= 0) {
+				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		RoomReservation reservation = new RoomReservation();
+		reservation.setPrice(res.getPrice());
+		reservation.setRoom(room);
+		reservation.setReservationStart(startRes);
+		reservation.setReservationEnd(endRes);
+		reservation.setStatus(TicketStatus.FAST);
+		rrServices.save(reservation);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@PutMapping(path = "/takeFastReservation/{resId}")
+	@PreAuthorize("hasRole('USER')")
+	@Transactional
+	public ResponseEntity<Void> takeFastReservation(@PathVariable Integer resId, HttpServletRequest request){
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		StandardUser loggedUser = stdUserServices.findByUsername(username);
+		RoomReservation res = rrServices.lockReservation(resId);
+		res.setUser(loggedUser);
+		loggedUser.getRoomReservation().add(res);
+		res.setStatus(TicketStatus.ACCEPTED);
+		rrServices.save(res);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/allFastReservation/{hotelId}")
+	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
+	public ResponseEntity<Page<FastReservationDTO>> getAllFastTicket(@PathVariable Integer hotelId,Pageable pageable)	{
+		Page<RoomReservation> reservations = rrServices.findAllByStatus(hotelId, TicketStatus.FAST, pageable);
+		List<FastReservationDTO> fasts = new ArrayList<FastReservationDTO>();
+		for(RoomReservation res : reservations) {
+			fasts.add(new FastReservationDTO(res));
+		}
+		return new ResponseEntity<Page<FastReservationDTO>>(new PageImpl<FastReservationDTO>(fasts),
+												HttpStatus.OK);
 	}
 }
 

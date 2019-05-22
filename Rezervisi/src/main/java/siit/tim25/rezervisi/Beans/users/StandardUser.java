@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import siit.tim25.rezervisi.Beans.RoomReservation;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
@@ -25,36 +27,47 @@ public class StandardUser extends User {
 	private static final long serialVersionUID = -1537025436231150265L;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<AirLineGrade> airLineGrades = new HashSet<AirLineGrade>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<HotelGrade> hotelGrades = new HashSet<HotelGrade>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<RoomGrade> roomGrades = new HashSet<RoomGrade>();
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<RentACarGrade> rentACarGrades = new HashSet<RentACarGrade>();
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<VehicleGrade> vehicleGrades = new HashSet<VehicleGrade>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<FlightGrade> flightGrades = new HashSet<FlightGrade>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Ticket> airLineTickets = new HashSet<Ticket>();
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<RoomReservation> roomReservation = new HashSet<RoomReservation>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<VehicleReservation> vehicleReservation = new HashSet<VehicleReservation>();
 	
 	@OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Friends> sentRequest = new HashSet<Friends>();
 	
 	@OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Friends> receivedRequests = new HashSet<Friends>();
 
 	public Set<AirLineGrade> getAirLineGrades() {

@@ -10,6 +10,16 @@ Rooms.prototype.bindEvents = function() {
  
 }
 
+Rooms.prototype.addCallback = function(e) {
+  e.preventDefault();
+
+  if (!this.validateInput()) {
+    return handleWrongInput();
+  }
+  var obj = this.makeJSONObject();
+  ajaxService.POST(this.urlApi.add + '?page=' + this.currentPage + "&size=" + this.pageSize, obj, this.showAll.bind(this));
+}
+
 Rooms.prototype.showAll = function(data) {
   var table = $("#roomsTable").first();
   table.html("<tr><th>Number</th><th>Description</th><th>Capacity</th><th>Price</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");

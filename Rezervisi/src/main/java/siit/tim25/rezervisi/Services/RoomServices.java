@@ -95,4 +95,7 @@ public class RoomServices {
 		hotelRepository.save(h);
 	}
 	
+	public Room lockRoom(Integer id) {
+		return roomRepository.lockRoom(id);
+	}
 }

@@ -28,6 +28,7 @@ public class TicketDTO {
 	
 	private String targetDestName;
 
+
 	private Double totalPrice;
 	
 	private Integer airlineId;

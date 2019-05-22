@@ -66,7 +66,7 @@ Profile.prototype.getShowAllURL = function(index) {
 Profile.prototype.getGETURL = function(indexParams, activeTab) {
   switch(this.activeTab) {
     case 'flight':
-      return `/app/airlines/${indexParams[0]}/getFlight/${indexParams[1]}`;
+      return `/app/airlines/${indexParams[1]}/getFlight/${indexParams[0]}`;
     default:
       return this.urlApis[activeTab].show + indexParams;
   }
@@ -99,7 +99,8 @@ Profile.prototype.getEntityHtml = function(data) {
       <div class=\"about\">\
         <span>Address: " + data.hotelAddress + "</span>\
         <span class=\"description\">" + data.hotelDescription + "</span>\
-      </div>";
+      </div>\
+      <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/fast/room.html?id="+data.hotelID+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Fast Reserve</span></a></p>";
     case 'rentacar':
       return "<iframe  width=1110px height=300px src=\"https://wego.here.com/directions/mix//"+ data.rentACarAddress + "\"/>\
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/rentacar.jpg")+"\"/>\
@@ -107,7 +108,8 @@ Profile.prototype.getEntityHtml = function(data) {
       <div class=\"about\">\
         <span>Address: " + data.rentACarAddress + "</span>\
         <span class=\"description\">" + data.rentACarDescription + "</span>\
-      </div>";
+      </div>\
+      <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/fast/vehicle.html?id="+data.rentACarID+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Fast Reserve</span></a></p>";
     default:
       return "";
   }

@@ -4,15 +4,19 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
+
 import siit.tim25.rezervisi.DTO.ReservationUserDTO;
 import siit.tim25.rezervisi.DTO.TicketDTO;
 import siit.tim25.rezervisi.DTO.TicketReportDTO;
 import siit.tim25.rezervisi.Repository.FlightRepository;
+
 import siit.tim25.rezervisi.Repository.TicketRepository;
 import siit.tim25.rezervisi.Repository.users.StandardUserRepository;
 import siit.tim25.rezervisi.security.model.User;
@@ -35,6 +39,19 @@ public class TicketServices {
 	public Ticket findOne(Integer ticketId)
 	{
 		return ticketRepository.findOne(ticketId);
+	}
+	
+
+	public Ticket lockTicket(Integer id) {
+		return ticketRepository.lockTicket(id);
+	}
+	
+	public Ticket save(Ticket ticket) {
+		return ticketRepository.save(ticket);
+	}
+	
+	public Page<Ticket> findAllByStatus(Integer airlineId,TicketStatus status, Pageable pageable){
+		return ticketRepository.findAllByStatus(airlineId, status, pageable);
 	}
 	
 	public List<TicketReportDTO> getDailyReport(Integer airlineId) {
@@ -102,5 +119,6 @@ public class TicketServices {
 			}
 		}
 		flightRepository.save(f);
+
 	}
 }

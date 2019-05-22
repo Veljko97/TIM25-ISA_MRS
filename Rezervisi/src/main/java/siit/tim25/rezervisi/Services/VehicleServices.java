@@ -118,4 +118,7 @@ public class VehicleServices {
 		vehicleRepository.delete(vh);
 	}
 	
+	public Vehicle lockVehicle(Integer id) {
+		return vehicleRepository.lockVehicle(id);
+	}
 }

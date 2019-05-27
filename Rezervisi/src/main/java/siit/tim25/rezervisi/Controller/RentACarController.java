@@ -337,4 +337,12 @@ public class RentACarController {
 		return new ResponseEntity<Page<FastReservationDTO>>(new PageImpl<FastReservationDTO>(fasts,reservations.nextPageable(),reservations.getTotalElements()),
 												HttpStatus.OK);
 	}
+	
+	@DeleteMapping(path="/{serviceId}/cancelReservation/{vehicleId}")
+	public ResponseEntity<Integer> cancelReservation(@PathVariable Integer serviceId, @PathVariable Integer vehicleId, @RequestBody List<Integer> ids){
+		for(Integer id: ids) {
+			this.vrServices.deleteVehicleReservation(vehicleId, id);
+		}
+		return new ResponseEntity<Integer>(-1, HttpStatus.NO_CONTENT);
+	}
 }

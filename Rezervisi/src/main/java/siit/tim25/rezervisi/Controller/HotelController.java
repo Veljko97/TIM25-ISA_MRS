@@ -288,5 +288,13 @@ public class HotelController {
 		return new ResponseEntity<Page<FastReservationDTO>>(new PageImpl<FastReservationDTO>(fasts),
 												HttpStatus.OK);
 	}
+	
+	@DeleteMapping(path="/{hotelId}/cancelReservation/{roomId}")
+	public ResponseEntity<Integer> cancelReservation(@PathVariable Integer hotelId, @PathVariable Integer roomId, @RequestBody List<Integer> ids){
+		for(Integer id: ids) {
+			this.rrServices.deleteRoomReservation(roomId, id);
+		}
+		return new ResponseEntity<Integer>(-1, HttpStatus.NO_CONTENT);
+	}
 }
 

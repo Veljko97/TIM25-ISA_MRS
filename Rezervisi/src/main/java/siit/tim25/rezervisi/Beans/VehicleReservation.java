@@ -112,4 +112,7 @@ public class VehicleReservation {
 	public void setMade(Date made) {
 		this.made = made;
 	}
+
+	
+
 }

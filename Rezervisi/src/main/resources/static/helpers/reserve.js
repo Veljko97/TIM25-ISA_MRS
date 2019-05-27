@@ -19,11 +19,62 @@ Reserve.prototype.reserveFlightCallback = function(data) {
 
 Reserve.prototype.getReservations = function() {
   let user = JSON.parse(sessionStorage.user);
+  $("#ticket-results").html("");
   ajaxService.GET('/app/reservations/' + user.id + '/getTickets', this.showTicketReservationsCallback.bind(this));
+  ajaxService.GET('/app/reservations/' + user.id + '/getRoomReservations', this.showRoomReservationsCallback.bind(this));
+  ajaxService.GET('/app/reservations/' + user.id + '/getVehicleReservations', this.showVehicleReservationsCallback.bind(this));
+}
+
+Reserve.prototype.showRoomReservationsCallback = function(response) {
+  if (!response.length) {return;}
+  for(let i = 0; i < response.length; i++) {
+    let data = response[i];
+    $("#ticket-results").html($("#ticket-results").html() + "<div class=\"row search-result\">\
+    <div class=\"search-content\">\
+      <div class=\"search-group\">\
+        <h4>Hotel: "+data.hotelName+"</h4>\
+        <span>Price: "+data.price+"$</span>\
+      </div>\
+      <span class=\"text-overflow\">Room number: " + data.roomNumber + "</span>\
+      <span class=\"text-overflow\">Reservation Type: Room</span>\
+      <span class=\"text-overflow\">Reservations starts on " + new Date(data.reservationStart).toLocaleString() + " and ends on " + new Date(data.reservationEnd).toLocaleString() + ".</span>\
+      <p class=\"mb-5 mt-3 ml-3\">\
+        <a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"\" onclick=\"reserve.deleteRoomReservation(event,"+ data.hotelId + "," + data.roomId + "," + data.id+")\">\
+          <span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">\
+            Cancel\
+          </span>\
+        </a>\
+      </p>\
+    </div>\
+    </div>");
+  }
+}
+
+Reserve.prototype.showVehicleReservationsCallback = function(response) {
+  if (!response.length) {return;}
+  for(let i = 0; i < response.length; i++) {
+    let data = response[i];
+    $("#ticket-results").html($("#ticket-results").html() + "<div class=\"row search-result\">\
+    <div class=\"search-content\">\
+      <div class=\"search-group\">\
+        <h4>Vehicle: "+data.vehicleName+"</h4>\
+        <span>Price: "+data.price+"$</span>\
+      </div>\
+      <span class=\"text-overflow\">Reservation Type: Vehicle</span>\
+      <span class=\"text-overflow\">Reservations starts on " + new Date(data.reservationStart).toLocaleString() + " and ends on " + new Date(data.reservationEnd).toLocaleString() + ".</span>\
+      <p class=\"mb-5 mt-3 ml-3\">\
+        <a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"\" onclick=\"reserve.deleteVehicleReservation(event,"+ data.rentACarId + "," + data.vehicleId + "," + data.id+")\">\
+          <span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">\
+            Cancel\
+          </span>\
+        </a>\
+      </p>\
+    </div>\
+    </div>");
+  }
 }
 
 Reserve.prototype.showTicketReservationsCallback = function(response) {
-  $("#ticket-results").html("");
   if (!response.length) {return;}
   for(let i = 0; i < response.length; i++) {
     let data = response[i];
@@ -50,6 +101,16 @@ Reserve.prototype.showTicketReservationsCallback = function(response) {
 Reserve.prototype.deleteTicketReservation = function(e, airlineid, flightid, ticketid) {
   e.preventDefault();
   ajaxService.DELETE('/app/airlines/' + airlineid + '/cancelReservation/' + flightid, JSON.stringify([ticketid]), this.getReservations.bind(this));
+}
+
+Reserve.prototype.deleteRoomReservation = function(e, hotelId, roomId, roomReservationId) {
+  e.preventDefault();
+  ajaxService.DELETE('/app/hotels/' + hotelId + '/cancelReservation/' + roomId, JSON.stringify([roomReservationId]), this.getReservations.bind(this));
+}
+
+Reserve.prototype.deleteVehicleReservation = function(e, serviceId, vehicleId, vehicleReservationId) {
+  e.preventDefault();
+  ajaxService.DELETE('/app/rentacar/' + serviceId + '/cancelReservation/' + vehicleId, JSON.stringify([vehicleReservationId]), this.getReservations.bind(this));
 }
 
 Reserve.prototype.makeJSONFlightObject = function(userType) {

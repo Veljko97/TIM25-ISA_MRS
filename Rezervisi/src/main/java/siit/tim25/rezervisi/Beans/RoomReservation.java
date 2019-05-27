@@ -115,5 +115,9 @@ public class RoomReservation {
 	public void setMade(Date made) {
 		this.made = made;
 	}
+	
+	
+
+	
 }
 

@@ -45,7 +45,7 @@ INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hot
 INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('7', 'R. Castilho 149, 1099-034 Lisboa, Portugal', 'valja', '0', 'InterContinental Lisbon', '7','/assets/images/hotels/7.jpg');
 
 INSERT INTO flight (id_flight, average_grade, flight_class, flight_length, landing_date, number_of_stops, take_off_date, ticket_price, air_line_air_lineid, airplane_id, final_destination_id_destination, start_destination_id_destination)  
-VALUES ('1','10.00','1','1200','2019-11-13 13:23:44','0','20019-11-12 13:23:44','2500','1','2','2','1')
+VALUES ('1','10.00','1','1200','2019-11-13 13:23:44','0','2019-11-12 13:23:44','2500','1','2','2','1')
 
 INSERT INTO air_line_admin(id, air_line_air_lineid) VALUES (3, 1);
 INSERT INTO hotel_admin (id, hotel_hotelid) VALUES (2, 1);

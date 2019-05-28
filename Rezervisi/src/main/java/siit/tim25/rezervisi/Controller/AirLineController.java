@@ -5,6 +5,8 @@ import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -234,7 +237,7 @@ public class AirLineController {
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Page<FlightDTO>> addFlight (Pageable pageable, @PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
 		System.out.println(f);
-		Flight fl = f.convert(destinationServices.findAll(airlineId), airplaneServices.findAll());
+		Flight fl = f.convert(new HashSet<Destination>(destinationServices.findAll()), airplaneServices.findAll());
 		System.out.println(fl);
 		flightServices.save(airlineId, fl);
 		return new ResponseEntity<Page<FlightDTO>> (flightServices.findAllAndConvert(airlineId, pageable), HttpStatus.OK);
@@ -434,6 +437,23 @@ public class AirLineController {
 		}
 		return new ResponseEntity<Page<TicketDTO>>(new PageImpl<TicketDTO>(ticketsDTO),
 												HttpStatus.OK);
+	}
+	
+	@Scheduled(fixedDelay = 3600000)
+	public void cancelReservations() throws InterruptedException {
+		List<Ticket> l = ticketServices.findAll();
+		for(Ticket t: l) {
+			if (t.getStatus().equals(TicketStatus.PENDING)) {
+				long difference = new Date().getTime() - t.getCreated().getTime();
+				long differenceDaysSinceReservation = difference / (1000 * 60 * 60 * 24);
+				long difference2 = t.getFlight().getTakeOffDate().getTime() - new Date().getTime();
+				long differenceTillDepartureInHours = difference2 / (60 * 60 * 1000);
+				if (differenceDaysSinceReservation >= 3 || differenceTillDepartureInHours <= 3) {
+					ticketServices.deleteTicket(t.getFlight().getIdFlight(), t.getIdTicket());
+				}
+			}
+		}
+		
 	}
 	
 }

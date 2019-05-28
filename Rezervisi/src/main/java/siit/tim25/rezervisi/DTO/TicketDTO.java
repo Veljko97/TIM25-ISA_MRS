@@ -27,9 +27,6 @@ public class TicketDTO {
 	private String srcDestName;
 	
 	private String targetDestName;
-
-
-	private Double totalPrice;
 	
 	private Integer airlineId;
 	
@@ -55,24 +52,7 @@ public class TicketDTO {
 		this.airlineId = t.getAirLine() != null ? t.getAirLine().getAirLineID() : null;
 		this.ticketId = t.getIdTicket();
 	}
-	
-	public TicketDTO(Ticket t, Double totalPrice) {
-		
-		this.ticketPrice = String.valueOf(t.getTicketPrice());
-		this.seat = t.getSeat();
-		this.firstName = t.getFirstName();
-		this.lastName = t.getLastName();
-		this.email = t.getEmail();
-		this.passport = t.getPassport();
-		this.status = t.getStatus();
-		this.idFlight = t.getFlight().getIdFlight();
-		this.srcDestName = t.getFlight().getStartDestination().getDestinationName();
-		this.targetDestName = t.getFlight().getFinalDestination().getDestinationName();
-		this.created = created;
-		this.ticketId = t.getIdTicket();
-		this.airlineId = t.getAirLine() != null ? t.getAirLine().getAirLineID() : null;
-		this.totalPrice = totalPrice;
-	}
+
 	public TicketDTO(Integer airlineId, Integer ticketId, String ticketPrice, String seat, String firstName, String lastName, String email, String passport,
 			TicketStatus status, Integer idFlight, String srcDestName, String targetDestName) {
 		super();
@@ -142,12 +122,7 @@ public class TicketDTO {
 	public void setTicketId(Integer ticketId) {
 		this.ticketId = ticketId;
 	}
-	public Double getTotalPrice() {
-		return totalPrice;
-	}
-	public void setTotalPrice(Double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+
 	public Date getCreated() {
 		return created;
 	}

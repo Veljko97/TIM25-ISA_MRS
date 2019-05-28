@@ -340,6 +340,7 @@ public class RentACarController {
 												HttpStatus.OK);
 	}
 	
+
 	@PostMapping(path="/freeVehicles/{serviceId}")
 	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
 	public ResponseEntity<Page<VehicleDTO>> findFree(@RequestBody FastReservationDTO res, @PathVariable Integer serviceId, Pageable pageable){
@@ -353,5 +354,14 @@ public class RentACarController {
 			}
 		});
 		return new ResponseEntity<Page<VehicleDTO>>(vDTO,HttpStatus.OK);
+  }
+
+	@DeleteMapping(path="/{serviceId}/cancelReservation/{vehicleId}")
+	public ResponseEntity<Integer> cancelReservation(@PathVariable Integer serviceId, @PathVariable Integer vehicleId, @RequestBody List<Integer> ids){
+		for(Integer id: ids) {
+			this.vrServices.deleteVehicleReservation(vehicleId, id);
+		}
+		return new ResponseEntity<Integer>(-1, HttpStatus.NO_CONTENT);
+
 	}
 }

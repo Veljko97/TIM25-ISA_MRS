@@ -8,7 +8,7 @@ function Report(urlApis, dataFields) {
 }
 
 
-Report.prototype.init = function(type) {
+Report.prototype.init = function (type) {
   this.type = type;
   this.initEntityRateReport();
   this.initSubEntityRateReport();
@@ -18,15 +18,15 @@ Report.prototype.init = function(type) {
   $(document).on('submit', "#reportForm", this.submitReportDates.bind(this));
 }
 
-Report.prototype.initEntityRateReport = function() {
+Report.prototype.initEntityRateReport = function () {
   ajaxService.GET(this.urlApis[this.type].get, this.showEntityRateCallback.bind(this));
 }
 
-Report.prototype.showEntityRateCallback = function(data) {
+Report.prototype.showEntityRateCallback = function (data) {
   $("#entitygrade").html(this.type + " average grade: " + data.averageGrade);
 }
 
-Report.prototype.initSubEntityRateReport = function() {
+Report.prototype.initSubEntityRateReport = function () {
   var source = {
     datatype: "json",
     datafields: this.dataFields[this.type]['rate'],
@@ -35,7 +35,6 @@ Report.prototype.initSubEntityRateReport = function() {
     async: true
   };
   var dataAdapter = new $.jqx.dataAdapter(source, { async: false, autoBind: true, loadError: function (xhr, status, error) { alert('Error loading "' + source.url + '" : ' + error); } });
-  console.log(this.dataFields[this.type].xAxis);
   var settings = {
     title: "Average grades",
     description: "",
@@ -46,37 +45,37 @@ Report.prototype.initSubEntityRateReport = function() {
     source: dataAdapter,
     xAxis:
     {
-        dataField: this.dataFields[this.type].xAxis,
-        showGridLines: true
+      dataField: this.dataFields[this.type].xAxis,
+      showGridLines: true
     },
     colorScheme: 'scheme01',
     seriesGroups:
-    [
+      [
         {
-            type: 'column',
-            columnsGapPercent: 50,
-            seriesGapPercent: 0,
-            valueAxis:
-            {
-                unitInterval: 10,
-                minValue: 0,
-                maxValue: 10,
-                displayValueAxis: true,
-                description: 'Grade',
-                axisSize: 'auto',
-                tickMarksColor: '#888888'
-            },
-            series: [
-                    { dataField: this.dataFields[this.type].yAxis, displayText: 'Flight Average Grade'}
-                ]
+          type: 'column',
+          columnsGapPercent: 50,
+          seriesGapPercent: 0,
+          valueAxis:
+          {
+            unitInterval: 10,
+            minValue: 0,
+            maxValue: 10,
+            displayValueAxis: true,
+            description: 'Grade',
+            axisSize: 'auto',
+            tickMarksColor: '#888888'
+          },
+          series: [
+            { dataField: this.dataFields[this.type].yAxis, displayText: this.dataFields[this.type].xAxis.substring(2) + ' Average Grade' }
+          ]
         }
-    ]
+      ]
   };
 
   $('#jqxChartRates').jqxChart(settings);
 }
 
-Report.prototype.initReport = function(time) {
+Report.prototype.initReport = function (time) {
   var source = {
     datatype: "json",
     datafields: this.dataFields[this.type][time],
@@ -97,43 +96,44 @@ Report.prototype.initReport = function(time) {
     {
       dataField: 'created',
       formatFunction: function (value) {
-        switch(time){
+        switch (time) {
           case 'daily':
             return new Date(value).toDateString();
           case 'week':
-            return value.getTime() + ". week";
+            console.log(value);
+            return value + ". week";
           case 'month':
-            return monthNames[new Date(value).getMonth()] + " " + (1900 + value.getYear());
+            return monthNames[new Date(value).getMonth()] + " " + (1900 + new Date(value).getYear());
         }
         return value.getDate();
       },
-      type: 'date',
+      type: 'int',
       showGridLines: true
     },
     colorScheme: 'scheme01',
     seriesGroups:
-    [
+      [
         {
-            type: 'column',
-            columnsGapPercent: 50,
-            seriesGapPercent: 0,
-            valueAxis:
-            {
-                unitInterval: 1000,
-                minValue: 0,
-                maxValue: 10000,
-                displayValueAxis: true,
-                description: 'Sales',
-                axisSize: 'auto',
-                tickMarksColor: '#888888'
-            },
-            series: [
-                    { dataField: 'totalPrice', displayText: 'Total Price'}
-                ]
+          type: 'column',
+          columnsGapPercent: 50,
+          seriesGapPercent: 0,
+          valueAxis:
+          {
+            unitInterval: 1000,
+            minValue: 0,
+            maxValue: 10000,
+            displayValueAxis: true,
+            description: 'Sales',
+            axisSize: 'auto',
+            tickMarksColor: '#888888'
+          },
+          series: [
+            { dataField: 'totalPrice', displayText: 'Total Price' }
+          ]
         }
-    ]
+      ]
   };
-  switch(time) {
+  switch (time) {
     case 'daily':
       $('#jqxChartDaily').jqxChart(settings);
       break;
@@ -146,8 +146,8 @@ Report.prototype.initReport = function(time) {
   }
 }
 
-Report.prototype.getReportTitle = function(time) {
-  switch(time){
+Report.prototype.getReportTitle = function (time) {
+  switch (time) {
     case 'daily':
       return 'Daily sales report';
     case 'week':
@@ -157,22 +157,21 @@ Report.prototype.getReportTitle = function(time) {
   }
 }
 
-Report.prototype.submitReportDates = function(e) {
+Report.prototype.submitReportDates = function (e) {
   e.preventDefault();
   var obj = JSON.stringify({
-    startDate : Date.parse($('#startDate').val()),
-    endDate : Date.parse($('#endDate').val())
+    startDate: Date.parse($('#startDate').val()),
+    endDate: Date.parse($('#endDate').val())
   });
   ajaxService.POST(this.urlApis[this.type].submit, obj, this.showDatesReportCallback.bind(this));
 }
 
-Report.prototype.showDatesReportCallback = function(data) {
-  console.log(data);
+Report.prototype.showDatesReportCallback = function (data) {
   $("#entitysales").html("Airline sales for this period: " + data);
 }
 
-Report.prototype.getReportDescription = function(time) {
-  switch(time){
+Report.prototype.getReportDescription = function (time) {
+  switch (time) {
     case 'daily':
       return 'Sales report grouped by day';
     case 'week':
@@ -185,11 +184,19 @@ Report.prototype.getReportDescription = function(time) {
 var report = new Report({
   'Hotels': {
     'get': '/app/hotels/getHotel/' + getUserServiceId(),
-    'show': '/app/hotels/' + getUserServiceId() + '/showAllRooms'
+    'show': '/app/hotels/' + getUserServiceId() + '/showAllRooms',
+    'daily': '/app/report/' + getUserServiceId() + '/dailyRooms',
+    'week': '/app/report/' + getUserServiceId() + '/weeklyRooms',
+    'month': '/app/report/' + getUserServiceId() + '/monthlyRooms',
+    'submit': '/app/report/' + getUserServiceId() + '/roomDates'
   },
   'Rentacar': {
     'get': '/app/rentacar/getRentacar/' + getUserServiceId(),
-    'show': '/app/rentacar/' + getUserServiceId() + '/showAllVehicles'
+    'show': '/app/rentacar/' + getUserServiceId() + '/showAllVehicles',
+    'daily': '/app/report/' + getUserServiceId() + '/dailyVehicle',
+    'week': '/app/report/' + getUserServiceId() + '/weeklyVehicle',
+    'month': '/app/report/' + getUserServiceId() + '/monthlyVehicle',
+    'submit': '/app/report/' + getUserServiceId() + '/vehicleDates'
   },
   'Airlines': {
     'get': '/app/airlines/getAirline/' + getUserServiceId(),
@@ -200,22 +207,28 @@ var report = new Report({
     'submit': '/app/report/' + getUserServiceId() + '/ticketDates'
   }
 }, {
-  'Airlines': {
-    'xAxis': 'idFlight',
-    'yAxis': 'flightAverageGrade',
-    'rate': [{name: 'idFlight', type: 'int'}, {name: 'flightAverageGrade', type: 'float'}],
-    'daily': [{name: 'created', type: 'date'}, {name: 'totalPrice', type: 'float'}],
-    'week': [{name: 'created', type: 'date'}, {name: 'totalPrice', type: 'float'}],
-    'month': [{name: 'created', type: 'date'}, {name: 'totalPrice', type: 'float'}]
-  },
-  'Hotels': {
-    'xAxis': 'roomID',
-    'yAxis': 'averageGrade',
-    'rate': [{name: 'roomID', type: 'int'}, {name: 'averageGrade', type: 'float'}],
-  },
-  'Rentacar': {
-    'xAxis': 'idVehicle',
-    'yAxis': 'averageGrade',
-    'rate': [{name: 'idVehicle', type: 'int'}, {name: 'averageGrade', type: 'float'}],
-  }
-});
+    'Airlines': {
+      'xAxis': 'idFlight',
+      'yAxis': 'flightAverageGrade',
+      'rate': [{ name: 'idFlight', type: 'int' }, { name: 'flightAverageGrade', type: 'float' }],
+      'daily': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
+      'week': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
+      'month': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }]
+    },
+    'Hotels': {
+      'xAxis': 'roomID',
+      'yAxis': 'averageGrade',
+      'rate': [{ name: 'roomID', type: 'int' }, { name: 'averageGrade', type: 'float' }],
+      'daily': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
+      'week': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
+      'month': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }]
+    },
+    'Rentacar': {
+      'xAxis': 'idVehicle',
+      'yAxis': 'averageGrade',
+      'rate': [{ name: 'idVehicle', type: 'int' }, { name: 'averageGrade', type: 'float' }],
+      'daily': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
+      'week': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
+      'month': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }]
+    }
+  });

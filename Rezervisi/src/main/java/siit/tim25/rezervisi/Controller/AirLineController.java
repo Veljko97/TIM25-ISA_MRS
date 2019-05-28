@@ -390,14 +390,13 @@ public class AirLineController {
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
-	@PostMapping(path = "/makeFastTicket/{airlineId}/{flightId}")
+	@PostMapping(path = "/makeFastTicket/{flightId}")
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	@Transactional
-	public ResponseEntity<Void> makeFastTicket(@PathVariable Integer flightId, @PathVariable Integer airlineId, @RequestBody TicketDTO ticket){
+	public ResponseEntity<Void> makeFastTicket(@PathVariable Integer flightId, @RequestBody TicketDTO ticket){
 		Flight flight = flightServices.lockFlight(flightId);
-		AirLine airline = airLineServices.findOne(airlineId);
 		Ticket t = new Ticket(Double.parseDouble(ticket.getTicketPrice()), ticket.getSeat(), "",
-							"", "", TicketStatus.FAST, flight, "", airline);
+							"", "", TicketStatus.FAST, flight, "", flight.getAirLine());
 		ticketServices.save(t);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -432,7 +431,9 @@ public class AirLineController {
 		Page<Ticket> tickets = ticketServices.findAllByStatus(airlineId,TicketStatus.FAST, pageable);
 		List<TicketDTO> ticketsDTO = new ArrayList<TicketDTO>();
 		for(Ticket t : tickets.getContent()) {
-			ticketsDTO.add(t.convert());
+			TicketDTO tic = t.convert();
+			tic.setFlight(t.getFlight().convert());
+			ticketsDTO.add(tic);
 		}
 		return new ResponseEntity<Page<TicketDTO>>(new PageImpl<TicketDTO>(ticketsDTO),
 												HttpStatus.OK);

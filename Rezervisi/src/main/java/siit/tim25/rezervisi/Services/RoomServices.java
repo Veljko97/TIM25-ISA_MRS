@@ -2,6 +2,7 @@ package siit.tim25.rezervisi.Services;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +98,9 @@ public class RoomServices {
 	
 	public Room lockRoom(Integer id) {
 		return roomRepository.lockRoom(id);
+	}
+	
+	public Page<Room> findFree(Integer  hotelId, Date start, Date end, Pageable pageable) {
+		return roomRepository.findFree(hotelId, start, end, pageable);
 	}
 }

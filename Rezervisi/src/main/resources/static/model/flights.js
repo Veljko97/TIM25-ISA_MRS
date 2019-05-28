@@ -172,6 +172,66 @@ Flights.prototype.showSeats = function(airlineId, flightId) {
   });
 }
 
+Flights.prototype.showFastCallback = function(data) {
+  var table = $("#flightsTable").first();
+  table.html("<tr><th>Start Destination</th><th>End Destination</th><th>Take off Date</th><th>Landing Date</th><th>Flight Length</th></tr>");
+  this.list = [];
+
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
+  for(var i = 0; i < data.length; i++) {
+    var flight = data[i];
+    this.list.push(flight);
+    table.html(table.html() + "<tr><td>"+ (flight.startDestinationName ? flight.startDestinationName : 'No destination')  + "</td><td>" + (flight.finalDestinationName ? flight.finalDestinationName : 'No destination')
+     + "</td><td>" + (new Date(flight.takeOffDate)).toDateString() + "</td><td>" + (new Date(flight.landingDate)).toDateString() + "</td><td>" + flight.flightLength + "</td>\
+     <td><a class=\"btn btn-danger\" onclick=\"flights.getSeats(event," + flight.idFlight +")\">Make Fast</a></td></tr>");
+  }
+}
+
+Flights.prototype.getSeats = function(event, flightId){
+  event.preventDefault();
+  ajaxService.GET('/app/airlines/'+getUserServiceId()+'/getFlight/' + flightId, function(flight) {
+    var seatOptions = $("#seats");
+    let numberOfSeats = flight.numberOfSeats;
+    var numberOfRows = numberOfSeats / 6;
+    for(var i = 1; i <= numberOfRows; i++){
+      if(!flight.seats.includes(i + 'A')){
+        seatOptions.html(seatOptions.html() + '<option>' + i + 'A </option>');
+      }
+      if(!flight.seats.includes(i + 'B')){
+        seatOptions.html(seatOptions.html() + "<option>" + i + 'B </option>');
+      }
+      if(!flight.seats.includes(i + 'C')){
+        seatOptions.html(seatOptions.html() + "<option>" + i + 'C </option>');
+      }
+      if(!flight.seats.includes(i + 'D')){
+        seatOptions.html(seatOptions.html() + "<option>" + i + 'D </option>');
+      }
+      if(!flight.seats.includes(i + 'E')){
+        seatOptions.html(seatOptions.html() + "<option>" + i + 'E </option>');
+      }
+      if(!flight.seats.includes(i + 'F')){
+        seatOptions.html(seatOptions.html() + "<option>" + i + 'F </option>');
+      }
+    }
+  })
+  modal.show(event,flightId);
+}
+
+Flights.prototype.showFast = function() {
+  event.preventDefault();
+  ajaxService.GET('/app/airlines/'+getUserServiceId()+'/showFlights'+'?page=' + this.currentPage + "&size=" + this.pageSize,this.showFastCallback.bind(this));
+}
+
+Flights.prototype.makeFast = function(event, flightId){
+  event.preventDefault();
+  var obj = {};
+  obj.seat = $("#seatTaken").val();
+  obj.ticketPrice = $("#newPrice").val();
+  ajaxService.POST('/app/airlines/makeFastTicket/'+ flightId, JSON.stringify(obj));
+}
+
 var flights = new Flights(
   ['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightClass', 'type', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'ticketPrice'],
   {

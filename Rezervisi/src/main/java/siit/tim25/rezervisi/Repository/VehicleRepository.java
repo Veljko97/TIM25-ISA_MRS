@@ -1,5 +1,7 @@
 package siit.tim25.rezervisi.Repository;
 
+import java.util.Date;
+
 import javax.persistence.LockModeType;
 
 import org.springframework.data.domain.Page;
@@ -9,7 +11,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import siit.tim25.rezervisi.Beans.RentACarBranch;
 import siit.tim25.rezervisi.Beans.Vehicle;
 
 
@@ -20,4 +21,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
 	@Query("SELECT v FROM Vehicle v WHERE v.idVehicle = :id")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public Vehicle lockVehicle(@Param("id") Integer id);
+	
+	@Query("SELECT v FROM Vehicle v WHERE v.branch.service.rentACarID = :serviceId AND 0 = (SELECT count(vr) FROM VehicleReservation vr WHERE vr.vehicle.idVehicle = v.idVehicle AND ((vr.reservationStart <= :startDate AND vr.reservationEnd >= :startDate) OR (vr.reservationStart <= :endDate AND vr.reservationEnd >= :endDate) OR (vr.reservationStart >= :startDate AND vr.reservationEnd <= :endDate)))")
+	public Page<Vehicle> findFree(@Param("serviceId") Integer serviceId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
 }

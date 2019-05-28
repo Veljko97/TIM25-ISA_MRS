@@ -7,7 +7,7 @@ Rooms.prototype = Object.create( Model.prototype );
 Rooms.prototype.bindEvents = function() {
   $(document).on('submit', '#roomsForm', this.addCallback.bind(this));
   $(document).on('submit', '#editRoomForm', this.addCallback.bind(this));
- 
+  $(document).on('submit', '#serchForm', this.showFast.bind(this));
 }
 
 Rooms.prototype.addCallback = function(e) {
@@ -53,6 +53,40 @@ Rooms.prototype.showCallback = function(room) {
 
 Rooms.prototype.show = function(index) {
   ajaxService.GET('/app/hotels/'+getUserServiceId()+'/getRoom/' + index, this.showCallback.bind(this));
+}
+
+Rooms.prototype.showFastCallback = function(data) {
+  var table = $("#roomsTable").first();
+  table.html("<tr><th>Number</th><th>Description</th><th>Capacity</th><th>Price</th><th class=\"options-cell\">Options</th></tr>");
+  this.list = [];
+
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
+  for(var i = 0; i < data.length; i++) {
+    var room = data[i];
+    this.list.push(room);
+    table.html(table.html() + "<tr><td>"+ room.roomNumber + "</td><td>" + room.roomDescription + 
+    "</td><td>" + room.roomCapacity +"</td><td>"+room.price+
+    "</td><td><a class=\"btn btn-danger\" onclick=\"modal.show(event," + room.roomID +")\">Make Fast</a></td></tr>");
+  }
+}
+
+Rooms.prototype.showFast = function(event) {
+  event.preventDefault();
+  var obj = {}
+  obj.start = Date.parse($("#startDate").val());
+  obj.end = Date.parse($("#endDate").val());
+  ajaxService.POST('/app/hotels/freeRooms/'+getUserServiceId()+'?page=' + this.currentPage + "&size=" + this.pageSize,JSON.stringify(obj),this.showFastCallback.bind(this));
+}
+
+Rooms.prototype.makeFast = function(event, roomId){
+  event.preventDefault();
+  var obj = {};
+  obj.start = Date.parse($("#startDate").val());
+  obj.end = Date.parse($("#endDate").val());
+  obj.price = $("#newPrice").val();
+  ajaxService.POST('/app/hotels/makeFastReservation/'+roomId,JSON.stringify(obj));
 }
 
 var rooms = new Rooms(

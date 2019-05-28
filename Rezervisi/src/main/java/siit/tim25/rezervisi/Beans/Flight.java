@@ -225,8 +225,7 @@ public class Flight {
 	public String toString() {
 		return "Flight [startDestination=" + startDestination + ", finalDestination=" + finalDestination
 				+ ", takeOffDate=" + takeOffDate + ", landingDate=" + landingDate + ", flightLength=" + flightLength
-				+ ", numberOfStops=" + numberOfStops + ", stopLocations=" + stopLocations + ", flightTicket="
-				+ flightTickets + ", flightAverageGrade=" + averageGrade + "]";
+				+ ", numberOfStops=" + numberOfStops + ", stopLocations=" + stopLocations + ", flightAverageGrade=" + averageGrade + "]";
 	}
 	
 	@Override
@@ -249,6 +248,7 @@ public class Flight {
 	}
 	
 	public FlightDTO convert() {
+		System.out.println(this);
 		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
 	}
 	

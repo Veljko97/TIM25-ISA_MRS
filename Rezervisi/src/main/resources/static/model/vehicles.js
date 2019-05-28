@@ -7,6 +7,7 @@ Vehicles.prototype = Object.create( Model.prototype );
 Vehicles.prototype.bindEvents = function() {
   $(document).on('submit', '#vehicleForm', this.addCallback.bind(this));
   $(document).on('submit', '#editVehicleForm', this.editCallback.bind(this));
+  $(document).on('submit', '#serchForm', this.showFast.bind(this));
 }
 
 Vehicles.prototype.addCallback = function(e) {
@@ -68,6 +69,39 @@ Vehicles.prototype.render = function() {
 Vehicles.prototype.show = function(index) {
   ajaxService.GET(this.urlApi.showBranches, this.showBranches.bind(this));
   ajaxService.GET('/app/rentacar/' + getUserServiceId() +'/getVehicle/' + index, this.showCallback.bind(this));
+}
+
+Vehicles.prototype.showFastCallback = function(data) {
+  var table = $("#vehiclesTable").first();
+  table.html("<tr><th>Name</th><th>Branch Name</th><th class=\"options-cell\">Options</th></tr>");
+  this.list = [];
+
+  this.numberOfPages = data.totalPages || 0;
+  data = data.content || data;
+
+  for(var i = 0; i < data.length; i++) {
+    var vehicle = data[i];
+    this.list.push(vehicle);
+    table.html(table.html() + "<tr><td>"+ vehicle.vehicleName + "</td><td>" + 
+    vehicle.branchName + "</td><td><a class=\"btn btn-danger\" onclick=\"modal.show(event," + vehicle.idVehicle +")\">Make Fast</a></td></tr>");
+  }
+}
+
+Vehicles.prototype.showFast = function(event) {
+  event.preventDefault();
+  var obj = {}
+  obj.start = Date.parse($("#startDate").val());
+  obj.end = Date.parse($("#endDate").val());
+  ajaxService.POST('/app/rentacar/freeVehicles/'+getUserServiceId()+'?page=' + this.currentPage + "&size=" + this.pageSize,JSON.stringify(obj),this.showFastCallback.bind(this));
+}
+
+Vehicles.prototype.makeFast = function(event, vehicleId){
+  event.preventDefault();
+  var obj = {};
+  obj.start = Date.parse($("#startDate").val());
+  obj.end = Date.parse($("#endDate").val());
+  obj.price = $("#newPrice").val();
+  ajaxService.POST('/app/rentacar/makeFastReservation/'+vehicleId,JSON.stringify(obj));
 }
 
 var vehicles = new Vehicles(

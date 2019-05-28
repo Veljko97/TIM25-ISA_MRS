@@ -81,7 +81,8 @@ Profile.prototype.getEntityHtml = function(data) {
       <div class=\"about\">\
         <span>Address: " + data.airLineAddress + "</span>\
         <span class=\"description\">" + data.airLineDescription + "</span>\
-      </div>";
+      </div>\
+      <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/fast/flight.html?id="+data.airLineID+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Fast Reserve</span></a></p>";;
     case 'flight':
       return "\
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/airline.jpg")+"\"/>\

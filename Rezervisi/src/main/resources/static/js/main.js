@@ -135,6 +135,7 @@ function showAdminNavbar() {
       navbar.html("<div>\
           <li><a href=\"/admin-airlines/destinations.html\">Destinations</a></li>\
           <li><a href=\"/admin-airlines/flights.html\">Flights</a></li>\
+          <li><a href=\"/admin-airlines/fastReservation.html\">Fast Reservation</a></li>\
           <li><a href=\"/admin-airlines/report.html\">Report</a></li>\
         </div>\
         <div>\
@@ -148,6 +149,7 @@ function showAdminNavbar() {
         <div>\
           <li><a href=\"/admin-rentacars/branches.html\">Branches</a></li>\
           <li><a href=\"/admin-rentacars/vehicles.html\">Vehicles</a></li>\
+          <li><a href=\"/admin-rentacars/fastReservation.html\">Fast Reservation</a></li>\
           <li><a href=\"/admin-rentacars/report.html\">Report</a></li>\
         </div>\
         <div>\
@@ -161,6 +163,7 @@ function showAdminNavbar() {
         <div>\
           <li><a href=\"/admin-hotels/rooms.html\">Rooms</a></li>\
           <li><a href=\"/admin-hotels/report.html\">Report</a></li>\
+          <li><a href=\"/admin-hotels/fastReservation.html\">Fast Reservation</a></li>\
         </div>\
         <div>\
           <li><a href=\"/editProfile.html\">Edit profile</a></li>\

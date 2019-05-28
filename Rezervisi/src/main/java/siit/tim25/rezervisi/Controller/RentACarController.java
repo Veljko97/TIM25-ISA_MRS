@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -36,11 +37,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
-
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
-
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FastReservationDTO;
@@ -300,6 +299,9 @@ public class RentACarController {
 			if(vr.getReservationStart().compareTo(endRes)<= 0 && vr.getReservationEnd().compareTo(endRes) >= 0) {
 				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 			}
+			if(vr.getReservationStart().compareTo(startRes) >= 0 && vr.getReservationEnd().compareTo(endRes) <= 0) {
+				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			}
 		}
 		VehicleReservation reservation = new VehicleReservation();
 		reservation.setPrice(res.getPrice());
@@ -336,5 +338,20 @@ public class RentACarController {
 		}
 		return new ResponseEntity<Page<FastReservationDTO>>(new PageImpl<FastReservationDTO>(fasts,reservations.nextPageable(),reservations.getTotalElements()),
 												HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/freeVehicles/{serviceId}")
+	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
+	public ResponseEntity<Page<VehicleDTO>> findFree(@RequestBody FastReservationDTO res, @PathVariable Integer serviceId, Pageable pageable){
+		Page<Vehicle> vehicles = vehicleServices.findFree(serviceId, new Date(res.getStart()), new Date(res.getEnd()), pageable);
+		
+		Page<VehicleDTO> vDTO = vehicles.map(new Converter<Vehicle, VehicleDTO>() {
+
+			@Override
+			public VehicleDTO convert(Vehicle source) {
+				return new VehicleDTO(source);
+			}
+		});
+		return new ResponseEntity<Page<VehicleDTO>>(vDTO,HttpStatus.OK);
 	}
 }

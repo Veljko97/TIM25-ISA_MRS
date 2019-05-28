@@ -35,6 +35,10 @@ public class TicketDTO {
 	
 	private Date created;
 	
+	private FlightDTO flight;
+	
+	public TicketDTO() {}
+	
 	public TicketDTO(Ticket t) {
 		
 		this.ticketPrice = String.valueOf(t.getTicketPrice());
@@ -194,6 +198,13 @@ public class TicketDTO {
 	public void setTargetDestName(String targetDestName) {
 		this.targetDestName = targetDestName;
 	}
-	
+
+	public FlightDTO getFlight() {
+		return flight;
+	}
+
+	public void setFlight(FlightDTO flight) {
+		this.flight = flight;
+	}
 	
 }

@@ -1,8 +1,7 @@
 package siit.tim25.rezervisi.Services;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
 import siit.tim25.rezervisi.Beans.Vehicle;
-import siit.tim25.rezervisi.DTO.FlightDTO;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Repository.BranchRepository;
 import siit.tim25.rezervisi.Repository.RentACarRepository;
@@ -120,5 +117,9 @@ public class VehicleServices {
 	
 	public Vehicle lockVehicle(Integer id) {
 		return vehicleRepository.lockVehicle(id);
+	}
+	
+	public Page<Vehicle> findFree(Integer  serviceId, Date start, Date end, Pageable pageable) {
+		return vehicleRepository.findFree(serviceId, start, end, pageable);
 	}
 }

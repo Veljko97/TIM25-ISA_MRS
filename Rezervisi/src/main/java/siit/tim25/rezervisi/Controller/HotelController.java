@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +42,7 @@ import siit.tim25.rezervisi.Beans.users.HotelAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.HotelDTO;
+import siit.tim25.rezervisi.DTO.RoomDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.HotelServices;
@@ -251,6 +250,10 @@ public class HotelController {
 			if(rr.getReservationStart().compareTo(endRes) <= 0 && rr.getReservationEnd().compareTo(endRes) >= 0) {
 				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 			}
+			
+			if(rr.getReservationStart().compareTo(startRes) >= 0 && rr.getReservationEnd().compareTo(endRes) <= 0) {
+				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			}
 		}
 		RoomReservation reservation = new RoomReservation();
 		reservation.setPrice(res.getPrice());
@@ -287,6 +290,21 @@ public class HotelController {
 		}
 		return new ResponseEntity<Page<FastReservationDTO>>(new PageImpl<FastReservationDTO>(fasts),
 												HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/freeRooms/{hotelId}")
+	@PreAuthorize("hasRole('HOTEL_ADMIN')")
+	public ResponseEntity<Page<RoomDTO>> findFree(@RequestBody FastReservationDTO res, @PathVariable Integer hotelId, Pageable pageable){
+		Page<Room> rooms = roomServices.findFree(hotelId, new Date(res.getStart()), new Date(res.getEnd()), pageable);
+		
+		Page<RoomDTO>rDTO = rooms.map(new Converter<Room, RoomDTO>() {
+
+			@Override
+			public RoomDTO convert(Room source) {
+				return new RoomDTO(source);
+			}
+		});
+		return new ResponseEntity<Page<RoomDTO>>(rDTO,HttpStatus.OK);
 	}
 }
 

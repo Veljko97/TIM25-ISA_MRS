@@ -1,5 +1,7 @@
 package siit.tim25.rezervisi.Repository;
 
+import java.util.Date;
+
 import javax.persistence.LockModeType;
 
 import org.springframework.data.domain.Page;
@@ -22,5 +24,8 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	@Query("SELECT r FROM Room r WHERE r.roomID = :id")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public Room lockRoom(@Param("id") Integer id);
+	
+	@Query("SELECT r FROM Room r WHERE r.hotel.hotelID = :hotelId AND 0 = (SELECT count(rr) FROM RoomReservation rr WHERE rr.room.roomID = r.roomID AND ((rr.reservationStart <= :startDate AND rr.reservationEnd >= :startDate) OR (rr.reservationStart <= :endDate AND rr.reservationEnd >= :endDate) OR (rr.reservationStart >= :startDate AND rr.reservationEnd <= :endDate)))")
+	public Page<Room> findFree(@Param("hotelId") Integer hotelId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
 	
 }

@@ -40,6 +40,12 @@ public class User implements UserDetails {
     @JsonIgnore
     @Column(name = "password")
     private String password;
+    
+    @Column(name = "user_city")
+    private String city;
+    
+    @Column(name = "user_phone_number")
+    private String phoneNumber;
 
     @Column(name = "first_name")
     private String firstName;
@@ -74,6 +80,22 @@ public class User implements UserDetails {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+    
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phone) {
+        this.phoneNumber = phone;
     }
 
     public String getUsername() {
@@ -184,6 +206,8 @@ public class User implements UserDetails {
 				+ ", lastName=" + lastName + ", email=" + email + ", enabled=" + enabled + ", confirmed=" + confirmed
 				+ ", lastPasswordResetDate=" + lastPasswordResetDate + ", authorities=" + authorities + "]";
 	}
+
+	
 
     
 

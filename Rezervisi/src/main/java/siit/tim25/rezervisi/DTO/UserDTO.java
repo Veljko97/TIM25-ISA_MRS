@@ -7,6 +7,8 @@ import siit.tim25.rezervisi.security.model.User;
 public class UserDTO {
 	private Integer id;
 	private String username;
+	private String city;
+	private String phoneNumber;
 	private String firstName;
 	private String lastName;
 	private String password;
@@ -33,11 +35,13 @@ public class UserDTO {
 		this.token = new TokenState();
 	}
 
-	public UserDTO(Integer id, String username, String firstName, String lastName, String email, boolean enabled,
+	public UserDTO(Integer id, String username, String city, String phoneNumber, String firstName, String lastName, String email, boolean enabled,
 			Integer serviceId,boolean confirmed, String image, TokenState token) {
 		super();
 		this.id = id;
 		this.username = username;
+		this.city = city;
+		this.phoneNumber = phoneNumber;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -68,6 +72,8 @@ public class UserDTO {
 		this(
 			user.getId(),
 			user.getUsername(),
+			user.getCity(),
+			user.getPhoneNumber(),
 			user.getFirstName(), 
 			user.getLastName(),
 			user.getEmail(),
@@ -79,7 +85,24 @@ public class UserDTO {
 			);
 	}
 	
+    
+	public String getCity() {
+		return city;
+	}
 
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phone) {
+		this.phoneNumber = phone;
+	}
+	
+	
 	public Integer getId() {
 		return id;
 	}

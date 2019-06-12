@@ -45,6 +45,18 @@ public class VehicleReservation {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date made;
 	
+	public VehicleReservation(Vehicle vehicle, StandardUser user, Date reservationStart,
+			Date reservationEnd, Double price, TicketStatus status, Date made) {
+		super();
+		this.vehicle = vehicle;
+		this.user = user;
+		this.reservationStart = reservationStart;
+		this.reservationEnd = reservationEnd;
+		this.price = price;
+		this.status = status;
+		this.made = made;
+	}
+
 	public VehicleReservation() {
 		this.made = new Date();
 	}

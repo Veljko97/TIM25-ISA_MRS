@@ -33,10 +33,10 @@ public class ProducerServices {
 	}
 	
 	@Async
-	public void sendEmailTo(String sendTo, String text) {
+	public void sendEmailTo(String subject, String sendTo, String text) {
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(sendTo);
-		mail.setSubject("Invitation for trip on Reservify!");
+		mail.setSubject(subject);
 		
 		mail.setText(text);
 		mailSender.send(mail);

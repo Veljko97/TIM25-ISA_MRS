@@ -1,15 +1,17 @@
 function Modal() {
   this.seat = "";
+  this.id = "";
 }
 
-Modal.prototype.show = function(e, seat) {
-  e.preventDefault();
+Modal.prototype.show = function(e, seat, id = 'modal') {
+  if (e) { e.preventDefault(); }
   this.seat = seat;
-  document.getElementById('modal').style.display = 'block';
+  this.id = id;
+  document.getElementById(id).style.display = 'block';
 }
 
 Modal.prototype.close = function() {
-  document.getElementById('modal').style.display = 'none';
+  document.getElementById(this.id).style.display = 'none';
 }
 
 Modal.prototype.switchMode = function(e, isAlreadyActive) {

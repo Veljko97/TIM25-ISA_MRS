@@ -154,7 +154,7 @@ Profile.prototype.getSubEntityTableRowHtml = function(data) {
         <div class=\"search-content\">\
           <div class=\"search-group\">\
             <h4>"+data.vehicleName+"</h4>\
-            <span>Grade: "+data.vehicleGrade+"$</span>\
+            <span>Grade: "+data.averageGrade+"</span>\
           </div>\
           <a class=\"see-more-link\" href=\"#\">Quick Reserve</a>\
         </div>\

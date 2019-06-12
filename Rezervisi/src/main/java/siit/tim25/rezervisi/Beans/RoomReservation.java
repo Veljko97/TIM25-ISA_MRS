@@ -47,6 +47,20 @@ public class RoomReservation {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date made;
+	
+	
+
+	public RoomReservation(Room room, StandardUser user, Date reservationStart, Date reservationEnd,
+			Double price, TicketStatus status, Date made) {
+		super();
+		this.room = room;
+		this.user = user;
+		this.reservationStart = reservationStart;
+		this.reservationEnd = reservationEnd;
+		this.price = price;
+		this.status = status;
+		this.made = made;
+	}
 
 	public RoomReservation() {
 		this.made = new Date();

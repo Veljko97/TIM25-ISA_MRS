@@ -12,17 +12,19 @@ public class VehicleDTO {
 	private Integer idVehicle;
 	private String branchName;
 	private Double averageGrade;
+	private Double price;
 	
 	public VehicleDTO() {
 		super();
 	}
 
-	public VehicleDTO(String vehicleName, Integer idVehicle, String branchName, Double averageGrade) {
+	public VehicleDTO(String vehicleName, Integer idVehicle, String branchName, Double averageGrade, Double price) {
 		super();
 		this.vehicleName = vehicleName;
 		this.idVehicle = idVehicle;
 		this.branchName = branchName;
 		this.averageGrade = averageGrade;
+		this.price = price;
 	}
 	
 	public VehicleDTO(Vehicle veh) {
@@ -64,6 +66,16 @@ public class VehicleDTO {
 		this.averageGrade = averageGrade;
 	}
 	
+	
+	
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
 	public Vehicle convert(Set<RentACarBranch> branches) throws ParseException {
 		Vehicle v = new Vehicle();
 		for(RentACarBranch b: branches) {
@@ -74,6 +86,7 @@ public class VehicleDTO {
 		
 		v.setVehicleName(this.vehicleName);
 		v.setIdVehicle(idVehicle);
+		v.setPrice(price);
 		
 		return v;
 	}

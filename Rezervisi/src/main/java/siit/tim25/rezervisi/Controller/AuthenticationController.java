@@ -155,6 +155,8 @@ public class AuthenticationController {
 		}
 	 	user.setPassword(passwordEncoder.encode(userData.getPassword()));
 	 	user.setUsername(userData.getUsername());
+	 	user.setCity(userData.getCity());
+	 	user.setPhoneNumber(userData.getPhoneNumber());
 	 	user.setFirstName(userData.getFirstName());
 	 	user.setLastName(userData.getLastName());
 	 	user.setEmail(userData.getEmail());
@@ -181,6 +183,9 @@ public class AuthenticationController {
 	    
 	    user.setUsername(modifiedUser.getUsername());
 	    user.setEmail(modifiedUser.getEmail());
+	    user.setCity(modifiedUser.getCity());
+	    user.setPhoneNumber(modifiedUser.getPhoneNumber());
+	    user.setConfirmed(true);
 	    user = this.userServices.save(user);
 	    return new ResponseEntity<UserDTO>(new UserDTO(user, new TokenState(tokenUtils.generateToken(user.getUsername(), device),tokenUtils.getExpired())), HttpStatus.OK); 
 	}

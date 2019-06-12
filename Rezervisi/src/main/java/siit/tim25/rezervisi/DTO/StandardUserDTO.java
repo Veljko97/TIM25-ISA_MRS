@@ -6,7 +6,7 @@ import siit.tim25.rezervisi.security.model.TokenState;
 
 public class StandardUserDTO extends UserDTO{
 	public StandardUserDTO(StandardUser user, TokenState token) {
-		super(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(),
+		super(user.getId(), user.getUsername(), user.getPhoneNumber(), user.getCity(), user.getFirstName(), user.getLastName(),
 				user.getEmail(), user.isEnabled(), -1, user.isConfirmed(), user.getImage(), token);
 		for(Object au : user.getAuthorities()) {
 			this.setRole(((Authority) au).getName());

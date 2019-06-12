@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<title>Reservify</title>
+		<meta name="description" content="Free Bootstrap 4 Template by uicookies.com">
+		<meta name="keywords" content="Free website templates, Free bootstrap themes, Free template, Free bootstrap, Free website template">
+
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/seats.css">
+		<link rel="stylesheet" href="../assets/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../assets/fonts/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/modal.css">
+
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="../assets/css/slick.css">
+    <link rel="stylesheet" href="../assets/css/slick-theme.css">
+    <link rel="stylesheet" href="../assets/css/tabs.css">
+
+    <link rel="stylesheet" href="../assets/css/helpers.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/landing-2.css">
+    <link rel="stylesheet" href="../assets/css/pagination.css">
+    <link rel="stylesheet" href="../assets/css/profile.css">
+    <link rel="stylesheet" href="../assets/css/search.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/checkbox.css">
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../helpers/nextreserve.js"></script>
+    <script src="../helpers/main-nav.js"></script>
+
+  </head>
+  <script>
+    $(document).ready(function() {
+      getMainPageNavBar();
+      nextreserve.ticketId = getParamFromUrl('ticketId');
+      nextreserve.init();
+    });
+  </script>
+	<body data-spy="scroll" data-target="#pb-navbar" data-offset="200">
+    <nav class="nav-blue navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="/index.html">Reservify</a>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar" aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span><i class="ion-navicon"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="probootstrap-navbar">
+          <ul id="navBar" class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/guest/search.html">Search</a></li>
+            <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" href="/LoginPage.html"><span class="pb_rounded-4 px-4">Get Started</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <section class="pb_cover_v3 overflow-hidden profile-section cover-bg-indigo cover-bg-opacity text-left pb_gradient_v1" id="section-home">
+    </section>
+
+
+    <section class="pb_section bg-light pb_slant-white overflow-hidden pb_pb-250" id="section-features">
+      <div class="container">
+        <h1>Reserve Hotels/RentACars</h1>
+        On this page you can make reservations at destination you chose to travel to. We provide accomodation such as hotel rooms and vehicle transportation. When you are done, click finish to complete your reservation and inform friends, if you invited them.
+        <p class="mb-5 mt-3 mr-3">
+          <a class="btn btn-success btn-lg pb_btn-pill\" href="" onclick="nextreserve.finish(event);">
+            <span class="pb_font-14 text-uppercase pb_letter-spacing-1\">
+              Finish
+            </span> 
+          </a>
+        </p>
+      </div>
+      <div class="container">
+        <form id="searchForm">
+          <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="datetime-local" class="form-control" id="startDate">
+            <label for="endDate">End Date:</label>
+            <input type="datetime-local" class="form-control" id="endDate">
+          </div>
+          <input type="submit" class="btn btn-primary" value="Find"><br><br>
+        </form>
+      </div>
+      <div class="container">
+        <div class="row justify-content-center" style="height: 60px;">
+          <div class="col-md-6 text-center mb-5">
+            <h2>Hotel Rooms:</h2>
+          </div>
+        </div>
+        <div class="pagination justify-content-end mb-3">
+          <span onclick="nextreserve.switchRoomPage(-1)">❮</span>
+          <span onclick="nextreserve.switchRoomPage(1)">❯</span>
+        </div>
+        <div class="results" id="rooms">
+
+        </div>
+        
+      </div>
+    </section>
+    
+    <section class="pb_section bg-light pb_slant-white overflow-hidden pb_pb-250" id="section-features">
+      <div class="container">
+        <div class="row justify-content-center" style="height: 60px;">
+          <div class="col-md-6 text-center mb-5">
+            <h2>RentACar Vehicles:</h2>
+          </div>
+        </div>
+        <div class="pagination justify-content-end mb-3">
+          <span onclick="nextreserve.switchVehiclePage(-1)">❮</span>
+          <span onclick="nextreserve.switchVehiclePage(1)">❯</span>
+        </div>
+        <div class="results" id="vehicles">
+
+        </div>
+        
+      </div>
+    </section>
+    <!-- loader -->
+    <div id="pb_loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#1d82ff"/></svg></div>
+
+
+
+    <script src="../assets/js/jquery.min.js"></script>
+
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/slick.min.js"></script>
+    <script src="../assets/js/jquery.mb.YTPlayer.min.js"></script>
+
+    <script src="../assets/js/jquery.waypoints.min.js"></script>
+    <script src="../assets/js/jquery.easing.1.3.js"></script>
+
+    <script src="../assets/js/main.js"></script>
+  </body>
+
+  
+</html>

@@ -105,7 +105,7 @@ Vehicles.prototype.makeFast = function(event, vehicleId){
 }
 
 var vehicles = new Vehicles(
-  ['vehicleName', 'branchName'],
+  ['vehicleName', 'branchName', 'price'],
   {
     'add': '/app/rentacar/' + getUserServiceId() +'/addVehicle',
     'showAll': '/app/rentacar/'+getUserServiceId()+'/showVehicles',

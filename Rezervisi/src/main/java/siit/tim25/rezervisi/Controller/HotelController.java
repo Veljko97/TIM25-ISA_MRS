@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Beans.RoomReservation;
+import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.users.HotelAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
@@ -49,6 +51,7 @@ import siit.tim25.rezervisi.Services.HotelServices;
 import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.RoomReservationServices;
 import siit.tim25.rezervisi.Services.RoomServices;
+import siit.tim25.rezervisi.Services.TicketServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.StandardUserServices;
 import siit.tim25.rezervisi.security.TokenUtils;
@@ -75,6 +78,9 @@ public class HotelController {
 	
 	@Autowired
 	private AuthorityServices authorityServices;
+	
+	@Autowired
+	private TicketServices ticketServices;
 	
 	@Autowired
 	private ImageServices imageServices;
@@ -233,6 +239,48 @@ public class HotelController {
 		
 		imageServices.saveUserImg(image, admin.getUsername());
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/{ticketId}/getAvailableRooms")
+	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
+	public ResponseEntity<Page<Room>> getAvailableRooms(@RequestBody FastReservationDTO res, @PathVariable Integer ticketId, Pageable pageable)	{
+		Ticket t = ticketServices.findOne(ticketId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+		
+		return new ResponseEntity<Page<Room>> (roomServices.findByDestination(t.getFlight().getFinalDestination().getIdDestination(), start, end, pageable), HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/{ticketId}/reserve/{roomId}")
+	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
+	@Transactional
+	public ResponseEntity<Integer> reserveRoom(@RequestBody FastReservationDTO res, HttpServletRequest request, @PathVariable Integer roomId, @PathVariable Integer ticketId) {
+		Ticket t = ticketServices.findOne(ticketId);
+		roomServices.lockRoom(roomId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		StandardUser loggedUser = stdUserServices.findByUsername(username);
+		
+		rrServices.reserveRoom(roomId, loggedUser, start, end);
+		return new ResponseEntity<Integer> (-1, HttpStatus.NO_CONTENT);
 	}
 	
 	@PostMapping(path = "/makeFastReservation/{roomId}")

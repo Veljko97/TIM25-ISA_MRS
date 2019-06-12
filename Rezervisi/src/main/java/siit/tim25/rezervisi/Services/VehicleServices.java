@@ -1,7 +1,6 @@
 package siit.tim25.rezervisi.Services;
 
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,9 +13,11 @@ import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
+import siit.tim25.rezervisi.Beans.RoomReservation;
+import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
-import siit.tim25.rezervisi.DTO.FlightDTO;
-import siit.tim25.rezervisi.DTO.TicketReportDTO;
+import siit.tim25.rezervisi.Beans.VehicleReservation;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Repository.BranchRepository;
 import siit.tim25.rezervisi.Repository.RentACarRepository;
@@ -93,6 +94,10 @@ public class VehicleServices {
 		return vehicleRepository.findOne(id);
 	}
 	
+	public Page<Vehicle> findByDestination(Integer destinationId, Date start, Date end, Pageable pageable) {
+		return vehicleRepository.findByDestination(destinationId, start, end, pageable);
+	}
+	
 	public Vehicle update(Integer serviceId, Vehicle vehicle) {
 		RentACar r = rentacarRepository.findOne(serviceId);
 		Vehicle vh = null;
@@ -127,4 +132,5 @@ public class VehicleServices {
 	public Page<Vehicle> findFree(Integer  serviceId, Date start, Date end, Pageable pageable) {
 		return vehicleRepository.findFree(serviceId, start, end, pageable);
 	}
+	
 }

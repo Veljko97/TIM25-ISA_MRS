@@ -42,13 +42,16 @@ import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.InvitationResponseType;
+import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
+import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FlightDTO;
 import siit.tim25.rezervisi.DTO.FriendsDTO;
 import siit.tim25.rezervisi.DTO.FriendsListsDTO;
+import siit.tim25.rezervisi.DTO.ReservationIdsDTO;
 import siit.tim25.rezervisi.DTO.ReservationUserDTO;
 import siit.tim25.rezervisi.DTO.TicketDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
@@ -58,7 +61,9 @@ import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.FlightServices;
 import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.ProducerServices;
+import siit.tim25.rezervisi.Services.RoomServices;
 import siit.tim25.rezervisi.Services.TicketServices;
+import siit.tim25.rezervisi.Services.VehicleServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.StandardUserServices;
 import siit.tim25.rezervisi.security.TokenUtils;
@@ -90,6 +95,12 @@ public class AirLineController {
 	
 	@Autowired
 	private StandardUserServices stdUserServices;
+	
+	@Autowired
+	private VehicleServices vehicleServices;
+	
+	@Autowired
+	private RoomServices roomServices;
 	
 	@Autowired
 	private TicketServices ticketServices;
@@ -316,17 +327,48 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/{airlineId}/continueReservation/{flightId}")
-	public void continueReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, HttpServletRequest request, @RequestBody List<Integer> ids){
+	public ResponseEntity<Integer> continueReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, HttpServletRequest request, @RequestBody List<Integer> ids){
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		User loggedUser = this.userServices.findByUsername(username);
 
 		for(Integer id: ids) {
 			Ticket t = this.ticketServices.findOne(id);
-			String text = "You have a new invitation for a trip with your friend " + 
-					loggedUser.getFirstName() + " " + loggedUser.getLastName() + " on Reservify platform. Please follow this link to proceed: http://localhost:8888/invitation/flight.html?ticketId=" + t.getIdTicket();
-			this.producerServices.sendEmailTo(t.getEmail(), text);
+			if (!t.getEmail().equals(loggedUser.getEmail())) {
+				String text = "You have a new invitation for a trip with your friend " + 
+						loggedUser.getFirstName() + " " + loggedUser.getLastName() + " on Reservify platform. Please follow this link to proceed: http://localhost:8888/invitation/flight.html?ticketId=" + t.getIdTicket();
+				this.producerServices.sendEmailTo("Invitation for trip on Reservify!", t.getEmail(), text);
+			}
 		}
+		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path="/finishReservation")
+	public ResponseEntity<Integer> finishReservation(@RequestBody ReservationIdsDTO ids, HttpServletRequest request) {
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		User loggedUser = this.userServices.findByUsername(username);
+		
+		Ticket t = this.ticketServices.findOne(ids.getTicketId());
+		String text = "Your reservation is successful on Reservify platform. You reserved flight from " 
+				+ t.getFlight().getStartDestination().getDestinationName() + " to " + t.getFlight().getFinalDestination().getDestinationName() + ".";
+		
+		if (ids.getRoomIds().length > 0 || ids.getVehicleIds().length > 0) {
+			text += "Also, you made some additional reservations: ";
+			for(Integer id: ids.getRoomIds()) {
+				Room r = roomServices.findOne(id);
+				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". ";
+			}
+			
+			for(Integer id: ids.getVehicleIds()) {
+				Vehicle v = vehicleServices.findOne(id);
+				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.";
+				
+			}
+		}
+		
+		this.producerServices.sendEmailTo("Successful reservation on Reservify!", loggedUser.getEmail(), text);
+		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping(path="/getTicket/{ticketId}")
@@ -455,5 +497,7 @@ public class AirLineController {
 		}
 		
 	}
+	
+	
 	
 }

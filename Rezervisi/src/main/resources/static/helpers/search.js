@@ -129,7 +129,6 @@ Search.prototype.render = function(url = null) {
 Search.prototype.bindEvents = function() {
   $(document).on('submit', '#airlineSearchForm', this.searchAirlineCallback.bind(this));
   $(document).on('submit', '#flightSearchForm', this.searchFlightCallback.bind(this));
-  // $(document).on('submit', '#flightFilterForm', this.filterFlightCallback.bind(this));
   $(document).on('submit', '#hotelSearchForm', this.searchHotelCallback.bind(this));
   $(document).on('submit', '#rentacarSearchForm', this.searchRentacarCallback.bind(this));
   $(document).on('submit', '#userSearchForm', this.searchUserCallback.bind(this));
@@ -242,7 +241,7 @@ Search.prototype.getEntityTableRowHtml = function(data) {
         <div class=\"search-content\">\
           <div class=\"search-group\">\
             <h4>"+data.hotelName+"</h4>\
-            <span>Graded: "+(data.hotelGrade || data.averageGrade)+"</span>\
+            <span>Graded: "+(data.averageGrade)+"</span>\
           </div>\
           <span class=\"text-overflow\">Location: " + data.destination + "</span>\
           <span class=\"text-overflow\">Address: " + data.hotelAddress + "</span>\

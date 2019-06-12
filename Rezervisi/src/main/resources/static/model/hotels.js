@@ -21,7 +21,7 @@ Hotels.prototype.showAll = function(data) {
     var hotel = data[i];
     this.list.push(hotel);
     table.html(table.html() + "<tr><td>"+ hotel.hotelName + "</td><td>" + 
-      hotel.hotelAddress + "</td><td>"+ hotel.hotelGrade+"</td><td>" + 
+      hotel.hotelAddress + "</td><td>"+ hotel.averageGrade+"</td><td>" + 
       hotel.hotelEarning + "</td><td><a class=\"btn btn-info\" href=\"add-admin-hotel.html?id=" + 
       hotel.hotelID + "\">Add Admins</a></td><td><a class=\"btn btn-danger\" onclick=\"hotels.deleteCallback(" + hotel.hotelID +")\">Delete</a></td></tr>");
   }
@@ -69,7 +69,7 @@ Hotels.prototype.showUsers = function(index) {
 }
 
 var hotels = new Hotels(
-  ['hotelName', 'hotelAddress', 'hotelDescription', 'hotelGrade', 'roomConfig', 'hotelEarning', 'destination'],
+  ['hotelName', 'hotelAddress', 'hotelDescription', 'averageGrade', 'roomConfig', 'hotelEarning', 'destination'],
   {
     'add': '/app/hotels/addHotel',
     'showDestinations': '/app/airlines/showAllDestinations',

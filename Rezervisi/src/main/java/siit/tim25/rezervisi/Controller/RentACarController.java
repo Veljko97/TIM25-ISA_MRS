@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
+import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
@@ -44,11 +46,14 @@ import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
+import siit.tim25.rezervisi.DTO.RentACarDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Services.BranchServices;
+import siit.tim25.rezervisi.Services.DestinationServices;
 import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
+import siit.tim25.rezervisi.Services.TicketServices;
 import siit.tim25.rezervisi.Services.VehicleReservationServices;
 import siit.tim25.rezervisi.Services.VehicleServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
@@ -72,11 +77,17 @@ public class RentACarController {
 	private VehicleServices vehicleServices;
 	
 	@Autowired
+	private TicketServices ticketServices;
+	
+	@Autowired
 	@Lazy
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private AuthorityServices authorityServices;
+	
+	@Autowired
+	private DestinationServices destinationServices;
 	
 	@Autowired
 	private ImageServices imageServices;
@@ -99,10 +110,11 @@ public class RentACarController {
 													@RequestParam("model") String a )  {
 		RentACar rnt = null;
 		try {
-			rnt = mapper.readValue(a, RentACar.class);
-		} catch (IOException e) {
+			rnt = mapper.readValue(a, RentACarDTO.class).convert(this.destinationServices.findAll());
+		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
+
 		if(rentACarServices.findOneByRentACarName(rnt.getRentACarName()) != null) {
 			return new ResponseEntity<Page<RentACar>>(HttpStatus.BAD_REQUEST);
 		}
@@ -243,6 +255,49 @@ public class RentACarController {
 		vehicleServices.delete(rentacarId, vehicleId);
 		return new ResponseEntity<Page<VehicleDTO>>(vehicleServices.findAllAndConvert(rentacarId, pageable),HttpStatus.OK);
 	}
+	
+	@PostMapping(path = "/{ticketId}/getAvailableVehicles")
+	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
+	public ResponseEntity<Page<Vehicle>> getAvailableVehicles(@RequestBody FastReservationDTO res, @PathVariable Integer ticketId, Pageable pageable)	{
+		Ticket t = ticketServices.findOne(ticketId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+		return new ResponseEntity<Page<Vehicle>> (vehicleServices.findByDestination(t.getFlight().getFinalDestination().getIdDestination(), start, end, pageable), HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/{ticketId}/reserve/{vehicleId}")
+	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
+	@Transactional
+	public ResponseEntity<Integer> reserveVehicle(@RequestBody FastReservationDTO res, HttpServletRequest request, @PathVariable Integer vehicleId, @PathVariable Integer ticketId) {
+		Ticket t = ticketServices.findOne(ticketId);
+		vehicleServices.lockVehicle(vehicleId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+		String token = tokenUtils.getToken(request);
+		String username = this.tokenUtils.getUsernameFromToken(token);
+		StandardUser loggedUser = stdUserServices.findByUsername(username);
+		
+		vrServices.reserveVehicle(vehicleId, loggedUser, start, end);
+		return new ResponseEntity<Integer> (-1, HttpStatus.NO_CONTENT);
+	}
+	
+	
 	
 	@GetMapping(path="/showUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('SYS_ADMIN')")

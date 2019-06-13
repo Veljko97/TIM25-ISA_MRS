@@ -44,9 +44,6 @@ INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hot
 INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('6', 'Avinguda Diagonal, 1, 08019 Barcelona, Spain', 'valja', '0', 'Hotel Barcelona Princess', '6','/assets/images/hotels/6.jpg');
 INSERT INTO hotel (hotelid, hotel_address, hotel_description, hotel_earning, hotel_name, destination_id_destination, image) VALUES ('7', 'R. Castilho 149, 1099-034 Lisboa, Portugal', 'valja', '0', 'InterContinental Lisbon', '7','/assets/images/hotels/7.jpg');
 
-INSERT INTO flight (id_flight, average_grade, flight_class, flight_length, landing_date, number_of_stops, take_off_date, ticket_price, air_line_air_lineid, airplane_id, final_destination_id_destination, start_destination_id_destination)  
-VALUES ('1','10.00','1','1200','2019-11-13 13:23:44','0','2019-11-12 13:23:44','2500','1','2','2','1')
-
 INSERT INTO air_line_admin(id, air_line_air_lineid) VALUES (3, 1);
 INSERT INTO hotel_admin (id, hotel_hotelid) VALUES (2, 1);
 INSERT INTO rentacar_admin (id, rentacar_rentacarid) VALUES (4,1);
@@ -57,14 +54,6 @@ INSERT INTO standard_user (id) values (8);
 INSERT INTO standard_user (id) values (9);
 INSERT INTO standard_user (id) values (10);
 
-
-INSERT INTO flight (id_flight,average_grade,landing_date,take_off_date) VALUES ('1','9.15','1573561424000','1573561424000');
-INSERT INTO flight (id_flight,average_grade,landing_date,take_off_date) VALUES ('2','8.20',1573561424000,1573561424000);
-INSERT INTO flight (id_flight,average_grade,landing_date,take_off_date) VALUES ('3','10.00','17-6-2019 01:22:31','17-6-2019 02:22:31');
-INSERT INTO flight (id_flight,average_grade,landing_date,take_off_date) VALUES ('4','5.30','11-11-2019 01:22:31','10-11-2019 02:22:31');
-INSERT INTO flight (id_flight,average_grade,landing_date,take_off_date) VALUES ('5','7.40','13-2-2019 01:22:31','13-2-2019 02:22:31');
-
-
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('1', 'Boeing 787', '30');
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('2', 'Airbus A220', '42');
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('3', 'Boeing 777', '48');
@@ -72,6 +61,15 @@ INSERT INTO air_plane (id, name, number_of_seats) VALUES ('4', 'Comac C919', '54
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('5', 'Airbus A330', '60');
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('6', 'Douglas DC-8', '66');
 INSERT INTO air_plane (id, name, number_of_seats) VALUES ('7', 'Convair 880', '72');
+
+INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, number_of_stops,ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('1','10.00','1','1200','19.6.2319','3', '1340','1','1','19.6.2119', '1', '2', '1');
+INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, number_of_stops,ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('2','8.00','2','1200','19.6.1919','2', '240','1','1','19.6.1818', '2', '3', '1');
+INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, number_of_stops,ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('3','9.50','1','1200','19.6.2719','1', '820','1','1','19.6.2617', '1', '6', '3');
+INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, number_of_stops,ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('4','8.40','1','1200','19.6.2919','0', '430','1','1','19.6.2816', '1', '7', '5');
+INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, number_of_stops,ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('5','7.20','2','1200','19.6.3019','2', '680','1','1','19.6.2915', '1', '2', '4');
+INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, number_of_stops,ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('6','9.20','1','1200','19.6.2519','1', '1120','1','1','19.6.2414', '2', '5', '3');
+
+
 
 INSERT INTO AUTHORITY (id, name) VALUES (1, 'ROLE_SYS_ADMIN');
 INSERT INTO AUTHORITY (id, name) VALUES (2, 'ROLE_HOTEL_ADMIN');

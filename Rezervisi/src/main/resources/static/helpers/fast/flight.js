@@ -11,6 +11,16 @@ FastFlight.prototype.reserveFlight = function(event, id){
     this.reserv(id,JSON.stringify(obj));
 }
 
+FastFlight.prototype.setStars = function(data) {
+  var selcetor  = "#Fgr"+data.idFlight;
+  $(selcetor).rateYo({
+    starSize: 25,
+    readOnly:true,
+    totalStars: 5,
+    rating: data.flight.averageGrade || 0
+  });
+}
+
 FastFlight.prototype.getSubEntityTableRowHtml = function(data){
     return "\
     <div class=\"row search-result\">\
@@ -22,7 +32,7 @@ FastFlight.prototype.getSubEntityTableRowHtml = function(data){
         <h6> Flight ends: "+ (new Date(data.flight.landingDate)).toLocaleString()+"</h6> \
         <h6> Price: "+ data.ticketPrice +"</h6> \
         <div class=\"search-group\">\
-          <span>Grade: "+data.flight.flightAverageGrade+"</span>\
+          <span class='my-rating' id='Fgr"+data.flight.idFlight+"'></span>\
         </div>\
         <a class=\"see-more-link\" href=\"#\" onClick=\"modal.show(event,'"+data.ticketId+"')\">Quick Reserve</a>\
       </div>\

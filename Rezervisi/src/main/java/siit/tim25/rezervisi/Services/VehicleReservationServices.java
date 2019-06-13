@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
+import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.VehicleReportDTO;
 import siit.tim25.rezervisi.DTO.VehicleReservationDTO;
@@ -72,12 +74,11 @@ public class VehicleReservationServices {
 		vehicleRepository.save(v);
 		vrRepository.delete(vr);
 	}
-	
+
 	public void reserveVehicle(Integer vehicleId, StandardUser u, Date start, Date end) {
 		Vehicle v = vehicleRepository.findOne(vehicleId);
 		VehicleReservation vr = new VehicleReservation(v, u, start, end, v.getPrice(), TicketStatus.ACCEPTED, new Date());
 		u.getVehicleReservation().add(vr);
 		this.save(vr);
 	}
-	
 }

@@ -32,6 +32,7 @@ public class Vehicle {
 	private RentACarBranch branch;
 
 	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<VehicleGrade> grades = new HashSet<VehicleGrade>();
 
 	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

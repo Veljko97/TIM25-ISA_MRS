@@ -28,6 +28,7 @@ Profile.prototype.showCallback = function(data) {
   data = data.content || data;
 
   resultsTable.html(resultsTable.html() + this.getEntityHtml(data));
+  this.setStars(data);
 }
 
 Profile.prototype.showListCallback = function(data) {
@@ -38,6 +39,7 @@ Profile.prototype.showListCallback = function(data) {
 
   for(let i = 0; i < data.length; i++) {
     resultsTable.html(resultsTable.html() + this.getSubEntityTableRowHtml(data[i]));
+    this.setStarsSub(data[i]);
   }
 }
 
@@ -72,6 +74,30 @@ Profile.prototype.getGETURL = function(indexParams, activeTab) {
   }
 }
 
+Profile.prototype.setStars = function(data) {
+  var selcetor  = ""
+  switch(this.activeTab)  {
+    case "hotel":
+      selcetor = "#Hgr"+data.hotelID;
+      break;
+    case "rentacar" :
+      selcetor = "#Rgr"+data.rentACarID;
+      break;
+    case "flight" :
+      selcetor = "#Fgr"+data.idFlight;
+      break;
+    case "airline":
+      selcetor = "#Agr"+data.airLineID;
+      break;
+  }
+  $(selcetor).rateYo({
+    starSize: 25,
+    readOnly:true,
+    totalStars: 5,
+    rating: data.averageGrade || 0,
+  });
+}
+
 Profile.prototype.getEntityHtml = function(data) {
   switch(this.activeTab) {
     case 'airline':
@@ -79,6 +105,7 @@ Profile.prototype.getEntityHtml = function(data) {
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/airline.jpg")+"\"/>\
       <h2 class=\"profile-headline\">" + data.airLineName + "</h2>\
       <div class=\"about\">\
+        <span class='my-rating' id='Agr"+data.airLineID+"'></span>\
         <span>Address: " + data.airLineAddress + "</span>\
         <span class=\"description\">" + data.airLineDescription + "</span>\
       </div>\
@@ -91,6 +118,7 @@ Profile.prototype.getEntityHtml = function(data) {
         <span>Price: "+data.ticketPrice+"$</span>\
         <span class=\"description\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " +(new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
       </div>\
+      <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
       <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/flight.html?id="+data.idFlight+"&airlineId="+data.airLineId+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Reserve</span></a></p>\
       ";
     case 'hotel':
@@ -98,6 +126,7 @@ Profile.prototype.getEntityHtml = function(data) {
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/hotel.jpg")+"\"/>\
       <h2 class=\"profile-headline\">" + data.hotelName + "</h2>\
       <div class=\"about\">\
+        <span class='my-rating' id='Hgr"+data.hotelID+"'></span>\
         <span>Address: " + data.hotelAddress + "</span>\
         <span class=\"description\">" + data.hotelDescription + "</span>\
       </div>\
@@ -107,6 +136,7 @@ Profile.prototype.getEntityHtml = function(data) {
       <img class=\"profile-img\" src=\""+(data.image || "../assets/images/rentacar.jpg")+"\"/>\
       <h2 class=\"profile-headline\">" + data.rentACarName + "</h2>\
       <div class=\"about\">\
+        <span class='my-rating' id='Rgr"+data.rentACarID+"'></span>\
         <span>Address: " + data.rentACarAddress + "</span>\
         <span class=\"description\">" + data.rentACarDescription + "</span>\
       </div>\
@@ -114,6 +144,30 @@ Profile.prototype.getEntityHtml = function(data) {
     default:
       return "";
   }
+}
+
+Profile.prototype.setStarsSub = function(data) {
+  var selcetor  = ""
+  switch(this.activeTab)  {
+    case "hotel":
+      selcetor = "#Rogr"+data.roomID;
+      break;
+    case "rentacar" :
+      selcetor = "#Vgr"+data.idVehicle;
+      break;
+    case "flight" :
+      selcetor = "";
+      break;
+    case "airline":
+      selcetor = "#Fgr"+data.idFlight;
+      break;
+  }
+  $(selcetor).rateYo({
+    starSize: 25,
+    readOnly:true,
+    totalStars: 5,
+    rating: data.averageGrade || 0,
+  });
 }
 
 Profile.prototype.getSubEntityTableRowHtml = function(data) {
@@ -125,6 +179,7 @@ Profile.prototype.getSubEntityTableRowHtml = function(data) {
         <div class=\"search-content\">\
           <div class=\"search-group\">\
             <h4>"+data.startDestinationName+"<->"+data.finalDestinationName+"</h4>\
+            <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
             <span>Price: "+data.ticketPrice+"$</span>\
           </div>\
           <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " +(new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
@@ -144,6 +199,7 @@ Profile.prototype.getSubEntityTableRowHtml = function(data) {
           <span>Capacity: " + data.roomCapacity + "</span>\
         </div>\
         <span class=\"text-overflow\">" + data.roomDescription + "</span>\
+        <span class='my-rating' id='Rogr"+data.roomID+"'></span>\
         <a class=\"see-more-link\" href=\"#\">Quick Reserve</a>\
       </div>\
     </div>";
@@ -154,7 +210,7 @@ Profile.prototype.getSubEntityTableRowHtml = function(data) {
         <div class=\"search-content\">\
           <div class=\"search-group\">\
             <h4>"+data.vehicleName+"</h4>\
-            <span>Grade: "+data.averageGrade+"</span>\
+            <span class='my-rating' id='Vgr"+data.idVehicle+"'></span>\
           </div>\
           <a class=\"see-more-link\" href=\"#\">Quick Reserve</a>\
         </div>\

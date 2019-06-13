@@ -48,6 +48,7 @@ public class RentACar {
 	private Set<RentACarBranch> rentACarBranches = new HashSet<RentACarBranch>();
 	
 	@OneToMany(mappedBy = "rentACar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<RentACarGrade> grades = new HashSet<RentACarGrade>();
 	
 	@Column(name = "rentACarEarning")

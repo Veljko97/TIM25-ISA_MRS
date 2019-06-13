@@ -7,12 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
+import siit.tim25.rezervisi.DTO.RoomDTO;
 import siit.tim25.rezervisi.Repository.HotelRepository;
 import siit.tim25.rezervisi.Repository.RoomRepository;
 
@@ -107,5 +109,15 @@ public class RoomServices {
 	
 	public Page<Room> findFree(Integer  hotelId, Date start, Date end, Pageable pageable) {
 		return roomRepository.findFree(hotelId, start, end, pageable);
+	}
+	
+	public Page<RoomDTO> findPastRoomReservations(Integer userId, Pageable pageable) {
+		Page<Room> ro = roomRepository.findPastRoomReservations(userId, new Date(), pageable);
+		return ro.map(new Converter<Room, RoomDTO>(){
+
+			@Override
+			public RoomDTO convert(Room source) {
+				return new RoomDTO(source);
+			}});
 	}
 }

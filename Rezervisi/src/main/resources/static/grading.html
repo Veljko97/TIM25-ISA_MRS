@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<title>Reservify</title>
+		<meta name="description" content="Free Bootstrap 4 Template by uicookies.com">
+		<meta name="keywords" content="Free website templates, Free bootstrap themes, Free template, Free bootstrap, Free website template">
+
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400" rel="stylesheet">
+
+		<link rel="stylesheet" href="/assets/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="/assets/fonts/ionicons/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="/assets/fonts/fontawesome/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/slick-theme.css">
+
+    <link rel="stylesheet" href="/assets/css/helpers.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/landing-2.css">
+    <link rel="stylesheet" href="/assets/css/tabs.css">
+    <link rel="stylesheet" href="/assets/css/checkbox.css">
+    <link rel="stylesheet" href="/assets/css/search.css">
+    <link rel="stylesheet" href="/assets/css/pagination.css">
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/service/ajaxService.js"></script>
+    <script src="/helpers/graiding.js"></script>
+    <script src="/helpers/main-nav.js"></script>
+
+
+  </head>
+  <script>
+    $(document).ready(function() {
+      getMainPageNavBar();
+      grade.init();
+    });
+  </script>
+	<body data-spy="scroll" data-target="#pb-navbar" data-offset="200">
+
+    <nav class="navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="/index.html">Reservify</a>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar" aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span><i class="ion-navicon"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="probootstrap-navbar">
+          <ul id="navBar" class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/guest/search.html">Search</a></li>
+            <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" href="/LoginPage.html"><span class="pb_rounded-4 px-4">Get Started</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <section class="pb_cover_v3 overflow-hidden cover-bg-indigo cover-bg-opacity text-left pb_gradient_v1" id="section-home">
+        <div class="container" >
+          <div class="search-container row align-items-center justify-content-center">
+            <div class="tabGrading" id="options">
+              
+            </div>
+            
+            <div class="relative align-self-center" style="width: 70%;">
+
+              <span id="Airlines" class="tabcontent active" style="display: block;"></span>
+              
+              <span id="Flights" class="tabcontent"></span>
+              
+              <span id="Hotels" class="tabcontent"></span>
+
+              <span id="Rentacar" class="tabcontent"></span>
+
+              <span id="Users" class="tabcontent" > </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pb_section  bg-light pb_slant-white overflow-hidden pb_pb-250" id="section-features">
+        <div class="container">
+          <div class="row justify-content-center" style="height: 60px;">
+            <div class="col-md-6 text-center mb-5">
+              <h2>Search Results:</h2>
+            </div>
+          </div>
+          <div class="pagination justify-content-end mb-3">
+            <span onclick="grade.switchPage(-1)">❮</span>
+            <span onclick="grade.switchPage(1)">❯</span>
+          </div>
+          <div class="results">
+
+          </div>
+          
+        </div>
+      </section>
+      <!-- END section -->
+      
+    <!-- loader -->
+    <div id="pb_loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#1d82ff"/></svg></div>
+
+
+
+    <script src="../assets/js/jquery.min.js"></script>
+
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/slick.min.js"></script>
+    <script src="../assets/js/jquery.mb.YTPlayer.min.js"></script>
+
+    <script src="../assets/js/jquery.waypoints.min.js"></script>
+    <script src="../assets/js/jquery.easing.1.3.js"></script>
+
+    <script src="../assets/js/main.js"></script>
+
+    
+    <!-- Star rating -->
+    <script src="/js/jquery.rateyo.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.rateyo.min.css">
+
+    <!-- End Rating -->
+
+  </body>
+
+  
+</html>

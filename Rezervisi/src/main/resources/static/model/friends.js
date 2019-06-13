@@ -71,6 +71,9 @@ Friends.prototype.renderTable = function(tableId, collection) {
     var res = $("#"+tableId).empty();
     var friends = this;
     var page = this.pendingPg * this.pageSize;
+    if(collection.length == 0){
+        return;
+    }
     for(var i = page; i < page+this.pageSize; i++){
         var item = collection[i];
         var div = "\
@@ -92,6 +95,9 @@ Friends.prototype.renderAcceptedTable = function(collection) {
     var res = $("#acceptedTable").empty();
     var friends = this;
     var page = this.acceptedPg * this.pageSize;
+    if(collection.length == 0){
+        return;
+    }
     for(var i = page; i < page+this.pageSize; i++){
         var item = collection[i];
         var div = "\
@@ -115,6 +121,9 @@ Friends.prototype.renderConfirmationTable = function(collection) {
     var res = $("#confirmationTable").empty();
     var friends = this;
     var page = this.confirmationPg * this.pageSize;
+    if(collection.length == 0){
+        return;
+    }
     for(var i = page; i < page+this.pageSize; i++){
         var item = collection[i];
         var div = "\

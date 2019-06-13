@@ -1,6 +1,7 @@
 package siit.tim25.rezervisi.Services;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,15 @@ public class HotelServices {
 	
 	public void delete(Integer id) {
 		hotelRepository.delete(id);
+	}
+	
+	public Page<HotelDTO> findPastHotelReservations(Integer userId, Pageable pageable) {
+		Page<Hotel> ho = hotelRepository.findPastHotelReservations(userId, new Date(), pageable);
+		return ho.map(new Converter<Hotel, HotelDTO>(){
+
+			@Override
+			public HotelDTO convert(Hotel source) {
+				return new HotelDTO(source);
+			}});
 	}
 }

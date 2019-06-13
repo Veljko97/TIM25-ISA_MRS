@@ -22,7 +22,7 @@ public class ImageServices {
 		} catch (IOException e) {
 			return "";
 		}
-		return "../"+name;
+		return "/"+name;
 	}
 	
 	public String saveUserImg(MultipartFile img, String id) {
@@ -32,7 +32,7 @@ public class ImageServices {
 	public String getUserPath(MultipartFile img, String id) {
 		String extention = img.getOriginalFilename().split("\\.")[1];
 		String name = Paths.get(imgPath.toString(), "users", id.toString() + "." + extention).toString();
-		return "../"+name;
+		return "/"+name;
 	}
 	
 	public String saveRentACarImg(MultipartFile img, Integer id) {

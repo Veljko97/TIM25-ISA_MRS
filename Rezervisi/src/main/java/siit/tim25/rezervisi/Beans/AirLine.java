@@ -51,6 +51,7 @@ public class AirLine {
 	private Set<AirLineAdmin> admins = new HashSet<AirLineAdmin>();
 	
 	@OneToMany(mappedBy = "airLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<AirLineGrade> grades = new HashSet<AirLineGrade>();
 
 	@Column(name = "airlineEarning", nullable = false)

@@ -12,7 +12,9 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.TicketStatus;
+import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
 import siit.tim25.rezervisi.DTO.VehicleReportDTO;
 import siit.tim25.rezervisi.DTO.VehicleReservationDTO;
@@ -41,5 +43,4 @@ public interface VehicleReservationRepository extends JpaRepository<VehicleReser
 	
 	@Query("SELECT new siit.tim25.rezervisi.DTO.VehicleReservationDTO(vr) from VehicleReservation vr inner join vr.user u WHERE u.id = ?1 and vr.status = '0'")
 	public List<VehicleReservationDTO> findVehicleReservationsByUserId(Integer userId);
-	
 }

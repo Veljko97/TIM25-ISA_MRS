@@ -27,4 +27,8 @@ public interface FlightRepository extends JpaRepository<Flight, Integer> {
 	@Query("SELECT f from Flight f where f.idFlight = :id")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public Flight findFlight(@Param("id") Integer id);
+	
+	@Query("Select fl FROM Flight fl WHERE fl.landingDate < :dateNow AND fl.idFlight IN (SELECT ti.flight.idFlight FROM fl.flightTickets ti WHERE ti.user.id = :userId)")
+	public Page<Flight> findPastFlightReservations(@Param("userId") Integer userId, @Param("dateNow") Date dateNow , Pageable pageable);
+
 }

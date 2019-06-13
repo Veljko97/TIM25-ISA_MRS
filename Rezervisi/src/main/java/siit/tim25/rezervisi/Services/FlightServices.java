@@ -166,4 +166,14 @@ public class FlightServices {
 	public Flight lockFlight(Integer id) {
 		return flightRepository.findFlight(id);
 	}
+	
+	public Page<FlightDTO> findPastFlightReservations(Integer userId, Pageable pageable) {
+		Page<Flight>fl = flightRepository.findPastFlightReservations(userId, new Date(), pageable);
+		return fl.map(new Converter<Flight, FlightDTO>(){
+
+			@Override
+			public FlightDTO convert(Flight source) {
+				return new FlightDTO(source);
+			}});
+	}
 }

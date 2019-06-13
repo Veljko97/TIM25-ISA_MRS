@@ -1,6 +1,7 @@
 package siit.tim25.rezervisi.Services;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,10 @@ public class AirLineServices {
 	
 	public void delete(Integer id) {
 		airLineRepository.delete(id);
+	}
+	
+	public Page<AirLine> findPastAirLineReservations(Integer userId, Pageable pageable) {
+		return airLineRepository.findPastAirLineReservations(userId, new Date(), pageable);
 	}
 	
 }

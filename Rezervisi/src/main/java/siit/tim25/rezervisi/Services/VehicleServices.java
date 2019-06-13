@@ -127,4 +127,14 @@ public class VehicleServices {
 	public Page<Vehicle> findFree(Integer  serviceId, Date start, Date end, Pageable pageable) {
 		return vehicleRepository.findFree(serviceId, start, end, pageable);
 	}
+	
+	public Page<VehicleDTO> findPastVehicleReservations(Integer userId, Pageable pageable) {
+		Page<Vehicle> ve = vehicleRepository.findPastVehicleReservations(userId, new Date(), pageable);
+		return ve.map(new Converter<Vehicle, VehicleDTO>(){
+
+			@Override
+			public VehicleDTO convert(Vehicle source) {
+				return new VehicleDTO(source);
+			}});
+	}
 }

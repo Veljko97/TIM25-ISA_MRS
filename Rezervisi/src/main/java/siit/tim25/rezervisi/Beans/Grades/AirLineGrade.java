@@ -18,7 +18,7 @@ public class AirLineGrade {
 	private Integer id;
 	
 	@Column
-	private int score;
+	private Double score;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private AirLine airLine;
@@ -28,7 +28,7 @@ public class AirLineGrade {
 
 	public AirLineGrade(){}
 	
-	public AirLineGrade(Integer id, int score, AirLine airLine, StandardUser user) {
+	public AirLineGrade(Integer id, Double score, AirLine airLine, StandardUser user) {
 		super();
 		this.id = id;
 		this.score = score;
@@ -44,11 +44,11 @@ public class AirLineGrade {
 		this.id = id;
 	}
 
-	public int getScore() {
+	public Double getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
 

@@ -19,7 +19,7 @@ public class HotelGrade {
 	private Integer id;
 	
 	@Column
-	private int score;
+	private Double score;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Hotel hotel;
@@ -30,12 +30,12 @@ public class HotelGrade {
 	public HotelGrade() {
 		super();
 		this.id = null;
-		this.score = -1;
+		this.score = null;
 		this.hotel = null;
 		this.user = null;
 	}
 	
-	public HotelGrade(Integer id, int score, Hotel hotel, StandardUser user) {
+	public HotelGrade(Integer id, Double score, Hotel hotel, StandardUser user) {
 		super();
 		this.id = id;
 		this.score = score;
@@ -51,11 +51,11 @@ public class HotelGrade {
 		this.id = id;
 	}
 
-	public int getScore() {
+	public Double getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
 

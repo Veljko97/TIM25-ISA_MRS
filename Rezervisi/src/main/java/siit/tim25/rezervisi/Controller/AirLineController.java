@@ -439,6 +439,7 @@ public class AirLineController {
 												HttpStatus.OK);
 	}
 	
+
 	@Scheduled(fixedDelay = 3600000)
 	public void cancelReservations() throws InterruptedException {
 		List<Ticket> l = ticketServices.findAll();

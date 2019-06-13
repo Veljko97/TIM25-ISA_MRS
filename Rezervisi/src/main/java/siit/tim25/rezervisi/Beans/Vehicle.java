@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import siit.tim25.rezervisi.Beans.Grades.VehicleGrade;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
 
@@ -29,6 +31,7 @@ public class Vehicle {
 	private RentACarBranch branch;
 	
 	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<VehicleGrade> grades = new HashSet<VehicleGrade>();
 
 	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

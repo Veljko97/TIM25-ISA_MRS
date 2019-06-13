@@ -19,7 +19,7 @@ public class FlightGrade {
 	private Integer id;
 	
 	@Column
-	private int score;
+	private Double score;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Flight flight;
@@ -30,12 +30,12 @@ public class FlightGrade {
 	public FlightGrade() {
 		super();
 		this.id = null;
-		this.score = -1;
+		this.score = null;
 		this.flight = null;
 		this.user = null;
 	}
 	
-	public FlightGrade(Integer id, int score, Flight flight, StandardUser user) {
+	public FlightGrade(Integer id, Double score, Flight flight, StandardUser user) {
 		super();
 		this.id = id;
 		this.score = score;
@@ -51,11 +51,11 @@ public class FlightGrade {
 		this.id = id;
 	}
 
-	public int getScore() {
+	public double getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
 

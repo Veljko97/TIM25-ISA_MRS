@@ -1,13 +1,17 @@
 package siit.tim25.rezervisi.Services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.RentACar;
+import siit.tim25.rezervisi.Beans.Vehicle;
+import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Repository.RentACarRepository;
 
 
@@ -47,5 +51,11 @@ public class RentACarServices {
 	
 	public void delete(Integer id) {
 		rentACarRepository.delete(id);
+	}
+	
+	public Page<RentACar> findPastRentACarReservations(Integer userId, Pageable pageable) {
+	
+		return rentACarRepository.findPastRentACarReservations(userId, new Date(), pageable);
+	
 	}
 }

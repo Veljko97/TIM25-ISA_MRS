@@ -29,6 +29,7 @@ FastModel.prototype.showAll = function(data) {
 
   for(let i = 0; i < data.length; i++) {
     resultsTable.html(resultsTable.html() + this.getSubEntityTableRowHtml(data[i]));
+    this.setStars(data[i]);
   }
 }
 
@@ -44,4 +45,5 @@ FastModel.prototype.reserv = function(ticketId, obj = "") {
 }
 
 FastModel.prototype.getSubEntityTableRowHtml = function(data){return ""}
+FastModel.prototype.setStars = function(data) {return ""}
 

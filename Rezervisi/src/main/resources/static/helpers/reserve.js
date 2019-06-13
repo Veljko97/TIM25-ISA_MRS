@@ -146,7 +146,7 @@ Reserve.prototype.makeJSONFlightObject = function(userType) {
 Reserve.prototype.cancelReservation = function(e) {
   e.preventDefault();
   if (this.reservations.length) {
-    ajaxService.DELETE('/app/airlines/' + reserve.airlineId + '/cancelReservation/' + reserve.id, JSON.stringify(this.reservations), function() {window.location.replace('http://localhost:8888');});
+    ajaxService.DELETE('/app/airlines/' + reserve.airlineId + '/cancelReservation/' + reserve.id, JSON.stringify(this.reservations), function() {window.location.replace('/');});
   }
 }
 
@@ -159,7 +159,7 @@ Reserve.prototype.checkTicketPermission = function(ticketId) {
   ajaxService.GET('/app/airlines/getTicket/' + ticketId, function(data) {
     var user = JSON.parse(sessionStorage.getItem('user'));
     if (data.status == 'ACCEPTED' || user == null || user.email != data.email) {
-      window.location.replace('http://localhost:8888');
+      window.location.replace('/');
     } else {
       $("#details").val("The ticket price is " + data.ticketPrice + ". The relation of the trip is " + data.srcDestName + "<->" + data.targetDestName);
     }
@@ -168,7 +168,7 @@ Reserve.prototype.checkTicketPermission = function(ticketId) {
 
 Reserve.prototype.sendResponse = function(event, response) {
   event.preventDefault();
-  ajaxService.POST('/app/airlines/reservationResponse/' + getParamFromUrl('ticketId'), JSON.stringify(response), function() {window.location.replace('http://localhost:8888')});
+  ajaxService.POST('/app/airlines/reservationResponse/' + getParamFromUrl('ticketId'), JSON.stringify(response), function() {window.location.replace('/')});
 }
 
 var reserve = new Reserve();

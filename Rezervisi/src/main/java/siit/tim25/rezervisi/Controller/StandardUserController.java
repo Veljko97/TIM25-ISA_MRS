@@ -200,7 +200,7 @@ public class StandardUserController {
 	}
 	
 	@PostMapping(path="/gradeAirLine/{id}")
-	public ResponseEntity<Void> gradeAirLine(@PathVariable Integer id, @RequestBody Integer score, HttpServletRequest request){
+	public ResponseEntity<Void> gradeAirLine(@PathVariable Integer id, @RequestBody Double score, HttpServletRequest request){
 		if(score < 0 || score >5) {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
@@ -225,7 +225,7 @@ public class StandardUserController {
 	}
 	
 	@PostMapping(path="/gradeHotel/{id}")
-	public ResponseEntity<Void> gradeHotel(@PathVariable Integer id, @RequestBody Integer score, HttpServletRequest request){
+	public ResponseEntity<Void> gradeHotel(@PathVariable Integer id, @RequestBody Double score, HttpServletRequest request){
 		if(score < 0 || score >5) {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
@@ -250,7 +250,7 @@ public class StandardUserController {
 	}
 	
 	@PostMapping(path="/gradeRentACar/{id}")
-	public ResponseEntity<Void> gradeRentACar(@PathVariable Integer id, @RequestBody Integer score, HttpServletRequest request){
+	public ResponseEntity<Void> gradeRentACar(@PathVariable Integer id, @RequestBody Double score, HttpServletRequest request){
 		if(score < 0 || score >5) {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
@@ -275,7 +275,7 @@ public class StandardUserController {
 	}
 	
 	@PostMapping(path="/gradeRoom/{id}")
-	public ResponseEntity<Void> gradeRoom(@PathVariable Integer id, @RequestBody Integer score, HttpServletRequest request){
+	public ResponseEntity<Void> gradeRoom(@PathVariable Integer id, @RequestBody Double score, HttpServletRequest request){
 		if(score < 0 || score >5) {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
@@ -308,7 +308,7 @@ public class StandardUserController {
 	}
 	
 	@PostMapping(path="/gradeFlight/{id}")
-	public ResponseEntity<Void> gradeFlight(@PathVariable Integer id, @RequestBody Integer score, HttpServletRequest request){
+	public ResponseEntity<Void> gradeFlight(@PathVariable Integer id, @RequestBody Double score, HttpServletRequest request){
 		if(score < 0 || score >5) {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
@@ -336,7 +336,7 @@ public class StandardUserController {
 	}
 	
 	@PostMapping(path="/gradeVehicle/{id}")
-	public ResponseEntity<Void> gradeVehicle(@PathVariable Integer id, @RequestBody Integer score, HttpServletRequest request){
+	public ResponseEntity<Void> gradeVehicle(@PathVariable Integer id, @RequestBody Double score, HttpServletRequest request){
 		if(score < 0 || score >5) {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}

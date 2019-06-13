@@ -93,7 +93,11 @@ Search.prototype.switchMode = function(e, isAlreadyActive) {
 Search.prototype.switchPage = function(dir) {
   if ((dir == -1 && this.currentPage > 0) || (dir == 1 && this.currentPage < (this.numberOfPages - 1))) {
     this.currentPage += dir;
-    this.render(this.lastSearch +'&size='+this.pageSize+'&page=' + this.currentPage);
+    if(this.lastSearch.includes('?')) {
+      this.render(this.lastSearch +'&size='+this.pageSize+'&page=' + this.currentPage);
+    }else {
+      this.render(this.lastSearch +'?size='+this.pageSize+'&page=' + this.currentPage);
+    }
   }
 }
 
@@ -207,7 +211,33 @@ Search.prototype.showCallback = function(data) {
 
   for(let i = 0; i < data.length; i++) {
     resultsTable.html(resultsTable.html() + this.getEntityTableRowHtml(data[i]));
+    this.setStars(data[i]);
   }
+}
+
+Search.prototype.setStars = function(data) {
+  var selcetor  = ""
+  switch(this.activeTab)  {
+    case "Hotels":
+      selcetor = "#Hgr"+data.hotelID;
+      break;
+    case "Rentacar" :
+      selcetor = "#Rgr"+data.rentACarID;
+      break;
+    case "Flights" :
+      selcetor = "#Fgr"+data.idFlight;
+      break;
+    case "Airlines":
+      selcetor = "#Agr"+data.airLineID;
+      break;
+  }
+  $(selcetor).rateYo({
+    starSize: 25,
+    readOnly:true,
+    totalStars: 5,
+    rating: data.averageGrade || 0,
+    
+  });
 }
 
 Search.prototype.getEntityTableRowHtml = function(data) {
@@ -217,7 +247,10 @@ Search.prototype.getEntityTableRowHtml = function(data) {
         <div class=\"row search-result\">\
           <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
           <div class=\"search-content\">\
-            <h4>"+data.airLineName+"</h4>\
+            <div class=\"search-group\">\
+              <h4>"+data.airLineName+"</h4>\
+              <span class='my-rating' id='Agr"+data.airLineID+"'></span>\
+            </div>\
             <span class=\"text-overflow\">"+ data.airLineDescription +"</span>\
             <a class=\"see-more-link\" href=\"/guest/airline.html?id="+data.airLineID +"\">See more</a>\
           </div>\
@@ -229,6 +262,7 @@ Search.prototype.getEntityTableRowHtml = function(data) {
           <div class=\"search-content\">\
             <div class=\"search-group\">\
               <h4>"+data.startDestinationName+"<->"+data.finalDestinationName+"</h4>\
+              <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
               <span>Price: "+data.ticketPrice+"$</span>\
             </div>\
             <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
@@ -242,7 +276,7 @@ Search.prototype.getEntityTableRowHtml = function(data) {
         <div class=\"search-content\">\
           <div class=\"search-group\">\
             <h4>"+data.hotelName+"</h4>\
-            <span>Graded: "+(data.hotelGrade || data.averageGrade)+"</span>\
+            <span class='my-rating' id='Hgr"+data.hotelID+"'></span>\
           </div>\
           <span class=\"text-overflow\">Location: " + data.destination + "</span>\
           <span class=\"text-overflow\">Address: " + data.hotelAddress + "</span>\
@@ -254,7 +288,10 @@ Search.prototype.getEntityTableRowHtml = function(data) {
       <div class=\"row search-result\">\
           <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
           <div class=\"search-content\">\
-            <h4>"+data.rentACarName+"</h4>\
+            <div class=\"search-group\">\
+              <h4>"+data.rentACarName+"</h4>\
+              <span class='my-rating' id='Rgr"+data.rentACarID+"'></span>\
+            </div>\
             <span class=\"text-overflow\">"+ data.rentACarDescription +"</span>\
             <a class=\"see-more-link\" href=\"/guest/rentacar.html?id="+data.rentACarID+"\">See more</a>\
           </div>\

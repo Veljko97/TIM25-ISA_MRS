@@ -14,3 +14,5 @@ Marko Simanić, SW-83/2017 <br/>
 
 Team mebers are students of Faculty of Technical Sciences, Novi Sad.
 
+To run this project, you will need Maven to build it after cloning.
+

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Beans.RoomReservation;
-import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.RoomReportDTO;
 import siit.tim25.rezervisi.DTO.RoomReservationDTO;
 import siit.tim25.rezervisi.Repository.RoomRepository;
@@ -70,6 +70,13 @@ public class RoomReservationServices {
 		r.getReservation().remove(rr);
 		roomRepository.save(r);
 		rrRepository.delete(rr);
+	}
+	
+	public void reserveRoom(Integer roomId, StandardUser u, Date start, Date end) {
+		Room r = roomRepository.findOne(roomId);
+		RoomReservation rr = new RoomReservation(r, u, start, end, r.getPrice(), TicketStatus.ACCEPTED, new Date());
+		u.getRoomReservation().add(rr);
+		this.save(rr);
 	}
 	
 	

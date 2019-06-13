@@ -133,7 +133,6 @@ Search.prototype.render = function(url = null) {
 Search.prototype.bindEvents = function() {
   $(document).on('submit', '#airlineSearchForm', this.searchAirlineCallback.bind(this));
   $(document).on('submit', '#flightSearchForm', this.searchFlightCallback.bind(this));
-  // $(document).on('submit', '#flightFilterForm', this.filterFlightCallback.bind(this));
   $(document).on('submit', '#hotelSearchForm', this.searchHotelCallback.bind(this));
   $(document).on('submit', '#rentacarSearchForm', this.searchRentacarCallback.bind(this));
   $(document).on('submit', '#userSearchForm', this.searchUserCallback.bind(this));

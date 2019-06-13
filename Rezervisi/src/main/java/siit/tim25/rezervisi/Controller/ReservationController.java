@@ -91,6 +91,8 @@ public class ReservationController {
 		return new ResponseEntity<List<VehicleReservationDTO>>(vehicleReservationServices.findVehicleReservationsByUserId(userId), HttpStatus.OK);
 
 	}
+		
+	
 
 	@GetMapping(path="/getPastVehicleReservations", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER')")

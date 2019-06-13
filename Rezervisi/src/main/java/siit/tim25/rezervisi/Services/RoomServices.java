@@ -2,6 +2,7 @@ package siit.tim25.rezervisi.Services;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -83,6 +84,10 @@ public class RoomServices {
 		hotelRepository.save(h);
 		// roomRepository.save(room);
 		return room;
+	}
+	
+	public Page<Room> findByDestination(Integer destinationId, Date start, Date end, Pageable pageable) {
+		return roomRepository.findByDestination(destinationId, start, end, pageable);
 	}
 	
 	public void delete(Integer hotelId, Integer roomId) {

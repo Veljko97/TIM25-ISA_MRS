@@ -31,4 +31,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	@Query("Select ro FROM Room ro WHERE ro.roomID IN (SELECT rr.room.roomID FROM ro.reservation rr WHERE rr.user.id = :userId AND rr.reservationEnd < :dateNow)")
 	public Page<Room> findPastRoomReservations(@Param("userId") Integer userId, @Param("dateNow") Date dateNow , Pageable pageable);
 
+	@Query("SELECT r FROM Room r WHERE r.hotel.destination.idDestination = :destinationId AND 0 = (SELECT count(rr) FROM RoomReservation rr WHERE rr.room.roomID = r.roomID AND ((rr.reservationStart <= :startDate AND rr.reservationEnd >= :startDate) OR (rr.reservationStart <= :endDate AND rr.reservationEnd >= :endDate) OR (rr.reservationStart >= :startDate AND rr.reservationEnd <= :endDate)))")
+	public Page<Room> findByDestination(@Param("destinationId") Integer destinationId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
+
 }

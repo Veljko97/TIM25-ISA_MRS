@@ -143,6 +143,7 @@ Reserve.prototype.makeJSONFlightObject = function(userType) {
   }
 }
 
+
 Reserve.prototype.cancelReservation = function(e) {
   e.preventDefault();
   if (this.reservations.length) {
@@ -152,7 +153,11 @@ Reserve.prototype.cancelReservation = function(e) {
 
 Reserve.prototype.continueReservation = function(e) {
   e.preventDefault();
-  ajaxService.POST('/app/airlines/' + reserve.airlineId + '/continueReservation/' + reserve.id, JSON.stringify(this.reservations), function() {/*to-do implement other reservations after this one*/});
+  ajaxService.POST('/app/airlines/' + reserve.airlineId + '/continueReservation/' + reserve.id, JSON.stringify(this.reservations), this.successReservationCallback.bind(this));
+}
+
+Reserve.prototype.successReservationCallback = function() {
+  window.location.replace('http://localhost:8888/reserve/continue.html?ticketId=' + this.reservations[0]);/*modal.show(null, null, 'continuechoice');*/
 }
 
 Reserve.prototype.checkTicketPermission = function(ticketId) {

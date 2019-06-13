@@ -9,12 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import siit.tim25.rezervisi.Beans.Grades.RentACarGrade;
 import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
+import siit.tim25.rezervisi.DTO.RentACarDTO;
 
 @Entity
 public class RentACar {
@@ -31,6 +33,9 @@ public class RentACar {
 	
 	@Column(name = "rentACarDescription")
 	private String rentACarDescription;
+	
+	@ManyToOne
+	private Destination destination;
 	
 	@Column
     private String image;
@@ -151,6 +156,16 @@ public class RentACar {
 		return "RentACar [rentACarID=" + rentACarID + ", rentACarName=" + rentACarName + ", rentACarAddress="
 				+ rentACarAddress + ", rentACarDescription=" + rentACarDescription + ", offersPriceList="
 				+ offersPriceList + ", rentACarBranches=" + rentACarBranches+", rentACarEarning=" + rentACarEarning + "]";
+	}
+	public Destination getDestination() {
+		return destination;
+	}
+	public void setDestination(Destination destination) {
+		this.destination = destination;
+	}
+	
+	public RentACarDTO convert() {
+		return new RentACarDTO(this.rentACarID, this.rentACarName, this.rentACarAddress, this.rentACarDescription, this.destination.getDestinationName());
 	}
 
 	

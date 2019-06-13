@@ -41,8 +41,27 @@ RentACars.prototype.showCallback = function(rentacar) {
   $(document).on('submit', '#editRentacarForm', this.editCallback.bind(this));
 }
 
+
+RentACars.prototype.showDestinations = function(data) {
+  var destinations = $("#destination").first();
+
+  destinations.html("");
+
+  for(var i = 0; i < data.length; i++) {
+    var destination = data[i];
+    destinations.html(destinations.html() + "<option value=\""+destination.destinationName+"\">"+destination.destinationName+"</option>");
+  }
+}
+
 RentACars.prototype.show = function(index) {
+  console.log('bbb');
+  ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
   ajaxService.GET('/app/rentacar/getRentacar/' + index, this.showCallback.bind(this));
+}
+
+RentACars.prototype.render = function() {
+  ajaxService.GET(this.urlApi.showAll + '?size='+this.pageSize+'&page=0', this.showAll.bind(this));
+  ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
 }
 
 RentACars.prototype.showUsers = function(index) {
@@ -52,4 +71,9 @@ RentACars.prototype.showUsers = function(index) {
   $(document).on('submit', '#addUserForm', this.addUserCallback.bind(this));
 }
 
-var rentacars = new RentACars(['rentACarName', 'rentACarAddress', 'rentACarDescription'], {'add': '/app/rentacar/addRentACar', 'showAll': '/app/rentacar/showRentACars', 'delete': '/app/rentacar/deleteRentacar/'});
+var rentacars = new RentACars(['rentACarName', 'destination', 'rentACarAddress', 'rentACarDescription'], {
+  'add': '/app/rentacar/addRentACar',
+  'showDestinations': '/app/airlines/showAllDestinations',
+  'showAll': '/app/rentacar/showRentACars',
+  'delete': '/app/rentacar/deleteRentacar/'
+});

@@ -49,7 +49,7 @@ Friends.prototype.responseCallback = function(data) {
         this.accepted.unshift(data.friendRequest);
         this.renderAcceptedTable.call(this,this.accepted);
     }else {
-        alert(data.friendRequest.other.name + " te je ODBIO!!!")
+        alert(data.friendRequest.other.name + " te je ODBIO!!!");
     }
     this.renderTable("pendingTable",this.pending);
 }
@@ -164,16 +164,16 @@ Friends.prototype.findUsers = function(event){
 
     var param = $("#serchParam").val();
 
-    ajaxService.GET("/app/users/findUser?serchParam="+param, this.findUsersCallback.bind(this))
+    ajaxService.GET("/app/users/findUser?serchParam="+param, this.findUsersCallback.bind(this));
 }
 
 Friends.prototype.addUser = function(userId){
     var success = function(data){
-        console.log("su")
-        location.reload()};
+      location.reload();
+    };
     var error = function(data){
-        console.log("er")
-        location.reload()};
+      location.reload();
+    };
     ajaxService.POST("/app/users/sendRequest/"+userId,"",success,error);
 }
 
@@ -233,7 +233,7 @@ Friends.prototype.findUsersCallback = function(data){
 }
 
 Friends.prototype.switchPagePanding = function(direction) {
-    var next = this.pendingPg + direction
+    var next = this.pendingPg + direction;
     if(next < 0){
         return;
     }
@@ -245,7 +245,7 @@ Friends.prototype.switchPagePanding = function(direction) {
 }
 
 Friends.prototype.switchPageAcept = function(direction) {
-    var next = this.acceptedPg + direction
+    var next = this.acceptedPg + direction;
     if(next < 0){
         return;
     }
@@ -257,7 +257,7 @@ Friends.prototype.switchPageAcept = function(direction) {
 }
 
 Friends.prototype.switchPageConf = function(direction) {
-    var next = this.confirmationPg + direction
+    var next = this.confirmationPg + direction;
     if(next < 0){
         return;
     }

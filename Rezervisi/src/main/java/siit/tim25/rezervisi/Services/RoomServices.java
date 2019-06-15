@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.Hotel;
 import siit.tim25.rezervisi.Beans.Room;
+import siit.tim25.rezervisi.Beans.Ticket;
+import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.RoomDTO;
 import siit.tim25.rezervisi.Repository.HotelRepository;
 import siit.tim25.rezervisi.Repository.RoomRepository;
@@ -25,6 +27,9 @@ public class RoomServices {
 	
 	@Autowired
 	private RoomRepository roomRepository;
+	
+	@Autowired
+	private TicketServices ticketServices;
 	
 	public Room save(Integer hotelId, Room room) {
 		Hotel h = hotelRepository.findOne(hotelId);
@@ -86,8 +91,19 @@ public class RoomServices {
 		return room;
 	}
 	
-	public Page<Room> findByDestination(Integer destinationId, Date start, Date end, Pageable pageable) {
-		return roomRepository.findByDestination(destinationId, start, end, pageable);
+	public Page<Room> findByDestination(Integer ticketId, FastReservationDTO res, Pageable pageable) {
+		Ticket t = ticketServices.findOne(ticketId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+		return roomRepository.findByDestination(t.getFlight().getFinalDestination().getIdDestination(), start, end, pageable);
 	}
 	
 	public void delete(Integer hotelId, Integer roomId) {

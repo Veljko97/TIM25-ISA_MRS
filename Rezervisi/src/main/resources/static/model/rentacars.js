@@ -54,7 +54,6 @@ RentACars.prototype.showDestinations = function(data) {
 }
 
 RentACars.prototype.show = function(index) {
-  console.log('bbb');
   ajaxService.GET(this.urlApi.showDestinations, this.showDestinations.bind(this));
   ajaxService.GET('/app/rentacar/getRentacar/' + index, this.showCallback.bind(this));
 }

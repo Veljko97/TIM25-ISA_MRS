@@ -1,10 +1,7 @@
 package siit.tim25.rezervisi.Controller;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,29 +30,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
-import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
-import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
-import siit.tim25.rezervisi.DTO.RentACarDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Services.BranchServices;
-import siit.tim25.rezervisi.Services.DestinationServices;
-import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
-import siit.tim25.rezervisi.Services.TicketServices;
 import siit.tim25.rezervisi.Services.VehicleReservationServices;
 import siit.tim25.rezervisi.Services.VehicleServices;
-import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.StandardUserServices;
 import siit.tim25.rezervisi.security.TokenUtils;
 import siit.tim25.rezervisi.security.model.TokenState;
@@ -77,23 +64,8 @@ public class RentACarController {
 	private VehicleServices vehicleServices;
 	
 	@Autowired
-	private TicketServices ticketServices;
-	
-	@Autowired
 	@Lazy
 	private PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	private AuthorityServices authorityServices;
-	
-	@Autowired
-	private DestinationServices destinationServices;
-	
-	@Autowired
-	private ImageServices imageServices;
-	
-	@Autowired
-	private ObjectMapper mapper;
 	
 	@Autowired
 	private VehicleReservationServices vrServices;
@@ -108,20 +80,7 @@ public class RentACarController {
 	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<Page<RentACar>> addRentACar(Pageable pageable, @RequestParam("image") MultipartFile image,
 													@RequestParam("model") String a )  {
-		RentACar rnt = null;
-		try {
-			rnt = mapper.readValue(a, RentACarDTO.class).convert(this.destinationServices.findAll());
-		} catch (IOException | ParseException e) {
-			e.printStackTrace();
-		}
-
-		if(rentACarServices.findOneByRentACarName(rnt.getRentACarName()) != null) {
-			return new ResponseEntity<Page<RentACar>>(HttpStatus.BAD_REQUEST);
-		}
-		rnt = rentACarServices.save(rnt);
-		rnt.setImage(imageServices.saveRentACarImg(image, rnt.getRentACarID()));
-		rentACarServices.save(rnt);
-		return new ResponseEntity<Page<RentACar>>(rentACarServices.findAll(pageable),HttpStatus.OK);
+		return rentACarServices.addService(image, a) ? new ResponseEntity<Page<RentACar>>(rentACarServices.findAll(pageable),HttpStatus.OK) : new ResponseEntity<Page<RentACar>>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping(path="/search", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -158,8 +117,6 @@ public class RentACarController {
 	public ResponseEntity<RentACar> editRentacar(@PathVariable Integer id, @RequestBody RentACar rentacar)
 	{
 		rentacar.setRentACarID(id);
-		RentACar r = rentACarServices.findOne(id);
-		rentacar.setRentACarEarning(r.getRentACarEarning());
 		return new ResponseEntity<RentACar>(rentACarServices.save(rentacar), HttpStatus.OK);
 	}
 	
@@ -259,41 +216,18 @@ public class RentACarController {
 	@PostMapping(path = "/{ticketId}/getAvailableVehicles")
 	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
 	public ResponseEntity<Page<Vehicle>> getAvailableVehicles(@RequestBody FastReservationDTO res, @PathVariable Integer ticketId, Pageable pageable)	{
-		Ticket t = ticketServices.findOne(ticketId);
-		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
-		Date end = null;
-		if (res.getEnd() == 0) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(t.getFlight().getLandingDate());
-			c.add(Calendar.DATE, 7);
-			end = c.getTime();
-		} else {
-			end = new Date(res.getEnd());
-		}
-		return new ResponseEntity<Page<Vehicle>> (vehicleServices.findByDestination(t.getFlight().getFinalDestination().getIdDestination(), start, end, pageable), HttpStatus.OK);
+		
+		return new ResponseEntity<Page<Vehicle>> (vehicleServices.findByDestination(ticketId, res, pageable), HttpStatus.OK);
 	}
 	
 	@PostMapping(path = "/{ticketId}/reserve/{vehicleId}")
 	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
-	@Transactional
 	public ResponseEntity<Integer> reserveVehicle(@RequestBody FastReservationDTO res, HttpServletRequest request, @PathVariable Integer vehicleId, @PathVariable Integer ticketId) {
-		Ticket t = ticketServices.findOne(ticketId);
-		vehicleServices.lockVehicle(vehicleId);
-		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
-		Date end = null;
-		if (res.getEnd() == 0) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(t.getFlight().getLandingDate());
-			c.add(Calendar.DATE, 7);
-			end = c.getTime();
-		} else {
-			end = new Date(res.getEnd());
-		}
+
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
-		
-		vrServices.reserveVehicle(vehicleId, loggedUser, start, end);
+		vrServices.reserveVehicle(ticketId, vehicleId, res, loggedUser);
 		return new ResponseEntity<Integer> (-1, HttpStatus.NO_CONTENT);
 	}
 	
@@ -313,73 +247,24 @@ public class RentACarController {
 	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestParam("image") MultipartFile image,
 											@RequestParam("model") String a) {
-		UserDTO user;
-		try {
-			user = mapper.readValue(a, UserDTO.class);
-		} catch (IOException e) {
-			return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
-		}
-		RentACar rentACar = rentACarServices.findOne(id);
-		RentACarAdmin admin = new RentACarAdmin();
-		admin.setPassword(passwordEncoder.encode("123"));
-		admin.setUsername(user.getUsername());
-		admin.setFirstName(user.getFirstName());
-		admin.setLastName(user.getLastName());
-		admin.setEmail(user.getEmail());
-		admin.setEnabled(true);
-		admin.setConfirmed(false);
-		admin.setRentACar(rentACar);
-		rentACar.getAdmins().add(admin);
-		admin.setAuthorities(Arrays.asList(authorityServices.findOne(4)));
-		admin.setImage(imageServices.getUserPath(image, admin.getUsername()));
 		
-		rentACar = rentACarServices.save(rentACar);
-		
-		imageServices.saveUserImg(image, admin.getUsername());
-		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+		return rentACarServices.addUser(image, a, id) ? new ResponseEntity<Boolean>(true,HttpStatus.OK) : new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@PostMapping(path = "/makeFastReservation/{vehicleId}")
 	@PreAuthorize("hasRole('RENTACAR_ADMIN')")
-	@Transactional
 	public ResponseEntity<Void> makeFastReservation(@RequestBody FastReservationDTO res,
 													@PathVariable Integer vehicleId) {
-		Vehicle vehicle = vehicleServices.lockVehicle(vehicleId);
-		Date endRes = new Date(res.getEnd());
-		Date startRes = new Date(res.getStart());
-		for(VehicleReservation vr : vehicle.getReservation()) {
-			if(vr.getReservationStart().compareTo(startRes) <= 0 && vr.getReservationEnd().compareTo(startRes) >= 0) {
-				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-			}
-			if(vr.getReservationStart().compareTo(endRes)<= 0 && vr.getReservationEnd().compareTo(endRes) >= 0) {
-				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-			}
-			if(vr.getReservationStart().compareTo(startRes) >= 0 && vr.getReservationEnd().compareTo(endRes) <= 0) {
-				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-			}
-		}
-		VehicleReservation reservation = new VehicleReservation();
-		reservation.setPrice(res.getPrice());
-		reservation.setVehicle(vehicle);
-		reservation.setReservationStart(startRes);
-		reservation.setReservationEnd(endRes);
-		reservation.setStatus(TicketStatus.FAST);
-		vrServices.save(reservation);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return vrServices.makeFastReservation(vehicleId, res) ? new ResponseEntity<Void>(HttpStatus.OK) : new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@PutMapping(path = "/takeFastReservation/{resId}")
 	@PreAuthorize("hasRole('USER')")
-	@Transactional
 	public ResponseEntity<Void> takeFastReservation(@PathVariable Integer resId, HttpServletRequest request){
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
-		VehicleReservation res = vrServices.lockReservation(resId);
-		res.setUser(loggedUser);
-		loggedUser.getVehicleReservation().add(res);
-		res.setStatus(TicketStatus.ACCEPTED);
-		vrServices.save(res);
+		vrServices.takeFastReservation(resId, loggedUser);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	

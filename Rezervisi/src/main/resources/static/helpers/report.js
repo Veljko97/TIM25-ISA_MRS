@@ -100,7 +100,6 @@ Report.prototype.initReport = function (time) {
           case 'daily':
             return new Date(value).toDateString();
           case 'week':
-            console.log(value);
             return value + ". week";
           case 'month':
             return monthNames[new Date(value).getMonth()] + " " + (1900 + new Date(value).getYear());

@@ -180,10 +180,6 @@ $(document).ready(function($) {
 		  	navToggler.click();
 		  }
 		});
-
-		$('body').on('activate.bs.scrollspy', function () {
-		  console.log('nice');
-		})
 	};
 	OnePageNav();
 

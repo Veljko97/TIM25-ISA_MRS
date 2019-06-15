@@ -51,8 +51,6 @@ public class RentACar {
 	@JsonIgnore
 	private Set<RentACarGrade> grades = new HashSet<RentACarGrade>();
 	
-	@Column(name = "rentACarEarning")
-	private Double rentACarEarning;
 	
 	@Column
 	private Double averageGrade;
@@ -63,11 +61,10 @@ public class RentACar {
 	
 	public RentACar() {
 		super();
-		this.rentACarEarning = 0.0;
 	}
 	public RentACar(Integer rentACarID, String rentACarName, String rentACarAddress, String rentACarDescription,
 			Set<RentACarOffer> offersPriceList, Set<RentACarBranch> rentACarBranches,
-			Double rentACarAverageGrade, Double rentACarEarning) {
+			Double rentACarAverageGrade) {
 		super();
 		this.rentACarID = rentACarID;
 		this.rentACarName = rentACarName;
@@ -75,7 +72,6 @@ public class RentACar {
 		this.rentACarDescription = rentACarDescription;
 		this.offersPriceList = offersPriceList;
 		this.rentACarBranches = rentACarBranches;
-		this.rentACarEarning = rentACarEarning;
 	}
 	public Integer getRentACarID() {
 		return rentACarID;
@@ -122,12 +118,6 @@ public class RentACar {
 		this.grades = grades;
 	}
 	
-	public Double getRentACarEarning() {
-		return rentACarEarning;
-	}
-	public void setRentACarEarning(Double rentACarEarning) {
-		this.rentACarEarning = rentACarEarning;
-	}
 	
 	public Set<RentACarAdmin> getAdmins() {
 		return admins;
@@ -155,7 +145,7 @@ public class RentACar {
 	public String toString() {
 		return "RentACar [rentACarID=" + rentACarID + ", rentACarName=" + rentACarName + ", rentACarAddress="
 				+ rentACarAddress + ", rentACarDescription=" + rentACarDescription + ", offersPriceList="
-				+ offersPriceList + ", rentACarBranches=" + rentACarBranches+", rentACarEarning=" + rentACarEarning + "]";
+				+ offersPriceList + ", rentACarBranches=" + rentACarBranches + "]";
 	}
 	public Destination getDestination() {
 		return destination;

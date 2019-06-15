@@ -53,7 +53,7 @@ Profile.prototype.switchPage = function(dir) {
 Profile.prototype.getShowAllURL = function(index) {
   switch(this.activeTab) {
     case 'airline':
-      return `/app/airlines/${index}/showFlights`
+      return `/app/airlines/${index}/showFlights`;
     case 'flight':
       return "";
     case 'hotel':

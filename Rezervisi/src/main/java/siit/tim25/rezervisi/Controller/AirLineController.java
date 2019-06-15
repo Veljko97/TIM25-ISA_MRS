@@ -40,12 +40,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
+import siit.tim25.rezervisi.Beans.DiscountPoint;
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.InvitationResponseType;
 import siit.tim25.rezervisi.Beans.Room;
+import siit.tim25.rezervisi.Beans.RoomReservation;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
+import siit.tim25.rezervisi.Beans.VehicleReservation;
 import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FlightDTO;
@@ -58,12 +61,13 @@ import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.AirLineServices;
 import siit.tim25.rezervisi.Services.AirplaneServices;
 import siit.tim25.rezervisi.Services.DestinationServices;
+import siit.tim25.rezervisi.Services.DiscountPointsServices;
 import siit.tim25.rezervisi.Services.FlightServices;
 import siit.tim25.rezervisi.Services.ImageServices;
 import siit.tim25.rezervisi.Services.ProducerServices;
-import siit.tim25.rezervisi.Services.RoomServices;
+import siit.tim25.rezervisi.Services.RoomReservationServices;
 import siit.tim25.rezervisi.Services.TicketServices;
-import siit.tim25.rezervisi.Services.VehicleServices;
+import siit.tim25.rezervisi.Services.VehicleReservationServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.StandardUserServices;
 import siit.tim25.rezervisi.security.TokenUtils;
@@ -91,16 +95,13 @@ public class AirLineController {
 	private ProducerServices producerServices;
 	
 	@Autowired
-	private UserService userServices;
-	
-	@Autowired
 	private StandardUserServices stdUserServices;
 	
 	@Autowired
-	private VehicleServices vehicleServices;
+	private VehicleReservationServices vrServices;
 	
 	@Autowired
-	private RoomServices roomServices;
+	private RoomReservationServices rrServices;
 	
 	@Autowired
 	private TicketServices ticketServices;
@@ -117,6 +118,12 @@ public class AirLineController {
 	
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	private DiscountPointsServices dpServices;
+
+	@Autowired
+	private UserService userServices;
 	
 	@Autowired
 	private TokenUtils tokenUtils;
@@ -347,26 +354,53 @@ public class AirLineController {
 	public ResponseEntity<Integer> finishReservation(@RequestBody ReservationIdsDTO ids, HttpServletRequest request) {
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
-		User loggedUser = this.userServices.findByUsername(username);
+		StandardUser loggedUser = this.stdUserServices.findByUsername(username);
+		
+		DiscountPoint dp = this.dpServices.findByMyPoints(loggedUser.getDiscauntPoints());
+		
+		if(dp.getId().equals(-1)) {
+			ids.setUsePoints(false);
+		}
 		
 		Ticket t = this.ticketServices.findOne(ids.getTicketId());
 		String text = "Your reservation is successful on Reservify platform. You reserved flight from " 
 				+ t.getFlight().getStartDestination().getDestinationName() + " to " + t.getFlight().getFinalDestination().getDestinationName() + ".";
-		
+		Integer countPoints = 1;
+		if(ids.getUsePoints()) {
+			Double pr = t.getTicketPrice();
+			t.setTicketPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+			ticketServices.save(t);
+		}
 		if (ids.getRoomIds().length > 0 || ids.getVehicleIds().length > 0) {
 			text += "Also, you made some additional reservations: ";
 			for(Integer id: ids.getRoomIds()) {
-				Room r = roomServices.findOne(id);
-				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". ";
+				RoomReservation rr = rrServices.findOne(id);
+				Double pr = rr.getPrice();
+				rr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+				rrServices.save(rr);
+				Room r = rr.getRoom();
+				countPoints += 1;
+				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". \n";
 			}
 			
 			for(Integer id: ids.getVehicleIds()) {
-				Vehicle v = vehicleServices.findOne(id);
-				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.";
+				VehicleReservation vr = vrServices.findOne(id);
+				Double pr = vr.getPrice();
+				vr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+				vrServices.save(vr);
+				Vehicle v = vr.getVehicle();
+				countPoints += 1;
+				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.\n";
 				
 			}
 		}
-		
+		if(ids.getUsePoints()) {
+			loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() - dp.getPointsNeeded());
+		}else {
+			loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() + countPoints);
+		}
+		stdUserServices.save(loggedUser);
+		text += "\n You Have: "+ loggedUser.getDiscauntPoints()+" discount points on Reservify ";
 		this.producerServices.sendEmailTo("Successful reservation on Reservify!", loggedUser.getEmail(), text);
 		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
 	}

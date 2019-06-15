@@ -157,7 +157,7 @@ Reserve.prototype.continueReservation = function(e) {
 }
 
 Reserve.prototype.successReservationCallback = function() {
-  window.location.replace('http://localhost:8888/reserve/continue.html?ticketId=' + this.reservations[0]);/*modal.show(null, null, 'continuechoice');*/
+  window.location.replace('/reserve/continue.html?ticketId=' + this.reservations[0]);/*modal.show(null, null, 'continuechoice');*/
 }
 
 Reserve.prototype.checkTicketPermission = function(ticketId) {

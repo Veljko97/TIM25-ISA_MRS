@@ -293,8 +293,8 @@ public class RentACarController {
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
 		
-		vrServices.reserveVehicle(vehicleId, loggedUser, start, end);
-		return new ResponseEntity<Integer> (-1, HttpStatus.NO_CONTENT);
+		Integer i = vrServices.reserveVehicle(vehicleId, loggedUser, start, end).getId();
+		return new ResponseEntity<Integer> (i, HttpStatus.NO_CONTENT);
 	}
 	
 	

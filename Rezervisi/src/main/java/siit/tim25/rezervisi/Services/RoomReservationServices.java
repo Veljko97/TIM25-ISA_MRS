@@ -29,6 +29,10 @@ public class RoomReservationServices {
 		return rrRepository.save(rr);
 	}
 	
+	public RoomReservation findOne(Integer id) {
+		return rrRepository.findOne(id);
+	}
+	
 	public Page<RoomReservation> findAllByStatus(Integer hotelId, TicketStatus status, Pageable pageable) {
 		return rrRepository.findAllByStatus(hotelId, status, pageable);
 	}
@@ -72,11 +76,11 @@ public class RoomReservationServices {
 		rrRepository.delete(rr);
 	}
 	
-	public void reserveRoom(Integer roomId, StandardUser u, Date start, Date end) {
+	public RoomReservation reserveRoom(Integer roomId, StandardUser u, Date start, Date end) {
 		Room r = roomRepository.findOne(roomId);
 		RoomReservation rr = new RoomReservation(r, u, start, end, r.getPrice(), TicketStatus.ACCEPTED, new Date());
 		u.getRoomReservation().add(rr);
-		this.save(rr);
+		return this.save(rr);
 	}
 	
 	

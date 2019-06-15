@@ -279,8 +279,8 @@ public class HotelController {
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
 		
-		rrServices.reserveRoom(roomId, loggedUser, start, end);
-		return new ResponseEntity<Integer> (-1, HttpStatus.NO_CONTENT);
+		Integer i = rrServices.reserveRoom(roomId, loggedUser, start, end).getId();
+		return new ResponseEntity<Integer> (i, HttpStatus.NO_CONTENT);
 	}
 	
 	@PostMapping(path = "/makeFastReservation/{roomId}")

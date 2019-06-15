@@ -116,7 +116,7 @@ NextReserve.prototype.finish = function(e) {
     'vehicleIds': this.vehicleIds,
     'roomIds': this.roomIds
   };
-  ajaxService.POST('/app/airlines/finishReservation', JSON.stringify(obj), function() {window.location.replace('http://localhost:8888');});
+  ajaxService.POST('/app/airlines/finishReservation', JSON.stringify(obj), function() {window.location.replace('/');});
 }
 
 var nextreserve = new NextReserve();

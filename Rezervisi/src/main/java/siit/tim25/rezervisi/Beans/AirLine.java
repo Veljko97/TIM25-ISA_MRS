@@ -54,15 +54,11 @@ public class AirLine {
 	@JsonIgnore
 	private Set<AirLineGrade> grades = new HashSet<AirLineGrade>();
 
-	@Column(name = "airlineEarning", nullable = false)
-	private Double airlineEarning;
-
 	@Column
 	private Double averageGrade;
 	
 	public AirLine() {
 		super();
-		this.airlineEarning = 0.0;
 	}
 
 	public AirLine(Integer airLineID, String airLineName, String airLineAddress, String airLineDescription,
@@ -76,7 +72,6 @@ public class AirLine {
 		this.airLineDestinations = airLineDestinations;
 		this.airLineFlights = airLineFlights;
 		this.offers = offers;
-		this.airlineEarning = 0.0;
 	}
 
 	public Integer getAirLineID() {
@@ -143,14 +138,6 @@ public class AirLine {
 	public void setGrades(Set<AirLineGrade> grades) {
 		this.grades = grades;
 	}
-
-	public Double getAirlineEarning() {
-		return airlineEarning;
-	}
-
-	public void setAirlineEarning(Double airlineEarning) {
-		this.airlineEarning = airlineEarning;
-	}
 	
 	public Set<AirLineAdmin> getAdmins() {
 		return admins;
@@ -180,7 +167,7 @@ public class AirLine {
 	public String toString() {
 		return "AirLine [airLineID=" + airLineID + ", airLineName=" + airLineName + ", airLineAddress=" + airLineAddress
 				+ ", airLineDescription=" + airLineDescription + ", airLineDestinations=" + airLineDestinations
-				+ ", airLineFlights=" + airLineFlights + ", offers=" + offers + ", airlineEarning=" + airlineEarning + "]";
+				+ ", airLineFlights=" + airLineFlights + ", offers=" + offers + "]";
 	}
 
 	@Override

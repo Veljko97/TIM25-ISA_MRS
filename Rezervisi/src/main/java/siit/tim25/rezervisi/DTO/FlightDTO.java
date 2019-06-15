@@ -221,4 +221,32 @@ public class FlightDTO {
 		f.setFlightClass(FlightClass.valueOf(this.flightClass));
 		return f;
 	}
+	
+	public Flight convert(List<Destination> destinations, List<AirPlane> airplanes) throws ParseException {
+		Flight f = new Flight();
+		for(Destination d: destinations) {
+			if (d.getDestinationName().equals(this.getStartDestinationName())) {
+				f.setStartDestination(d);
+			}
+			if(d.getDestinationName().equals(this.getFinalDestinationName())) {
+				f.setFinalDestination(d);
+			}
+		}
+		
+		for(AirPlane a: airplanes) {
+			if(a.getName().equals(this.getAirplane())) {
+				f.setAirplane(a);
+			}
+		}
+		
+		f.setTakeOffDate(new Date(this.takeOffDate));
+		f.setLandingDate(new Date(this.landingDate));
+		f.setFlightLength(this.flightLength);
+		f.setTicketPrice(this.getTicketPrice());
+		f.setNumberOfStops(this.numberOfStops);
+		f.setAverageGrade(this.averageGrade);
+		f.setType(FlightType.valueOf(this.type));
+		f.setFlightClass(FlightClass.valueOf(this.flightClass));
+		return f;
+	}
 }

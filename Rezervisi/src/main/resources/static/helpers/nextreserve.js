@@ -99,7 +99,7 @@ NextReserve.prototype.reserveVehicle = function(e, vehicleId)
 
 
 NextReserve.prototype.render = function(e) {
-  if (e) {e.preventDefault()};
+  if (e) {e.preventDefault();};
   let obj = {
     'start': Date.parse($("#startDate").val()) || 0,
     'end': Date.parse($("#endDate").val()) || 0
@@ -116,7 +116,7 @@ NextReserve.prototype.finish = function(e) {
     'vehicleIds': this.vehicleIds,
     'roomIds': this.roomIds
   };
-  ajaxService.POST('/app/airlines/finishReservation', JSON.stringify(obj), function() {window.location.replace('http://localhost:8888');})
+  ajaxService.POST('/app/airlines/finishReservation', JSON.stringify(obj), function() {window.location.replace('http://localhost:8888');});
 }
 
 var nextreserve = new NextReserve();

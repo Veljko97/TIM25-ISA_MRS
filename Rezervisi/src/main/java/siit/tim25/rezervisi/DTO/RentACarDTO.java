@@ -17,7 +17,6 @@ public class RentACarDTO {
 	
 	private String destination;
 	private Double averageGrade;
-	private Double rentACarEarning;
 	private String image;
 	
 	public RentACarDTO() {
@@ -83,14 +82,6 @@ public class RentACarDTO {
 	}
 
 
-	public Double getRentACarEarning() {
-		return rentACarEarning;
-	}
-
-	public void setRentACarEarning(Double rentACarEarning) {
-		this.rentACarEarning = rentACarEarning;
-	}
-
 	public String getImage() {
 		return image;
 	}
@@ -112,8 +103,6 @@ public class RentACarDTO {
 		r.setRentACarName(this.rentACarName);
 		r.setRentACarAddress(this.rentACarAddress);
 		r.setRentACarDescription(this.rentACarDescription);
-		r.setRentACarEarning(this.rentACarEarning);
-
 		return r;
 	}
 }

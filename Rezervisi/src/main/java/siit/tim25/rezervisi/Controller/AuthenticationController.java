@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -41,7 +40,6 @@ import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.AirLineAdminDTO;
 import siit.tim25.rezervisi.DTO.HotelAdminDTO;
-import siit.tim25.rezervisi.DTO.RegistrationUserDTO;
 import siit.tim25.rezervisi.DTO.RentACarAdminDTO;
 import siit.tim25.rezervisi.DTO.StandardUserDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;

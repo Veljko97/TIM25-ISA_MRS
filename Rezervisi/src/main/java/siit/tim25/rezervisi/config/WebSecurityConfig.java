@@ -3,7 +3,6 @@ package siit.tim25.rezervisi.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import siit.tim25.rezervisi.security.TokenUtils;
-import siit.tim25.rezervisi.security.auth.RestAuthenticationEntryPoint;
 import siit.tim25.rezervisi.security.auth.TokenAuthenticationFilter;
 import siit.tim25.rezervisi.security.servicce.CustomUserDetailsService;
 
@@ -35,8 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomUserDetailsService jwtUserDetailsService;
 
-	@Autowired
-	private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
 	@Autowired
 	private TokenUtils tokenUtils;

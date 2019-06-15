@@ -14,8 +14,8 @@ FastModel.prototype.init = function() {
   this.bindEvents();
 }
 
-FastModel.prototype.cacheDom = function() {}
-FastModel.prototype.bindEvents = function() {}
+FastModel.prototype.cacheDom = function() {};
+FastModel.prototype.bindEvents = function() {};
 
 FastModel.prototype.render = function(url = null) {
   ajaxService.GET(url || (this.urlApi.showAllFast+ '?size='+this.pageSize+'&page=' + this.currentPage), this.showAll.bind(this), function() {handleErrorAction();});
@@ -41,9 +41,9 @@ FastModel.prototype.switchPage = function(dir) {
 }
 
 FastModel.prototype.reserv = function(ticketId, obj = "") {
-  ajaxService.PUT(this.urlApi.reserv + ticketId, obj, function(){window.location.replace("/index.html")})
+  ajaxService.PUT(this.urlApi.reserv + ticketId, obj, function(){window.location.replace("/index.html");});
 }
 
-FastModel.prototype.getSubEntityTableRowHtml = function(data){return ""}
-FastModel.prototype.setStars = function(data) {return ""}
+FastModel.prototype.getSubEntityTableRowHtml = function(data){return ""};
+FastModel.prototype.setStars = function(data) {return ""};
 

@@ -1,6 +1,6 @@
 package siit.tim25.rezervisi.Services;
 
-
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,11 +13,9 @@ import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
-import siit.tim25.rezervisi.Beans.RoomReservation;
-import siit.tim25.rezervisi.Beans.TicketStatus;
+import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.Vehicle;
-import siit.tim25.rezervisi.Beans.VehicleReservation;
-import siit.tim25.rezervisi.Beans.users.StandardUser;
+import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Repository.BranchRepository;
 import siit.tim25.rezervisi.Repository.RentACarRepository;
@@ -34,6 +32,9 @@ public class VehicleServices {
 
 	@Autowired
 	VehicleRepository vehicleRepository;
+	
+	@Autowired
+	TicketServices ticketServices;
 	
 	
 	public Vehicle save(Integer serviceId, Vehicle v) {
@@ -94,8 +95,19 @@ public class VehicleServices {
 		return vehicleRepository.findOne(id);
 	}
 	
-	public Page<Vehicle> findByDestination(Integer destinationId, Date start, Date end, Pageable pageable) {
-		return vehicleRepository.findByDestination(destinationId, start, end, pageable);
+	public Page<Vehicle> findByDestination(Integer ticketId, FastReservationDTO res, Pageable pageable) {
+		Ticket t = ticketServices.findOne(ticketId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+		return vehicleRepository.findByDestination(t.getFlight().getFinalDestination().getIdDestination(), start, end, pageable);
 	}
 	
 	public Vehicle update(Integer serviceId, Vehicle vehicle) {
@@ -142,4 +154,5 @@ public class VehicleServices {
 				return new VehicleDTO(source);
 			}});
 	}
+	
 }

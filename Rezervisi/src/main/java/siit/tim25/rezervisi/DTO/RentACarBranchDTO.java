@@ -1,14 +1,9 @@
 package siit.tim25.rezervisi.DTO;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Set;
 
-import siit.tim25.rezervisi.Beans.AirPlane;
 import siit.tim25.rezervisi.Beans.Destination;
-import siit.tim25.rezervisi.Beans.FlightClass;
-import siit.tim25.rezervisi.Beans.FlightType;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
 
 public class RentACarBranchDTO {

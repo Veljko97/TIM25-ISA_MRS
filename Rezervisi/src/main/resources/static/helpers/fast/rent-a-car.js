@@ -2,7 +2,7 @@ function FastRentACar(thisName,urlApi) {
     FastModel.call(this, thisName, urlApi);
 }
 
-FastRentACar.prototype = Object.create( FastModel.prototype )
+FastRentACar.prototype = Object.create( FastModel.prototype );
 
 FastRentACar.prototype.setStars = function(data) {
   var selcetor  = "#Vgr"+data.idVehicle;
@@ -32,4 +32,4 @@ FastRentACar.prototype.getSubEntityTableRowHtml = function(data){
 }
 
 var fastRentACar = new FastRentACar("fastRentACar", {'showAllFast':"/app/rentacar/allFastReservation/"+getParamFromUrl('id'), 
-                                                     'reserv': "/app/rentacar/takeFastReservation/"})
+                                                     'reserv': "/app/rentacar/takeFastReservation/"});

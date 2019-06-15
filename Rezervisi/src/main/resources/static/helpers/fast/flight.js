@@ -2,11 +2,11 @@ function FastFlight(thisName,urlApi) {
     FastModel.call(this, thisName, urlApi);
 }
 
-FastFlight.prototype = Object.create( FastModel.prototype )
+FastFlight.prototype = Object.create( FastModel.prototype );
 
 FastFlight.prototype.reserveFlight = function(event, id){
     event.preventDefault();
-    var obj = {}
+    var obj = {};
     obj.passport = $("#passport3").val();
     this.reserv(id,JSON.stringify(obj));
 }
@@ -40,4 +40,4 @@ FastFlight.prototype.getSubEntityTableRowHtml = function(data){
 }
 
 var fastFlight = new FastFlight("fastFlight", {'showAllFast':"/app/airlines/allFastTickets/"+getParamFromUrl('id'), 
-                                                     'reserv': "/app/airlines/reserveFastTicket/"})
+                                                     'reserv': "/app/airlines/reserveFastTicket/"});

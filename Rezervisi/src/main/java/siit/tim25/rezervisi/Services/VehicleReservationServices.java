@@ -1,19 +1,21 @@
 package siit.tim25.rezervisi.Services;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
-import siit.tim25.rezervisi.DTO.VehicleDTO;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
+import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.VehicleReportDTO;
 import siit.tim25.rezervisi.DTO.VehicleReservationDTO;
 import siit.tim25.rezervisi.Repository.VehicleRepository;
@@ -26,6 +28,12 @@ public class VehicleReservationServices {
 
 	@Autowired
 	private VehicleReservationRepository vrRepository;
+	
+	@Autowired
+	private VehicleServices vehicleServices;
+	
+	@Autowired
+	private TicketServices ticketServices;
 	
 	public VehicleReservation save(VehicleReservation vr) {
 		return vrRepository.save(vr);
@@ -80,5 +88,59 @@ public class VehicleReservationServices {
 		VehicleReservation vr = new VehicleReservation(v, u, start, end, v.getPrice(), TicketStatus.ACCEPTED, new Date());
 		u.getVehicleReservation().add(vr);
 		this.save(vr);
+	}
+	
+	@Transactional
+	public void reserveVehicle(Integer ticketId, Integer vehicleId, FastReservationDTO res, StandardUser loggedUser) {
+		Ticket t = ticketServices.findOne(ticketId);
+		vehicleServices.lockVehicle(vehicleId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+		
+		this.reserveVehicle(vehicleId, loggedUser, start, end);
+	}
+	
+	@Transactional
+	public boolean makeFastReservation(Integer vehicleId, FastReservationDTO res) {
+		Vehicle vehicle = vehicleServices.lockVehicle(vehicleId);
+		Date endRes = new Date(res.getEnd());
+		Date startRes = new Date(res.getStart());
+		for(VehicleReservation vr : vehicle.getReservation()) {
+			if(vr.getReservationStart().compareTo(startRes) <= 0 && vr.getReservationEnd().compareTo(startRes) >= 0) {
+				return false;
+			}
+			if(vr.getReservationStart().compareTo(endRes)<= 0 && vr.getReservationEnd().compareTo(endRes) >= 0) {
+				return false;
+			}
+			if(vr.getReservationStart().compareTo(startRes) >= 0 && vr.getReservationEnd().compareTo(endRes) <= 0) {
+				return false;
+			}
+		}
+		VehicleReservation reservation = new VehicleReservation();
+		reservation.setPrice(res.getPrice());
+		reservation.setVehicle(vehicle);
+		reservation.setReservationStart(startRes);
+		reservation.setReservationEnd(endRes);
+		reservation.setStatus(TicketStatus.FAST);
+		this.save(reservation);
+		return true;
+	}
+	
+	@Transactional
+	public void takeFastReservation(Integer resId, StandardUser loggedUser)
+	{
+		VehicleReservation res = this.lockReservation(resId);
+		res.setUser(loggedUser);
+		loggedUser.getVehicleReservation().add(res);
+		res.setStatus(TicketStatus.ACCEPTED);
+		this.save(res);
 	}
 }

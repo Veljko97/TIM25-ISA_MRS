@@ -9,14 +9,16 @@ Flights.prototype.bindEvents = function() {
 }
 
 Flights.prototype.makeJSONObject = function() {
-  var object = {}
-  for(var i = 0; i < this.attributes.length; i++) {
-    if(this.attributes[i] == "takeOffDate" || this.attributes[i] == "landingDate") {
-      object[this.attributes[i]] = Date.parse($('#' + this.attributes[i]).val());
+  var object = {};
+
+  this.attributes.forEach(function(attribute) {
+    if(attribute == "takeOffDate" || attribute == "landingDate") {
+      object[attribute] = Date.parse($('#' + attribute).val());
     }else{
-      object[this.attributes[i]] = $('#' + this.attributes[i]).val() || $('#' + this.attributes[i]).first().val();
+      object[attribute] = $('#' + attribute).val() || $('#' + attribute).first().val();
     }
-  }
+  }.bind(this));
+
   return JSON.stringify(object);
 }
 
@@ -50,21 +52,21 @@ Flights.prototype.showAll = function(data) {
 
 Flights.prototype.validateInput = function() {
   return true;
-  for(var i = 0; i < this.attributes.length; i++) {
-    if ($('#' + this.attributes[i]).val() == ("")) {
-      return false;
-    }
-  }
-  var regExp = new RegExp(/^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}$/);
-  if (!regExp.test($('#landingDate').val())) { 
-    $('#landingDate').attr('style', 'border-color: red;');
-    setTimeout(() => {$('#landingDate').attr('style', 'border-color: none;');}, 5000);
-  }
-  if (!regExp.test($('#takeOffDate').val())) {
-    $('#takeOffDate').attr('style', 'border-color: red;');
-    setTimeout(() => {$('#takeOffDate').attr('style', 'border-color: none;');}, 5000);
-  }
-  return regExp.test($('#landingDate').val()) && regExp.test($('#takeOffDate').val());
+  // for(var i = 0; i < this.attributes.length; i++) {
+  //   if ($('#' + this.attributes[i]).val() == ("")) {
+  //     return false;
+  //   }
+  // }
+  // var regExp = new RegExp(/^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}$/);
+  // if (!regExp.test($('#landingDate').val())) { 
+  //   $('#landingDate').attr('style', 'border-color: red;');
+  //   setTimeout(() => {$('#landingDate').attr('style', 'border-color: none;');}, 5000);
+  // }
+  // if (!regExp.test($('#takeOffDate').val())) {
+  //   $('#takeOffDate').attr('style', 'border-color: red;');
+  //   setTimeout(() => {$('#takeOffDate').attr('style', 'border-color: none;');}, 5000);
+  // }
+  // return regExp.test($('#landingDate').val()) && regExp.test($('#takeOffDate').val());
 }
 
 Flights.prototype.showCallback = function(flight) {
@@ -114,6 +116,8 @@ Flights.prototype.render = function() {
 Flights.prototype.showDestinations = function(data) {
   var startDestinations = $("#startDestinationName").first();
   var finalDestinations = $("#finalDestinationName").first();
+  startDestinations.html("");
+  finalDestinations.html("");
 
   for(var i = 0; i < data.length; i++) {
     var destination = data[i];

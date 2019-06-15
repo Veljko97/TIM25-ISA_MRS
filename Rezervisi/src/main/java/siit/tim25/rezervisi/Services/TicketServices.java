@@ -6,20 +6,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import siit.tim25.rezervisi.Beans.Flight;
+import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
-
+import siit.tim25.rezervisi.Beans.Vehicle;
+import siit.tim25.rezervisi.Beans.users.StandardUser;
+import siit.tim25.rezervisi.DTO.FriendsDTO;
+import siit.tim25.rezervisi.DTO.FriendsListsDTO;
+import siit.tim25.rezervisi.DTO.ReservationIdsDTO;
 import siit.tim25.rezervisi.DTO.ReservationUserDTO;
 import siit.tim25.rezervisi.DTO.TicketDTO;
 import siit.tim25.rezervisi.DTO.TicketReportDTO;
 import siit.tim25.rezervisi.Repository.FlightRepository;
-
 import siit.tim25.rezervisi.Repository.TicketRepository;
 import siit.tim25.rezervisi.Repository.users.StandardUserRepository;
+import siit.tim25.rezervisi.Services.users.StandardUserServices;
 import siit.tim25.rezervisi.security.model.User;
+import siit.tim25.rezervisi.security.servicce.UserService;
 
 @Component
 public class TicketServices {
@@ -31,6 +40,22 @@ public class TicketServices {
 	
 	@Autowired
 	private StandardUserRepository userRepository;
+	
+	@Autowired
+	private StandardUserServices stdUserServices;
+	
+	@Autowired
+	private UserService userServices;
+	
+	@Autowired
+	private ProducerServices producerServices;
+	
+	@Autowired
+	private RoomServices roomServices;
+	
+	@Autowired
+	private VehicleServices vehicleServices;
+	
 	
 	public List<Ticket> findAll(){
 		return ticketRepository.findAll();
@@ -120,5 +145,83 @@ public class TicketServices {
 		}
 		flightRepository.save(f);
 
+	}
+	
+	@Transactional
+	public ResponseEntity<Integer> buyTicket(ReservationUserDTO user, User loggedUser, Integer airlineId, Integer flightId, String username) {
+		switch(user.getUserType()) {
+		case CURRENT:		    
+			return new ResponseEntity<Integer>(this.addTicket(airlineId, flightId, user, loggedUser), HttpStatus.OK);
+		case UNREGISTERED:
+			User registered = userServices.findByEmail(user.getEmail());
+			if (registered == null) {
+				return new ResponseEntity<Integer>(this.addTicket(airlineId, flightId, user), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Integer>(-1, HttpStatus.BAD_REQUEST);
+			}
+		case REGISTERED:
+			StandardUser standardLoggedUser = stdUserServices.findByUsername(username);
+			FriendsListsDTO friends = new FriendsListsDTO(standardLoggedUser);
+			User registeredUser = userServices.findByEmail(user.getEmail());
+			for (FriendsDTO f: friends.getAccepted()) {
+				if (f.getOther().getEmail().equals(user.getEmail())) {
+					return new ResponseEntity<Integer>(this.addTicket(airlineId, flightId, user, registeredUser), HttpStatus.OK);
+				}
+			}
+		default:
+			return new ResponseEntity<Integer>(-1, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	public void sendEmailInvitations(List<Integer> ids, User loggedUser) {
+		for(Integer id: ids) {
+			Ticket t = this.findOne(id);
+			if (!t.getEmail().equals(loggedUser.getEmail())) {
+				String text = "You have a new invitation for a trip with your friend " + 
+						loggedUser.getFirstName() + " " + loggedUser.getLastName() + " on Reservify platform. Please follow this link to proceed: http://localhost:8888/invitation/flight.html?ticketId=" + t.getIdTicket();
+				this.producerServices.sendEmailTo("Invitation for trip on Reservify!", t.getEmail(), text);
+			}
+		}
+	}
+	
+	public void sendFinishReservationEmail(ReservationIdsDTO ids, User loggedUser) {
+		Ticket t = this.findOne(ids.getTicketId());
+		String text = "Your reservation is successful on Reservify platform. You reserved flight from " 
+				+ t.getFlight().getStartDestination().getDestinationName() + " to " + t.getFlight().getFinalDestination().getDestinationName() + ".";
+		
+		if (ids.getRoomIds().length > 0 || ids.getVehicleIds().length > 0) {
+			text += "Also, you made some additional reservations: ";
+			for(Integer id: ids.getRoomIds()) {
+				Room r = roomServices.findOne(id);
+				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". ";
+			}
+			
+			for(Integer id: ids.getVehicleIds()) {
+				Vehicle v = vehicleServices.findOne(id);
+				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.";
+				
+			}
+		}
+		
+		this.producerServices.sendEmailTo("Successful reservation on Reservify!", loggedUser.getEmail(), text);
+	}
+	
+	@Transactional
+	public boolean makeFastTicket(Integer ticketId, StandardUser loggedUser, ReservationUserDTO res) {
+		Ticket ticket = this.lockTicket(ticketId);
+		
+		if(ticket.getStatus().getValue() != 3) {
+			return false;
+		}
+		
+		ticket.setEmail(loggedUser.getEmail());
+		ticket.setFirstName(loggedUser.getFirstName());
+		ticket.setLastName(loggedUser.getLastName());
+		ticket.setPassport(res.getPassport());
+		ticket.setStatus(TicketStatus.ACCEPTED);
+		ticket.setUser(loggedUser);
+		this.save(ticket);
+		
+		return true;
 	}
 }

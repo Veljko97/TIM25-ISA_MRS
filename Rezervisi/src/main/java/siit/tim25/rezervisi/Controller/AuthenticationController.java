@@ -23,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -187,6 +188,13 @@ public class AuthenticationController {
 	    user = this.userServices.save(user);
 	    return new ResponseEntity<UserDTO>(new UserDTO(user, new TokenState(tokenUtils.generateToken(user.getUsername(), device),tokenUtils.getExpired())), HttpStatus.OK); 
 	}
+	
+	@GetMapping(path="/getUserProfile/{userId}")
+	public ResponseEntity<UserDTO> getUser(@PathVariable Integer userId)
+	{
+		User user = userServices.findById(userId);
+		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK);
+	}
 		
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
 	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
@@ -265,5 +273,7 @@ public class AuthenticationController {
 		
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
+	
+	
 	
 }

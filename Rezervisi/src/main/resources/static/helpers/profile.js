@@ -7,6 +7,55 @@ function Profile(urlApis, activeTab) {
   this.index = 0;
 }
 
+Profile.prototype.getUser = function() {
+  ajaxService.GET('/auth/getUserProfile/' + getUserId(), this.showUserCallback.bind(this));
+}
+
+Profile.prototype.showUserCallback = function(data) {
+  var inputs = $("input");
+  for(var i = 0; i < inputs.length - 1; i++) {
+    var input = inputs.eq(i);
+    var inputName = input.attr("id");
+    input.attr("value", data[inputName]);
+  }
+}
+
+Profile.prototype.changePassword = function(e) {
+  e.preventDefault();
+  var password = {
+    oldPassword: $("#oldpassword").val(),
+    newPassword: $("#newpassword").val()
+  };
+
+  ajaxService.POST("/auth/change-password", JSON.stringify(password), function(){
+    modal.close();
+    location.replace("/LoginPage.html");
+  }, function() {
+    alert('Wrong old password! Try again!');
+  });
+}
+
+Profile.prototype.editUser = function(e) {
+  e.preventDefault();
+  var user = {
+    username: $("#username").val(),
+    password: $("#password").val(),
+    email: $("#email").val(),
+    city: $("#city").val(),
+    phoneNumber: $("#phoneNumber").val(),
+    firstName: $("#firstName").val(),
+    lastName: $("#lastName").val()
+  };
+  var userObj = JSON.stringify(user);
+
+  ajaxService.PUT("/auth/editUserProfile", userObj, function(data) { 
+    if (data != null) {
+      sessionStorage.setItem('user',JSON.stringify(data));
+      window.location.replace('/');
+    }
+  });
+}
+
 Profile.prototype.show = function(indexParams, activeTab) {
   this.index = indexParams[0] || indexParams;
   this.activeTab = activeTab;

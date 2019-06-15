@@ -193,3 +193,8 @@ function getUserServiceId() {
   let user = JSON.parse(sessionStorage.user);
   return user ? JSON.parse(sessionStorage.user).serviceId : null;
 }
+
+function getUserId() {
+  let user = JSON.parse(sessionStorage.user);
+  return user ? JSON.parse(sessionStorage.user).id : null;
+}

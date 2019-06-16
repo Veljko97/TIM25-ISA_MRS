@@ -50,7 +50,7 @@ Profile.prototype.editUser = function(e) {
 
   ajaxService.PUT("/auth/editUserProfile", userObj, function(data) { 
     if (data != null) {
-      sessionStorage.setItem('user',JSON.stringify(data));
+       localStorage.setItem('user',JSON.stringify(data));
       window.location.replace('/');
     }
   });

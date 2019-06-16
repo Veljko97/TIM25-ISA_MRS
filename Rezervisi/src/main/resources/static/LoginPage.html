@@ -29,7 +29,7 @@
     			contentType:"application/json",
     			data: JSON.stringify(user),
     			success: function(result){
-    				sessionStorage.setItem('user',JSON.stringify(result));
+    				 localStorage.setItem('user',JSON.stringify(result));
             location.replace(getAdminUrlSlug(result) + "index.html");
     			
     			}

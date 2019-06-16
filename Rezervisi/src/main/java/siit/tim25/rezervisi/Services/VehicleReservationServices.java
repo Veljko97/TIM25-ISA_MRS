@@ -87,6 +87,7 @@ public class VehicleReservationServices {
 		vrRepository.delete(vr);
 	}
 
+	@Transactional
 	public VehicleReservation reserveVehicle(Integer vehicleId, StandardUser u, Date start, Date end) {
 		Vehicle v = vehicleRepository.findOne(vehicleId);
 		VehicleReservation vr = new VehicleReservation(v, u, start, end, v.getPrice(), TicketStatus.ACCEPTED, new Date());
@@ -95,7 +96,7 @@ public class VehicleReservationServices {
 	}
 	
 	@Transactional
-	public void reserveVehicle(Integer ticketId, Integer vehicleId, FastReservationDTO res, StandardUser loggedUser) {
+	public VehicleReservation reserveVehicle(Integer ticketId, Integer vehicleId, FastReservationDTO res, StandardUser loggedUser) {
 		Ticket t = ticketServices.findOne(ticketId);
 		vehicleServices.lockVehicle(vehicleId);
 		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
@@ -109,7 +110,7 @@ public class VehicleReservationServices {
 			end = new Date(res.getEnd());
 		}
 		
-		this.reserveVehicle(vehicleId, loggedUser, start, end);
+		return this.reserveVehicle(vehicleId, loggedUser, start, end);
 	}
 	
 	@Transactional

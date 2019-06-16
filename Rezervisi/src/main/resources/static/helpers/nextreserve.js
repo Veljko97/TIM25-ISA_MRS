@@ -81,10 +81,10 @@ NextReserve.prototype.reserveRoom = function(e, roomId)
   obj.start = Date.parse($("#startDate").val()) || 0;
   obj.end = Date.parse($("#endDate").val()) || 0;
 
-  ajaxService.POST('/app/hotels/'+this.ticketId+'/reserve/'+ roomId, JSON.stringify(obj), function(data){
-    this.roomIds.push(data);
-  });
-  this.render();
+  ajaxService.POST('/app/hotels/'+this.ticketId+'/reserve/'+ roomId, JSON.stringify(obj), function(rr){
+    this.roomIds.push(rr.id);
+    this.render();
+  }.bind(this));
 }
 
 NextReserve.prototype.reserveVehicle = function(e, vehicleId)
@@ -94,10 +94,10 @@ NextReserve.prototype.reserveVehicle = function(e, vehicleId)
   obj.start = Date.parse($("#startDate").val()) || 0;
   obj.end = Date.parse($("#endDate").val()) || 0;
 
-  ajaxService.POST('/app/rentacar/'+this.ticketId+'/reserve/'+ vehicleId, JSON.stringify(obj), function(data){
-    this.vehicleIds.push(data);
-  });
-  this.render();
+  ajaxService.POST('/app/rentacar/'+this.ticketId+'/reserve/'+ vehicleId, JSON.stringify(obj), function(vr){
+    this.vehicleIds.push(vr.id);
+    this.render();
+  }.bind(this));
 }
 
 

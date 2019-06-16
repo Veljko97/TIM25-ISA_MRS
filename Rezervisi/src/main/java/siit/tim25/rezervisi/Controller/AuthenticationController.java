@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +41,6 @@ import siit.tim25.rezervisi.Beans.users.RentACarAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.AirLineAdminDTO;
 import siit.tim25.rezervisi.DTO.HotelAdminDTO;
-import siit.tim25.rezervisi.DTO.RegistrationUserDTO;
 import siit.tim25.rezervisi.DTO.RentACarAdminDTO;
 import siit.tim25.rezervisi.DTO.StandardUserDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
@@ -189,6 +188,13 @@ public class AuthenticationController {
 	    user = this.userServices.save(user);
 	    return new ResponseEntity<UserDTO>(new UserDTO(user, new TokenState(tokenUtils.generateToken(user.getUsername(), device),tokenUtils.getExpired())), HttpStatus.OK); 
 	}
+	
+	@GetMapping(path="/getUserProfile/{userId}")
+	public ResponseEntity<UserDTO> getUser(@PathVariable Integer userId)
+	{
+		User user = userServices.findById(userId);
+		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK);
+	}
 		
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
 	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
@@ -267,5 +273,7 @@ public class AuthenticationController {
 		
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
+	
+	
 	
 }

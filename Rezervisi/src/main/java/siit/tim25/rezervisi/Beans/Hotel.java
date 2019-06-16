@@ -57,20 +57,17 @@ public class Hotel {
 	@Column
 	private String roomConfig;
 	
-	@Column
-	private Double hotelEarning;
 	
 	@Column
 	private Double averageGrade;
 	
 	public Hotel() {
 		super();
-		this.hotelEarning = 0.0;
 	}
 
 	public Hotel(Integer hotelID, String hotelName, String hotelAddress, Destination destination,
 			String hotelDescription, Set<HotelOffer> offersPriceList, Set<Room> roomList, Set<HotelAdmin> admins,
-			Set<HotelGrade> grades, String roomConfig, Double hotelEarning) {
+			Set<HotelGrade> grades, String roomConfig) {
 		super();
 		this.hotelID = hotelID;
 		this.hotelName = hotelName;
@@ -82,7 +79,6 @@ public class Hotel {
 		this.admins = admins;
 		this.grades = grades;
 		this.roomConfig = roomConfig;
-		this.hotelEarning = 0.0;
 	}
 
 	public Integer getHotelID() {
@@ -158,14 +154,6 @@ public class Hotel {
 		this.grades = grades;
 	}
 
-	public Double getHotelEarning() {
-		return hotelEarning;
-	}
-
-	public void setHotelEarning(Double hotelEarning) {
-		this.hotelEarning = hotelEarning;
-	}
-
 	public Set<HotelAdmin> getAdmins() {
 		return admins;
 	}
@@ -196,7 +184,7 @@ public class Hotel {
 		return "Hotel [hotelID=" + hotelID + ", hotelName=" + hotelName + ", hotelAddress=" + hotelAddress
 				+ ", destination=" + destination + ", hotelDescription=" + hotelDescription + ", offersPriceList="
 				+ offersPriceList + ", roomList=" + roomList + ", admins=" + admins + ", grades=" + grades
-				+ ", roomConfig=" + roomConfig + ", hotelEarning=" + hotelEarning + "]";
+				+ ", roomConfig=" + roomConfig;
 	}
 
 
@@ -212,7 +200,7 @@ public class Hotel {
 	}
 	
 	public HotelDTO convert() {
-		return new HotelDTO(this.hotelID, this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade(), this.hotelEarning, this.image);
+		return new HotelDTO(this.hotelID, this.hotelName, this.hotelAddress, this.hotelDescription, this.destination.getDestinationName(), this.getAverageGrade(), this.image);
 
 	}
 	

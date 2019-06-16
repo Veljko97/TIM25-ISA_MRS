@@ -7,14 +7,15 @@ function Search(urlApis, activeTab) {
   this.lastSearch = "";
 }
 
-addFriend = function(userId) {
+var addFriend = function(userId) {
   var success = function(data){
-    alert("Added")
-    location.reload()};
+    alert("Added");
+    location.reload();
+  };
   ajaxService.POST("/app/users/sendRequest/"+userId,"",success);
 }
 
-errorImage = function(img) {
+var errorImage = function(img) {
   img.src = "../assets/images/no-image.png";
 }
 
@@ -49,21 +50,21 @@ Search.prototype.showSearchOptions = function() {
               </button>\
               <button class=\"tablinks\" onclick=\"search.switchTab(event, 'Rentacar')\">\
                 <div class=\"pb_icon\"><i class=\"ion-android-car pb_icon-gradient\"></i></div>\
-              </button>")
+              </button>");
 	}
 }
 
 Search.prototype.switchTab = function(evt, tabName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
+  var tabcontent, tablinks;
+  tabcontent = document.querySelectorAll(".tabcontent");
+  tabcontent.forEach(function(tab) {
+    tab.style.display = "none";
+  }.bind(this));
 
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
+  tablinks = document.querySelectorAll(".tablinks");
+  tablinks.forEach(function(link) {
+    link.className = link.className.replace(" active", "");
+  }.bind(this));
 
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
@@ -208,10 +209,10 @@ Search.prototype.showCallback = function(data) {
   this.numberOfPages = data.totalPages || 0;
   data = data.content || data;
 
-  for(let i = 0; i < data.length; i++) {
-    resultsTable.html(resultsTable.html() + this.getEntityTableRowHtml(data[i]));
-    this.setStars(data[i]);
-  }
+  data.forEach(function(item) {
+    resultsTable.html(resultsTable.html() + this.getEntityTableRowHtml(item));
+    this.setStars(item);
+  }.bind(this));
 }
 
 Search.prototype.setStars = function(data) {
@@ -261,8 +262,10 @@ Search.prototype.getEntityTableRowHtml = function(data) {
           <div class=\"search-content\">\
             <div class=\"search-group\">\
               <h4>"+data.startDestinationName+"<->"+data.finalDestinationName+"</h4>\
-              <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
-              <span>Price: "+data.ticketPrice+"$</span>\
+              <div>\
+                <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
+                <span>Price: "+data.ticketPrice+"$</span>\
+              </div>\
             </div>\
             <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
             <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"&airlineId=" + data.airLineId +"\">See more</a>\

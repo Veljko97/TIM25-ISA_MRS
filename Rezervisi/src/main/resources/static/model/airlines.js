@@ -11,7 +11,7 @@ Airlines.prototype.bindEvents = function() {
 
 Airlines.prototype.showAll = function(data) {
   var table = $("#airlinesTable").first();
-  table.html("<tr><th>Name</th><th>Address</th><th>Description</th><th class=\"options-cell\" colspan=\"2\">Options</th></tr>");
+  table.html("<tr><th>Name</th><th>Address</th><th>Description</th><th class=\"options-cell\" colspan=\"3\">Options</th></tr>");
   this.list = [];
 
   this.numberOfPages = data.totalPages || 0;
@@ -22,7 +22,8 @@ Airlines.prototype.showAll = function(data) {
     this.list.push(airline);
     table.html(table.html() + "<tr><td>"+ airline.airLineName + 
       "</td><td>" + airline.airLineAddress + "</td><td>"+ airline.airLineDescription+
-      "</td><td><a class=\"btn btn-info\" href=\"add-admin-airline.html?id=" + airline.airLineID + 
+      "</td><td><a class=\"btn btn-info\" href=\"edit-airline.html?id=" + airline.airLineID + 
+      "\">Edit</a></td><td><a class=\"btn btn-info\" href=\"add-admin-airline.html?id=" + airline.airLineID + 
       "\">Add Admins</a></td><td><a class=\"btn btn-danger\" onclick=\"airlines.deleteCallback(" + airline.airLineID +")\">Delete</a></td></tr>");
   }
 }
@@ -46,8 +47,8 @@ Airlines.prototype.show = function(index) {
 }
 
 Airlines.prototype.showUsers = function(index) {
-  this.urlApi.users = '/app/airlines/showUser/' + index
-  this.urlApi.addUser = '/app/airlines/addUser/' + index
+  this.urlApi.users = '/app/airlines/showUser/' + index;
+  this.urlApi.addUser = '/app/airlines/addUser/' + index;
   ajaxService.GET(this.urlApi.users,this.showUsersTable);
   $(document).on('submit', '#addUserForm', this.addUserCallback.bind(this));
 }

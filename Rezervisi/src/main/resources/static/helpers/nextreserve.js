@@ -102,7 +102,7 @@ NextReserve.prototype.reserveVehicle = function(e, vehicleId)
 
 
 NextReserve.prototype.render = function(e) {
-  if (e) {e.preventDefault()};
+  if (e) {e.preventDefault();};
   let obj = {
     'start': Date.parse($("#startDate").val()) || 0,
     'end': Date.parse($("#endDate").val()) || 0
@@ -120,7 +120,7 @@ NextReserve.prototype.finish = function(e) {
     'roomIds': this.roomIds,
     'usePoints': $("#discountBox").prop("checked")
   };
-  ajaxService.POST('/app/airlines/finishReservation', JSON.stringify(obj), function() {window.location.replace('/index.html');})
+  ajaxService.POST('/app/airlines/finishReservation', JSON.stringify(obj), function() {window.location.replace('/');});
 }
 
 var nextreserve = new NextReserve();

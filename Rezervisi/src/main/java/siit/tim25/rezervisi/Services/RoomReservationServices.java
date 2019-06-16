@@ -1,5 +1,6 @@
 package siit.tim25.rezervisi.Services;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -7,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import siit.tim25.rezervisi.Beans.Room;
 import siit.tim25.rezervisi.Beans.RoomReservation;
+import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
+import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.RoomReportDTO;
 import siit.tim25.rezervisi.DTO.RoomReservationDTO;
 import siit.tim25.rezervisi.Repository.RoomRepository;
@@ -24,6 +28,10 @@ public class RoomReservationServices {
 	private RoomRepository roomRepository;
 	@Autowired
 	private RoomReservationRepository rrRepository;
+	@Autowired
+	private TicketServices ticketServices;
+	@Autowired
+	private RoomServices roomServices;
 	
 	public RoomReservation save(RoomReservation rr) {
 		return rrRepository.save(rr);
@@ -76,11 +84,62 @@ public class RoomReservationServices {
 		rrRepository.delete(rr);
 	}
 	
-	public RoomReservation reserveRoom(Integer roomId, StandardUser u, Date start, Date end) {
+	@Transactional
+	public void reserveRoom(Integer ticketId, Integer roomId, StandardUser u, FastReservationDTO res) {
+		Ticket t = ticketServices.findOne(ticketId);
+		roomServices.lockRoom(roomId);
+		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
+		Date end = null;
+		if (res.getEnd() == 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(t.getFlight().getLandingDate());
+			c.add(Calendar.DATE, 7);
+			end = c.getTime();
+		} else {
+			end = new Date(res.getEnd());
+		}
+  
 		Room r = roomRepository.findOne(roomId);
 		RoomReservation rr = new RoomReservation(r, u, start, end, r.getPrice(), TicketStatus.ACCEPTED, new Date());
 		u.getRoomReservation().add(rr);
-		return this.save(rr);
+		this.save(rr);
+	}
+	
+	@Transactional
+	public boolean fastReserve(Integer roomId, FastReservationDTO res) {
+		Room room = roomServices.lockRoom(roomId);
+		Date endRes = new Date(res.getEnd());
+		Date startRes = new Date(res.getStart());
+		for(RoomReservation rr : room.getReservation()) {
+			if(rr.getReservationStart().compareTo(startRes) <= 0 && rr.getReservationEnd().compareTo(startRes) >= 0) {
+				return false;
+			}
+			if(rr.getReservationStart().compareTo(endRes) <= 0 && rr.getReservationEnd().compareTo(endRes) >= 0) {
+				return false;
+			}
+			
+			if(rr.getReservationStart().compareTo(startRes) >= 0 && rr.getReservationEnd().compareTo(endRes) <= 0) {
+				return false;
+			}
+		}
+		RoomReservation reservation = new RoomReservation();
+		reservation.setPrice(res.getPrice());
+		reservation.setRoom(room);
+		reservation.setReservationStart(startRes);
+		reservation.setReservationEnd(endRes);
+		reservation.setStatus(TicketStatus.FAST);
+		this.save(reservation);
+		return true;
+	}
+	
+	@Transactional
+	public void takeFastReservation(StandardUser loggedUser, Integer resId)
+	{
+		RoomReservation res = this.lockReservation(resId);
+		res.setUser(loggedUser);
+		loggedUser.getRoomReservation().add(res);
+		res.setStatus(TicketStatus.ACCEPTED);
+		this.save(res);
 	}
 	
 	

@@ -12,9 +12,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.TicketStatus;
-import siit.tim25.rezervisi.Beans.Vehicle;
 import siit.tim25.rezervisi.Beans.VehicleReservation;
 import siit.tim25.rezervisi.DTO.VehicleReportDTO;
 import siit.tim25.rezervisi.DTO.VehicleReservationDTO;

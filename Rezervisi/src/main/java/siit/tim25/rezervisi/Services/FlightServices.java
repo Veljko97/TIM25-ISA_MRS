@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.AirLine;
+import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.FlightClass;
 import siit.tim25.rezervisi.Beans.FlightType;
@@ -31,6 +32,15 @@ public class FlightServices {
 	
 	@Autowired
 	private TicketRepository ticketRepository;
+	
+	@Autowired
+	private DestinationServices destinationServices;
+	
+	@Autowired
+	private AirLineServices airLineServices;
+	
+	@Autowired
+	private AirplaneServices airplaneServices;
 	
 	
 	public Flight save(Integer airLineId, Flight f) {
@@ -175,5 +185,13 @@ public class FlightServices {
 			public FlightDTO convert(Flight source) {
 				return new FlightDTO(source);
 			}});
+	}
+	
+	public Flight editFlight(Integer airlineId, Integer flightId, FlightDTO modifiedFlight) throws ParseException {
+		Flight f = modifiedFlight.convert(destinationServices.findAll(), airplaneServices.findAll());
+		f.setIdFlight(flightId);
+		f.setAirLine(airLineServices.findOne(airlineId));
+		this.update(airlineId, f);
+		return f;
 	}
 }

@@ -27,7 +27,7 @@ Model.prototype.validateInput = function() {
 }
 
 Model.prototype.makeJSONObject = function() {
-  var object = {}
+  var object = {};
   for(var i = 0; i < this.attributes.length; i++) {
     object[this.attributes[i]] = $('#' + this.attributes[i]).val() || $('#' + this.attributes[i]).first().val();
   }
@@ -87,8 +87,8 @@ Model.prototype.addUserCallback = function(e){
   ajaxService.POSTFORM(this.urlApi.addUser, formData, function(){location.reload();}, function() {handleErrorAction();});
 }
 
-Model.prototype.showAll = function(data) {}
-Model.prototype.show = function(data) {}
+Model.prototype.showAll = function(data) {};
+Model.prototype.show = function(data) {};
 
 Model.prototype.switchPage = function(dir) {
   if ((dir == -1 && this.currentPage > 0) || (dir == 1 && this.currentPage < (this.numberOfPages - 1))) {

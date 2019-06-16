@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import siit.tim25.rezervisi.Beans.Hotel;
-import siit.tim25.rezervisi.Beans.Room;
 
 
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {

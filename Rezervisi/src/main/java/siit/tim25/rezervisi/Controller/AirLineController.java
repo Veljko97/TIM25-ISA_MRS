@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,25 +33,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
-import siit.tim25.rezervisi.Beans.DiscountPoint;
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.InvitationResponseType;
-import siit.tim25.rezervisi.Beans.Room;
-import siit.tim25.rezervisi.Beans.RoomReservation;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
-import siit.tim25.rezervisi.Beans.Vehicle;
-import siit.tim25.rezervisi.Beans.VehicleReservation;
-import siit.tim25.rezervisi.Beans.users.AirLineAdmin;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FlightDTO;
-import siit.tim25.rezervisi.DTO.FriendsDTO;
-import siit.tim25.rezervisi.DTO.FriendsListsDTO;
 import siit.tim25.rezervisi.DTO.ReservationIdsDTO;
 import siit.tim25.rezervisi.DTO.ReservationUserDTO;
 import siit.tim25.rezervisi.DTO.TicketDTO;
@@ -61,14 +48,8 @@ import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.AirLineServices;
 import siit.tim25.rezervisi.Services.AirplaneServices;
 import siit.tim25.rezervisi.Services.DestinationServices;
-import siit.tim25.rezervisi.Services.DiscountPointsServices;
 import siit.tim25.rezervisi.Services.FlightServices;
-import siit.tim25.rezervisi.Services.ImageServices;
-import siit.tim25.rezervisi.Services.ProducerServices;
-import siit.tim25.rezervisi.Services.RoomReservationServices;
 import siit.tim25.rezervisi.Services.TicketServices;
-import siit.tim25.rezervisi.Services.VehicleReservationServices;
-import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.StandardUserServices;
 import siit.tim25.rezervisi.security.TokenUtils;
 import siit.tim25.rezervisi.security.model.TokenState;
@@ -91,17 +72,12 @@ public class AirLineController {
 	@Autowired
 	private AirplaneServices airplaneServices;
 	
+  
 	@Autowired
-	private ProducerServices producerServices;
+	private UserService userServices;
 	
 	@Autowired
 	private StandardUserServices stdUserServices;
-	
-	@Autowired
-	private VehicleReservationServices vrServices;
-	
-	@Autowired
-	private RoomReservationServices rrServices;
 	
 	@Autowired
 	private TicketServices ticketServices;
@@ -109,21 +85,6 @@ public class AirLineController {
 	@Autowired
 	@Lazy
 	private PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	private AuthorityServices authorityServices;
-	
-	@Autowired
-	private ImageServices imageServices;
-	
-	@Autowired
-	private ObjectMapper mapper;
-	
-	@Autowired
-	private DiscountPointsServices dpServices;
-
-	@Autowired
-	private UserService userServices;
 	
 	@Autowired
 	private TokenUtils tokenUtils;
@@ -137,25 +98,9 @@ public class AirLineController {
 	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<Page<AirLine>> addAirline(Pageable pageable, @RequestParam("image") MultipartFile image,
 													@RequestParam("model") String a )  {
-		AirLine airline = new AirLine();
-		try {
-			airline = mapper.readValue(a, AirLine.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if(airLineServices.findOneByAirLineName(airline.getAirLineName()) != null)	{
-			return new ResponseEntity<Page<AirLine>>(HttpStatus.BAD_REQUEST);
-		}
-		AirLine air = airLineServices.save(airline);
-		String imgPath = imageServices.saveAirlineImg(image, air.getAirLineID());
-		if(imgPath.equals("")) {
-			airLineServices.delete(air.getAirLineID());
-			return new ResponseEntity<Page<AirLine>>(HttpStatus.BAD_REQUEST);
-		}
-		air.setImage(imgPath);
-		airLineServices.save(air);
-		return new ResponseEntity<Page<AirLine>>(airLineServices.findAll(pageable),HttpStatus.OK);
+		return airLineServices.addAirLine(image, a) ? new ResponseEntity<Page<AirLine>>(airLineServices.findAll(pageable),HttpStatus.OK) : new ResponseEntity<Page<AirLine>>(HttpStatus.BAD_REQUEST);
 	}
+	
 	
 	@DeleteMapping(path="/deleteAirline/{id}")
 	@PreAuthorize("hasRole('SYS_ADMIN')")
@@ -181,8 +126,6 @@ public class AirLineController {
 	public ResponseEntity<AirLine> editAirline(@PathVariable Integer id, @RequestBody AirLine modifiedAirline)
 	{
 		modifiedAirline.setAirLineID(id);
-		AirLine air = airLineServices.findOne(id);
-		modifiedAirline.setAirlineEarning(air.getAirlineEarning());
 		return new ResponseEntity<AirLine>(airLineServices.save(modifiedAirline), HttpStatus.OK);
 	}
 	
@@ -254,9 +197,7 @@ public class AirLineController {
 	@PostMapping(path="/{airlineId}/addFlight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Page<FlightDTO>> addFlight (Pageable pageable, @PathVariable Integer airlineId, @RequestBody FlightDTO f) throws ParseException {
-		System.out.println(f);
-		Flight fl = f.convert(new HashSet<Destination>(destinationServices.findAll()), airplaneServices.findAll());
-		System.out.println(fl);
+		Flight fl = f.convert(destinationServices.findAll(), airplaneServices.findAll());
 		flightServices.save(airlineId, fl);
 		return new ResponseEntity<Page<FlightDTO>> (flightServices.findAllAndConvert(airlineId, pageable), HttpStatus.OK);
 	}
@@ -276,13 +217,8 @@ public class AirLineController {
 	@PutMapping(path="/{airlineId}/editFlight/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('AIRLINE_ADMIN')")
 	public ResponseEntity<Flight> editFlight(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody FlightDTO modifiedFlight) throws ParseException
-	{
-		Flight f = modifiedFlight.convert(destinationServices.findAll(airlineId), airplaneServices.findAll());
-		f.setIdFlight(flightId);
-		f.setAirLine(airLineServices.findOne(airlineId));
-		flightServices.update(airlineId, f);
-		
-		return new ResponseEntity<Flight>(f, HttpStatus.OK);
+	{		
+		return new ResponseEntity<Flight>(flightServices.editFlight(airlineId, flightId, modifiedFlight), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path="{airlineId}/deleteFlight/{flightId}")
@@ -294,35 +230,13 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/{airlineId}/buyticket/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Transactional
 	public ResponseEntity<Integer> buyTicket(@PathVariable Integer airlineId, @PathVariable Integer flightId, HttpServletRequest request, @RequestBody ReservationUserDTO user) throws UnknownHostException
 	{
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		User loggedUser = this.userServices.findByUsername(username);
 
-		switch(user.getUserType()) {
-		case CURRENT:		    
-			return new ResponseEntity<Integer>(ticketServices.addTicket(airlineId, flightId, user, loggedUser), HttpStatus.OK);
-		case UNREGISTERED:
-			User registered = userServices.findByEmail(user.getEmail());
-			if (registered == null) {
-				return new ResponseEntity<Integer>(ticketServices.addTicket(airlineId, flightId, user), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Integer>(-1, HttpStatus.BAD_REQUEST);
-			}
-		case REGISTERED:
-			StandardUser standardLoggedUser = stdUserServices.findByUsername(username);
-			FriendsListsDTO friends = new FriendsListsDTO(standardLoggedUser);
-			User registeredUser = userServices.findByEmail(user.getEmail());
-			for (FriendsDTO f: friends.getAccepted()) {
-				if (f.getOther().getEmail().equals(user.getEmail())) {
-					return new ResponseEntity<Integer>(ticketServices.addTicket(airlineId, flightId, user, registeredUser), HttpStatus.OK);
-				}
-			}
-		default:
-			return new ResponseEntity<Integer>(-1, HttpStatus.BAD_REQUEST);
-		}
+		return ticketServices.buyTicket(user, loggedUser, airlineId, flightId, username);
 	}
 	
 	@DeleteMapping(path="/{airlineId}/cancelReservation/{flightId}")
@@ -339,14 +253,7 @@ public class AirLineController {
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		User loggedUser = this.userServices.findByUsername(username);
 
-		for(Integer id: ids) {
-			Ticket t = this.ticketServices.findOne(id);
-			if (!t.getEmail().equals(loggedUser.getEmail())) {
-				String text = "You have a new invitation for a trip with your friend " + 
-						loggedUser.getFirstName() + " " + loggedUser.getLastName() + " on Reservify platform. Please follow this link to proceed: http://localhost:8888/invitation/flight.html?ticketId=" + t.getIdTicket();
-				this.producerServices.sendEmailTo("Invitation for trip on Reservify!", t.getEmail(), text);
-			}
-		}
+		ticketServices.sendEmailInvitations(ids, loggedUser);
 		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
 	}
 	
@@ -356,52 +263,7 @@ public class AirLineController {
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = this.stdUserServices.findByUsername(username);
 		
-		DiscountPoint dp = this.dpServices.findByMyPoints(loggedUser.getDiscauntPoints());
-		
-		if(dp.getId().equals(-1)) {
-			ids.setUsePoints(false);
-		}
-		
-		Ticket t = this.ticketServices.findOne(ids.getTicketId());
-		String text = "Your reservation is successful on Reservify platform. You reserved flight from " 
-				+ t.getFlight().getStartDestination().getDestinationName() + " to " + t.getFlight().getFinalDestination().getDestinationName() + ".";
-		Integer countPoints = 1;
-		if(ids.getUsePoints()) {
-			Double pr = t.getTicketPrice();
-			t.setTicketPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
-			ticketServices.save(t);
-		}
-		if (ids.getRoomIds().length > 0 || ids.getVehicleIds().length > 0) {
-			text += "Also, you made some additional reservations: ";
-			for(Integer id: ids.getRoomIds()) {
-				RoomReservation rr = rrServices.findOne(id);
-				Double pr = rr.getPrice();
-				rr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
-				rrServices.save(rr);
-				Room r = rr.getRoom();
-				countPoints += 1;
-				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". \n";
-			}
-			
-			for(Integer id: ids.getVehicleIds()) {
-				VehicleReservation vr = vrServices.findOne(id);
-				Double pr = vr.getPrice();
-				vr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
-				vrServices.save(vr);
-				Vehicle v = vr.getVehicle();
-				countPoints += 1;
-				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.\n";
-				
-			}
-		}
-		if(ids.getUsePoints()) {
-			loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() - dp.getPointsNeeded());
-		}else {
-			loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() + countPoints);
-		}
-		stdUserServices.save(loggedUser);
-		text += "\n You Have: "+ loggedUser.getDiscauntPoints()+" discount points on Reservify ";
-		this.producerServices.sendEmailTo("Successful reservation on Reservify!", loggedUser.getEmail(), text);
+		ticketServices.sendFinishReservationEmail(ids, loggedUser);
 		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
 	}
 	
@@ -440,29 +302,12 @@ public class AirLineController {
 	@PreAuthorize("hasRole('SYS_ADMIN')")
 	public ResponseEntity<Boolean> addUser(@PathVariable Integer id, @RequestParam("image") MultipartFile image,
 											@RequestParam("model") String a ){
-		UserDTO user;
 		try {
-			user = mapper.readValue(a, UserDTO.class);
+			airLineServices.addAirLineUser(id, image, a);
 		} catch (IOException e) {
 			return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
 		}
-		AirLine airline = airLineServices.findOne(id);
-		AirLineAdmin admin = new AirLineAdmin();
-		admin.setPassword(passwordEncoder.encode("123"));
-		admin.setUsername(user.getUsername());
-		admin.setFirstName(user.getFirstName());
-		admin.setLastName(user.getLastName());
-		admin.setEmail(user.getEmail());
-		admin.setEnabled(true);
-		admin.setConfirmed(false);
-		admin.setAirLine(airline);
-		airline.getAdmins().add(admin);
-		admin.setAuthorities(Arrays.asList(authorityServices.findOne(3)));
-		admin.setImage(imageServices.getUserPath(image, admin.getUsername()));
 		
-		airline = airLineServices.save(airline);
-		
-		imageServices.saveUserImg(image, admin.getUsername());
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
@@ -479,26 +324,12 @@ public class AirLineController {
 	
 	@PutMapping(path = "/reserveFastTicket/{ticketId}")
 	@PreAuthorize("hasRole('USER')")
-	@Transactional
 	public ResponseEntity<Void> takeFastTicket(@PathVariable Integer ticketId, @RequestBody ReservationUserDTO res, HttpServletRequest request){
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
 		
-		Ticket ticket = ticketServices.lockTicket(ticketId);
-		
-		if(ticket.getStatus().getValue() != 3) {
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-		}
-		
-		ticket.setEmail(loggedUser.getEmail());
-		ticket.setFirstName(loggedUser.getFirstName());
-		ticket.setLastName(loggedUser.getLastName());
-		ticket.setPassport(res.getPassport());
-		ticket.setStatus(TicketStatus.ACCEPTED);
-		ticket.setUser(loggedUser);
-		ticketServices.save(ticket);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return ticketServices.makeFastTicket(ticketId, loggedUser, res) ? new ResponseEntity<Void>(HttpStatus.OK) : new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping(path = "/allFastTickets/{airlineId}")

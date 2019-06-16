@@ -25,14 +25,6 @@ function toDatetimeLocal(date) {
             HH + ':' + II + ':' + SS;
 };
 
-Date.prototype.getWeek = function () {
-  const today = new Date();
-  const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
-  const pastDaysOfYear = (today - firstDayOfYear) / 86400000;
-  console.log({firstDayOfYear, pastDaysOfYear});
-  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-};
-
 function handleWrongInput() {
   $('#warning-message').html('Wrong input. Fill all of the required fields and check the input!');
   $('#warning-message').attr('style', 'display: block;');
@@ -115,15 +107,15 @@ function checkUserPermission(){
 function getAdminUrlSlug(user) {
   switch(user.role) {
     case 'ROLE_AIRLINE_ADMIN':
-      return '/admin-airlines/'
+      return '/admin-airlines/';
     case 'ROLE_RENTACAR_ADMIN':
-      return '/admin-rentacars/'
+      return '/admin-rentacars/';
     case 'ROLE_HOTEL_ADMIN':
-      return '/admin-hotels/'
+      return '/admin-hotels/';
     case 'ROLE_SYS_ADMIN':
-      return '/admin/'
+      return '/admin/';
     default:
-      return ''
+      return '';
   }
 }
 
@@ -201,4 +193,9 @@ function logout(e) {
 function getUserServiceId() {
   let user = JSON.parse(sessionStorage.user);
   return user ? JSON.parse(sessionStorage.user).serviceId : null;
+}
+
+function getUserId() {
+  let user = JSON.parse(sessionStorage.user);
+  return user ? JSON.parse(sessionStorage.user).id : null;
 }

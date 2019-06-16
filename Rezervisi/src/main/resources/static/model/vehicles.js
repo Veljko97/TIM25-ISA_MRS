@@ -7,7 +7,7 @@ Vehicles.prototype = Object.create( Model.prototype );
 Vehicles.prototype.bindEvents = function() {
   $(document).on('submit', '#vehicleForm', this.addCallback.bind(this));
   $(document).on('submit', '#editVehicleForm', this.editCallback.bind(this));
-  $(document).on('submit', '#serchForm', this.showFast.bind(this));
+  $(document).on('submit', '#searchForm', this.showFast.bind(this));
 }
 
 Vehicles.prototype.addCallback = function(e) {

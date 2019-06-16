@@ -21,8 +21,14 @@ Grade.prototype.showSearchOptions = function() {
         <button class=\"tablinks\" onclick=\"grade.switchTab(event, 'Hotels')\">\
           <div class=\"pb_icon\"><i class=\"ion-android-home pb_icon-gradient\"></i></div>\
         </button>\
+        <button class=\"tablinks\" onclick=\"grade.switchTab(event, 'Rooms')\">\
+          <div class=\"pb_icon\"><i class=\"ion-easel pb_icon-gradient\"></i></div>\
+        </button>\
         <button class=\"tablinks\" onclick=\"grade.switchTab(event, 'Rentacar')\">\
           <div class=\"pb_icon\"><i class=\"ion-android-car pb_icon-gradient\"></i></div>\
+        </button>\
+        <button class=\"tablinks\" onclick=\"grade.switchTab(event, 'Vehicles')\">\
+          <div class=\"pb_icon\"><i class=\"ion-android-subway pb_icon-gradient\"></i></div>\
         </button>")
     
 }
@@ -91,6 +97,7 @@ Grade.prototype.init = function() {
   this.render();
   this.bindEvents();
   this.showSearchOptions();
+  $("#section-home").height(200);
 }
 
 Grade.prototype.render = function(url = null) {
@@ -136,6 +143,14 @@ Grade.prototype.setStars = function(data) {
     case "Airlines":
       selcetor = "#Agr"+data.airLineID;
       id = data.airLineID;
+      break;
+    case "Rooms":
+      selcetor = "#Rogr"+data.roomID;
+      id = data.roomID;
+      break;
+    case "Vehicles":
+      selcetor = "#Vgr"+data.idVehicle;
+      id = data.idVehicle;
       break;
   }
   $(".my-rating").rateYo();
@@ -193,6 +208,21 @@ Grade.prototype.getEntityTableRowHtml = function(data) {
           <a class=\"see-more-link\" href=\"/guest/hotel.html?id="+data.hotelID+"\">See more</a>\
         </div>\
       </div>";
+      case 'Rooms':
+        return "\
+        <div class=\"row search-result\">\
+        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+        <div class=\"search-content\">\
+          <div class=\"search-group\">\
+            <h4>Room Number: " + data.roomNumber + "</h4>\
+            <span>Price: "+data.price+"$</span>\
+            <span>Capacity: " + data.roomCapacity + "</span>\
+          </div>\
+          <span class=\"text-overflow\">" + data.roomDescription + "</span>\
+          <span class='my-rating' id='Rogr"+data.roomID+"'></span>\
+          <a class=\"see-more-link\" href=\"#\">Quick Reserve</a>\
+        </div>\
+      </div>";
     case 'Rentacar':
       return "\
       <div class=\"row search-result\">\
@@ -206,6 +236,17 @@ Grade.prototype.getEntityTableRowHtml = function(data) {
             <a class=\"see-more-link\" href=\"/guest/rentacar.html?id="+data.rentACarID+"\">See more</a>\
           </div>\
         </div>";
+    case 'Vehicles':
+      return "\
+      <div class=\"row search-result\">\
+        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
+        <div class=\"search-content\">\
+          <div class=\"search-group\">\
+            <h4>"+data.vehicleName+"</h4>\
+            <span class='my-rating' id='Vgr"+data.idVehicle+"'></span>\
+          </div>\
+        </div>\
+      </div>";
     default:
       return "";
   }

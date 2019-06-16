@@ -34,6 +34,7 @@ import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.HotelDTO;
 import siit.tim25.rezervisi.DTO.RoomDTO;
+import siit.tim25.rezervisi.DTO.RoomReservationDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.HotelServices;
 import siit.tim25.rezervisi.Services.RoomReservationServices;
@@ -168,21 +169,21 @@ public class HotelController {
 		return hotelServices.addUser(image, a, id) ? new ResponseEntity<Boolean>(true,HttpStatus.OK) : new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
 	}
 	
-	@PostMapping(path = "/{ticketId}/getAvailableRooms")
+	@PostMapping(path = "/{ticketId}/getAvailableRooms",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
 	public ResponseEntity<Page<Room>> getAvailableRooms(@RequestBody FastReservationDTO res, @PathVariable Integer ticketId, Pageable pageable)	{
 		return new ResponseEntity<Page<Room>> (roomServices.findByDestination(ticketId, res, pageable), HttpStatus.OK);
 	}
 	
-	@PostMapping(path = "/{ticketId}/reserve/{roomId}")
+	@PostMapping(path = "/{ticketId}/reserve/{roomId}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
-	public ResponseEntity<Integer> reserveRoom(@RequestBody FastReservationDTO res, HttpServletRequest request, @PathVariable Integer roomId, @PathVariable Integer ticketId) {
+	public ResponseEntity<RoomReservationDTO> reserveRoom(@RequestBody FastReservationDTO res, HttpServletRequest request, @PathVariable Integer roomId, @PathVariable Integer ticketId) {
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
 		
-		rrServices.reserveRoom(ticketId, roomId, loggedUser, res);
-		return new ResponseEntity<Integer> (-1, HttpStatus.NO_CONTENT);
+		RoomReservationDTO rr = new RoomReservationDTO(rrServices.reserveRoom(ticketId, roomId, loggedUser, res));
+		return new ResponseEntity<RoomReservationDTO> (rr, HttpStatus.OK);
 	}
 	
 	@PostMapping(path = "/makeFastReservation/{roomId}")

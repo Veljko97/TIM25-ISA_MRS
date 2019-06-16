@@ -37,6 +37,10 @@ public class RoomReservationServices {
 		return rrRepository.save(rr);
 	}
 	
+	public RoomReservation findOne(Integer id) {
+		return rrRepository.findOne(id);
+	}
+	
 	public Page<RoomReservation> findAllByStatus(Integer hotelId, TicketStatus status, Pageable pageable) {
 		return rrRepository.findAllByStatus(hotelId, status, pageable);
 	}
@@ -81,7 +85,7 @@ public class RoomReservationServices {
 	}
 	
 	@Transactional
-	public void reserveRoom(Integer ticketId, Integer roomId, StandardUser u, FastReservationDTO res) {
+	public RoomReservation reserveRoom(Integer ticketId, Integer roomId, StandardUser u, FastReservationDTO res) {
 		Ticket t = ticketServices.findOne(ticketId);
 		roomServices.lockRoom(roomId);
 		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
@@ -94,10 +98,11 @@ public class RoomReservationServices {
 		} else {
 			end = new Date(res.getEnd());
 		}
+  
 		Room r = roomRepository.findOne(roomId);
 		RoomReservation rr = new RoomReservation(r, u, start, end, r.getPrice(), TicketStatus.ACCEPTED, new Date());
 		u.getRoomReservation().add(rr);
-		this.save(rr);
+		return this.save(rr);
 	}
 	
 	@Transactional

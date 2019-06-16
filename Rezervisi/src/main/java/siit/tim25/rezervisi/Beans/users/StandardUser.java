@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -26,6 +27,9 @@ public class StandardUser extends User {
 
 	private static final long serialVersionUID = -1537025436231150265L;
 
+	@Column
+	private Integer discauntPoints = 0;
+	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<AirLineGrade> airLineGrades = new HashSet<AirLineGrade>();
@@ -160,5 +164,13 @@ public class StandardUser extends User {
 
 	public void setFlightGrades(Set<FlightGrade> flightGrades) {
 		this.flightGrades = flightGrades;
+	}
+
+	public int getDiscauntPoints() {
+		return discauntPoints;
+	}
+
+	public void setDiscauntPoints(int discauntPoints) {
+		this.discauntPoints = discauntPoints;
 	}
 }

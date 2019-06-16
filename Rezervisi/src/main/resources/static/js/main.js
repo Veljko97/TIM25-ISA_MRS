@@ -169,6 +169,7 @@ function showAdminNavbar() {
         <li><a href=\"/admin/airlines.html\">Airlines</a></li>\
         <li><a href=\"/admin/hotels.html\">Hotels</a></li>\
         <li><a href=\"/admin/rentacars.html\">Rent a Car</a></li>\
+        <li><a href=\"/admin/discount.html\">Discount</a></li>\
         <li><a href=\"/admin/add-admin-sys.html\">System Admins</a></li>\
       </div>\
       <div>\

@@ -7,7 +7,7 @@ Rooms.prototype = Object.create( Model.prototype );
 Rooms.prototype.bindEvents = function() {
   $(document).on('submit', '#roomsForm', this.addCallback.bind(this));
   $(document).on('submit', '#editRoomForm', this.addCallback.bind(this));
-  $(document).on('submit', '#serchForm', this.showFast.bind(this));
+  $(document).on('submit', '#searchForm', this.showFast.bind(this));
 }
 
 Rooms.prototype.addCallback = function(e) {

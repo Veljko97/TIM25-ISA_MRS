@@ -5,7 +5,6 @@ import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
@@ -75,6 +72,7 @@ public class AirLineController {
 	@Autowired
 	private AirplaneServices airplaneServices;
 	
+  
 	@Autowired
 	private UserService userServices;
 	
@@ -263,7 +261,7 @@ public class AirLineController {
 	public ResponseEntity<Integer> finishReservation(@RequestBody ReservationIdsDTO ids, HttpServletRequest request) {
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
-		User loggedUser = this.userServices.findByUsername(username);
+		StandardUser loggedUser = this.stdUserServices.findByUsername(username);
 		
 		ticketServices.sendFinishReservationEmail(ids, loggedUser);
 		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);

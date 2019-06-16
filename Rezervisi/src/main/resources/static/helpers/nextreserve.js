@@ -10,6 +10,7 @@ function NextReserve() {
 
 NextReserve.prototype.init = function() {
   $(document).on('submit', '#searchForm', this.render.bind(this));
+  ajaxService.GET('/app/DiscountPoints/findMyDiscount', this.setDiscount.bind(this));
   this.render();
 }
 
@@ -80,9 +81,10 @@ NextReserve.prototype.reserveRoom = function(e, roomId)
   obj.start = Date.parse($("#startDate").val()) || 0;
   obj.end = Date.parse($("#endDate").val()) || 0;
 
-  ajaxService.POST('/app/hotels/'+this.ticketId+'/reserve/'+ roomId, JSON.stringify(obj));
-  this.roomIds.push(roomId);
-  this.render();
+  ajaxService.POST('/app/hotels/'+this.ticketId+'/reserve/'+ roomId, JSON.stringify(obj), function(rr){
+    this.roomIds.push(rr.id);
+    this.render();
+  }.bind(this));
 }
 
 NextReserve.prototype.reserveVehicle = function(e, vehicleId)
@@ -92,9 +94,10 @@ NextReserve.prototype.reserveVehicle = function(e, vehicleId)
   obj.start = Date.parse($("#startDate").val()) || 0;
   obj.end = Date.parse($("#endDate").val()) || 0;
 
-  ajaxService.POST('/app/rentacar/'+this.ticketId+'/reserve/'+ vehicleId, JSON.stringify(obj));
-  this.vehicleIds.push(vehicleId);
-  this.render();
+  ajaxService.POST('/app/rentacar/'+this.ticketId+'/reserve/'+ vehicleId, JSON.stringify(obj), function(vr){
+    this.vehicleIds.push(vr.id);
+    this.render();
+  }.bind(this));
 }
 
 
@@ -114,10 +117,21 @@ NextReserve.prototype.finish = function(e) {
   let obj = {
     'ticketId': this.ticketId,
     'vehicleIds': this.vehicleIds,
-    'roomIds': this.roomIds
+    'roomIds': this.roomIds,
+    'usePoints': $("#discountBox").prop("checked")
   };
   ajaxService.POST('/app/airlines/finishReservation', JSON.stringify(obj), function() {window.location.replace('/');});
 }
 
 var nextreserve = new NextReserve();
 
+
+
+NextReserve.prototype.setDiscount = function (data) {
+  if(data.id == -1){
+    $("#discountBox").prop('disabled', true);
+    $("#discountBoxLab").text("You don't have enough points for a discount");
+  }else {
+    $("#discountBoxLab").text("Use " + data.pointsNeeded + " points for " + data.discountPercent + "% discount");
+  }
+}

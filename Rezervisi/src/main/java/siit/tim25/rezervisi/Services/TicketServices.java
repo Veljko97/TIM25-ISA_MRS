@@ -11,11 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import siit.tim25.rezervisi.Beans.DiscountPoint;
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.Room;
+import siit.tim25.rezervisi.Beans.RoomReservation;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 import siit.tim25.rezervisi.Beans.Vehicle;
+import siit.tim25.rezervisi.Beans.VehicleReservation;
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.DTO.FriendsDTO;
 import siit.tim25.rezervisi.DTO.FriendsListsDTO;
@@ -51,10 +54,13 @@ public class TicketServices {
 	private ProducerServices producerServices;
 	
 	@Autowired
-	private RoomServices roomServices;
+	private VehicleReservationServices vrServices;
 	
 	@Autowired
-	private VehicleServices vehicleServices;
+	private DiscountPointsServices dpServices;
+	
+	@Autowired
+	private RoomReservationServices rrServices;
 	
 	
 	public List<Ticket> findAll(){
@@ -184,25 +190,52 @@ public class TicketServices {
 		}
 	}
 	
-	public void sendFinishReservationEmail(ReservationIdsDTO ids, User loggedUser) {
+	public void sendFinishReservationEmail(ReservationIdsDTO ids, StandardUser loggedUser) {
+		DiscountPoint dp = this.dpServices.findByMyPoints(loggedUser.getDiscauntPoints());
+		
+		if(dp.getId().equals(-1)) {
+			ids.setUsePoints(false);
+		}
+		
 		Ticket t = this.findOne(ids.getTicketId());
 		String text = "Your reservation is successful on Reservify platform. You reserved flight from " 
 				+ t.getFlight().getStartDestination().getDestinationName() + " to " + t.getFlight().getFinalDestination().getDestinationName() + ".";
-		
+		Integer countPoints = 1;
+		if(ids.getUsePoints()) {
+			Double pr = t.getTicketPrice();
+			t.setTicketPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+			this.save(t);
+		}
 		if (ids.getRoomIds().length > 0 || ids.getVehicleIds().length > 0) {
 			text += "Also, you made some additional reservations: ";
 			for(Integer id: ids.getRoomIds()) {
-				Room r = roomServices.findOne(id);
-				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". ";
+				RoomReservation rr = rrServices.findOne(id);
+				Double pr = rr.getPrice();
+				rr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+				rrServices.save(rr);
+				Room r = rr.getRoom();
+				countPoints += 1;
+				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". \n";
 			}
 			
 			for(Integer id: ids.getVehicleIds()) {
-				Vehicle v = vehicleServices.findOne(id);
-				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.";
+				VehicleReservation vr = vrServices.findOne(id);
+				Double pr = vr.getPrice();
+				vr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+				vrServices.save(vr);
+				Vehicle v = vr.getVehicle();
+				countPoints += 1;
+				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.\n";
 				
 			}
 		}
-		
+		if(ids.getUsePoints()) {
+			loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() - dp.getPointsNeeded());
+		}else {
+			loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() + countPoints);
+		}
+		stdUserServices.save(loggedUser);
+		text += "\n You Have: "+ loggedUser.getDiscauntPoints()+" discount points on Reservify ";
 		this.producerServices.sendEmailTo("Successful reservation on Reservify!", loggedUser.getEmail(), text);
 	}
 	

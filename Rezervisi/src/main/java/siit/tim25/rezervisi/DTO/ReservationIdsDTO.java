@@ -6,16 +6,18 @@ public class ReservationIdsDTO {
 	private Integer ticketId;
 	private Integer[] vehicleIds;
 	private Integer[] roomIds;
+	private Boolean usePoints;
 	
 	public ReservationIdsDTO() {
 		
 	}
 
-	public ReservationIdsDTO(Integer ticketId, Integer[] vehicleIds, Integer[] roomIds) {
+	public ReservationIdsDTO(Integer ticketId, Integer[] vehicleIds, Integer[] roomIds, Boolean usePoints) {
 		super();
 		this.ticketId = ticketId;
 		this.vehicleIds = vehicleIds;
 		this.roomIds = roomIds;
+		this.usePoints = usePoints;
 	}
 
 	public Integer getTicketId() {
@@ -40,6 +42,14 @@ public class ReservationIdsDTO {
 
 	public void setRoomIds(Integer[] roomIds) {
 		this.roomIds = roomIds;
+	}
+	
+	public Boolean getUsePoints() {
+		return usePoints;
+	}
+
+	public void setUsePoints(Boolean usePoints) {
+		this.usePoints = usePoints;
 	}
 
 	@Override

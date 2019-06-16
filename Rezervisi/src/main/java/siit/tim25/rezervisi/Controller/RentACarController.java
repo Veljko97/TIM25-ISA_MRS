@@ -40,6 +40,7 @@ import siit.tim25.rezervisi.DTO.FastReservationDTO;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.DTO.VehicleDTO;
+import siit.tim25.rezervisi.DTO.VehicleReservationDTO;
 import siit.tim25.rezervisi.Services.BranchServices;
 import siit.tim25.rezervisi.Services.RentACarServices;
 import siit.tim25.rezervisi.Services.VehicleReservationServices;
@@ -220,15 +221,15 @@ public class RentACarController {
 		return new ResponseEntity<Page<Vehicle>> (vehicleServices.findByDestination(ticketId, res, pageable), HttpStatus.OK);
 	}
 	
-	@PostMapping(path = "/{ticketId}/reserve/{vehicleId}")
+	@PostMapping(path = "/{ticketId}/reserve/{vehicleId}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER') or hasRole('HOTEL_ADMIN')")
-	public ResponseEntity<Integer> reserveVehicle(@RequestBody FastReservationDTO res, HttpServletRequest request, @PathVariable Integer vehicleId, @PathVariable Integer ticketId) {
+	public ResponseEntity<VehicleReservationDTO> reserveVehicle(@RequestBody FastReservationDTO res, HttpServletRequest request, @PathVariable Integer vehicleId, @PathVariable Integer ticketId) {
 
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
-		vrServices.reserveVehicle(ticketId, vehicleId, res, loggedUser);
-		return new ResponseEntity<Integer> (-1, HttpStatus.NO_CONTENT);
+		VehicleReservationDTO vr = new VehicleReservationDTO(vrServices.reserveVehicle(ticketId, vehicleId, res, loggedUser));
+		return new ResponseEntity<VehicleReservationDTO> (vr, HttpStatus.OK);
 	}
 	
 	

@@ -25,12 +25,12 @@
     <link rel="stylesheet" href="../assets/css/search.css">
     <link rel="stylesheet" href="../assets/css/pagination.css">
 
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.min.js"></script> -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../helpers/search.js"></script>
     <script src="../helpers/main-nav.js"></script>
-
 
   </head>
   <script>
@@ -232,9 +232,20 @@
               <h2>Search Results:</h2>
             </div>
           </div>
-          <div class="pagination justify-content-end mb-3">
-            <span onclick="search.switchPage(-1)">❮</span>
-            <span onclick="search.switchPage(1)">❯</span>
+          
+          <div class="pagination justify-content-end mb-3 display-flex flex-column">
+            <div class="justify-content-end">
+              <span style="width: 50px;" onclick="search.switchPage(-1)">❮</span>
+              <span style="width: 50px;" onclick="search.switchPage(1)">❯</span>
+            </div>
+            <div class="mr-5">
+              <span>Sort by:</span>
+              <select onchange="search.sortResults(event)" class="form-control" id="sortselect" style="width: 150px;">
+                
+              </select>
+            </div>
+            
+            
           </div>
           <div class="results">
 

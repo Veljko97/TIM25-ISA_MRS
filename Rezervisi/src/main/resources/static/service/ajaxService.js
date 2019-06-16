@@ -24,6 +24,8 @@ var ajaxService = {
   },
   POST: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
     this.SETTOKEN();
+    console.log(dataObj);
+    console.log(apiUrl);
     $.ajax({
       method:"POST",
       url: apiUrl,	

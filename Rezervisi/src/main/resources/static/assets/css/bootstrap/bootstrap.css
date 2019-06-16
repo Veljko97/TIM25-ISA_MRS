@@ -7033,6 +7033,10 @@ button.bg-dark:focus {
   justify-content: flex-end !important;
 }
 
+.display-flex {
+  display: flex;
+}
+
 .justify-content-center {
   -ms-flex-pack: center !important;
   justify-content: center !important;

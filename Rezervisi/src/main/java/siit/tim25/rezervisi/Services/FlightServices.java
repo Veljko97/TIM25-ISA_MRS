@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import siit.tim25.rezervisi.Beans.AirLine;
-import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
 import siit.tim25.rezervisi.Beans.FlightClass;
 import siit.tim25.rezervisi.Beans.FlightType;
@@ -42,6 +41,9 @@ public class FlightServices {
 	@Autowired
 	private AirplaneServices airplaneServices;
 	
+	public Flight save(Flight f) {
+		return flightRepository.save(f);
+	}
 	
 	public Flight save(Integer airLineId, Flight f) {
 		AirLine a = airLineRepository.findOne(airLineId);
@@ -143,7 +145,6 @@ public class FlightServices {
 				flight.setTakeOffDate(f.getTakeOffDate());
 				flight.setLandingDate(f.getLandingDate());
 				flight.setFlightLength(f.getFlightLength());
-				flight.setNumberOfStops(f.getNumberOfStops());
 				flight.setAirplane(f.getAirplane());
 				flight.setTicketPrice(f.getTicketPrice());
 				flight.setType(f.getType());

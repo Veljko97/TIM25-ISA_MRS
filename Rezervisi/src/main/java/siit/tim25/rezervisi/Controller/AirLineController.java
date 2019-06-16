@@ -5,7 +5,6 @@ import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -140,6 +139,15 @@ public class AirLineController {
 	@GetMapping(path="/showAllDestinations", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Destination>> getAllDestinations() {
 		return new ResponseEntity<List<Destination>>(destinationServices.findAll(),HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/{airlineId}/addStopLocation/{flightId}")
+	public ResponseEntity<Integer> addStopLocation(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody Integer idDestination) {
+		Destination d = destinationServices.findOne(airlineId, idDestination);
+		Flight f = flightServices.findOne(flightId);
+		f.getStopLocations().add(d);
+		flightServices.save(f);
+		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
 	}
 	
 	@PostMapping(path="/{airlineId}/addDestination", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

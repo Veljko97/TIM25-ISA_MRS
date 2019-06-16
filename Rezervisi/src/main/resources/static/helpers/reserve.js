@@ -18,7 +18,7 @@ Reserve.prototype.reserveFlightCallback = function(data) {
 }
 
 Reserve.prototype.getReservations = function() {
-  let user = JSON.parse(sessionStorage.user);
+  let user = JSON.parse(localStorage.user);
   $("#ticket-results").html("");
   ajaxService.GET('/app/reservations/' + user.id + '/getTickets', this.showTicketReservationsCallback.bind(this));
   ajaxService.GET('/app/reservations/' + user.id + '/getRoomReservations', this.showRoomReservationsCallback.bind(this));
@@ -162,7 +162,7 @@ Reserve.prototype.successReservationCallback = function() {
 
 Reserve.prototype.checkTicketPermission = function(ticketId) {
   ajaxService.GET('/app/airlines/getTicket/' + ticketId, function(data) {
-    var user = JSON.parse(sessionStorage.getItem('user'));
+    var user = JSON.parse( localStorage.getItem('user'));
     if (data.status == 'ACCEPTED' || user == null || user.email != data.email) {
       window.location.replace('/');
     } else {

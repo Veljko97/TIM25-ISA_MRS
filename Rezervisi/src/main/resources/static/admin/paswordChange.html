@@ -15,7 +15,7 @@
             showAdminNavbar();
         });
         $(document).ready(function(){
-            var user = JSON.parse(sessionStorage.getItem('user'));
+            var user = JSON.parse( localStorage.getItem('user'));
             ajaxService.SETTOKEN(user.token.accessToken);
             $("#passwordForm").change(function(e){
                 e.preventDefault();
@@ -33,7 +33,7 @@
                     };
                 var sucess = function(){
                     user.confirmed = true;
-                    sessionStorage.setItem('user',JSON.stringify(user));
+                     localStorage.setItem('user',JSON.stringify(user));
                     location.replace("/admin-airlines/index.html")
                 };
                 ajaxService.POST("/auth/first-change-password",JSON.stringify(password), sucess)

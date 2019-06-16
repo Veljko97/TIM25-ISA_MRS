@@ -120,7 +120,7 @@ function getAdminUrlSlug(user) {
 }
 
 function showAdminNavbar() {
-  let user = JSON.parse(sessionStorage.user);
+  let user = JSON.parse(localStorage.user);
   let navbar = $("#navigationBar");
   switch(user.role) {
     case 'ROLE_AIRLINE_ADMIN':
@@ -185,17 +185,17 @@ function showAdminNavbar() {
 
 function logout(e) {
   e.preventDefault();
-  sessionStorage.user = null;
+  localStorage.user = null;
   location.replace("/index.html");
   return false;
 }
 
 function getUserServiceId() {
-  let user = JSON.parse(sessionStorage.user);
-  return user ? JSON.parse(sessionStorage.user).serviceId : null;
+  let user = JSON.parse(localStorage.user);
+  return user ? JSON.parse(localStorage.user).serviceId : null;
 }
 
 function getUserId() {
-  let user = JSON.parse(sessionStorage.user);
-  return user ? JSON.parse(sessionStorage.user).id : null;
+  let user = JSON.parse(localStorage.user);
+  return user ? JSON.parse(localStorage.user).id : null;
 }

@@ -20,7 +20,7 @@ var errorImage = function(img) {
 }
 
 Search.prototype.showSearchOptions = function() {
-	let user = JSON.parse(sessionStorage.user);
+	let user = JSON.parse(localStorage.user);
 	if (user) {
 		$("#options").html("<button class=\"tablinks active\" onclick=\"search.switchTab(event, 'Airlines')\">\
                 <div class=\"pb_icon\"><i class=\"ion-android-plane pb_icon-gradient\"></i></div>\
@@ -332,7 +332,7 @@ Search.prototype.getEntityTableRowHtml = function(data) {
           </div>\
         </div>";
     case 'Users':
-      let user = JSON.parse(sessionStorage.user);
+      let user = JSON.parse(localStorage.user);
       var logdIn = "<a class=\"see-more-link\" href=\"#\" onclick=\"addFriend("+data.id+")\">Add Friend</a>";
       var div = "\
       <div class=\"row search-result\">\

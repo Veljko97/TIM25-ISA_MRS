@@ -63,7 +63,7 @@ public class FlightDTO {
 		this.takeOffDate = fl.getTakeOffDate().getTime();
 		this.landingDate = fl.getLandingDate().getTime();
 		this.flightLength = fl.getFlightLength();
-		this.numberOfStops = fl.getNumberOfStops();
+		this.numberOfStops = fl.getStopLocations().size();
 		this.numberOfSeats = fl.getAirplane().getNumberOfSeats();
 		this.airplane = fl.getAirplane().getName();
 		this.ticketPrice = fl.getTicketPrice();
@@ -215,7 +215,6 @@ public class FlightDTO {
 		f.setLandingDate(new Date(this.landingDate));
 		f.setFlightLength(this.flightLength);
 		f.setTicketPrice(this.getTicketPrice());
-		f.setNumberOfStops(this.numberOfStops);
 		f.setAverageGrade(this.averageGrade);
 		f.setType(FlightType.valueOf(this.type));
 		f.setFlightClass(FlightClass.valueOf(this.flightClass));
@@ -243,7 +242,6 @@ public class FlightDTO {
 		f.setLandingDate(new Date(this.landingDate));
 		f.setFlightLength(this.flightLength);
 		f.setTicketPrice(this.getTicketPrice());
-		f.setNumberOfStops(this.numberOfStops);
 		f.setAverageGrade(this.averageGrade);
 		f.setType(FlightType.valueOf(this.type));
 		f.setFlightClass(FlightClass.valueOf(this.flightClass));

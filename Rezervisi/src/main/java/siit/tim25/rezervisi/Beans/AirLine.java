@@ -32,6 +32,9 @@ public class AirLine {
 	@Column(name = "airLineDescription")
 	private String airLineDescription;
 	
+	@Column(name = "city")
+	private String city;
+	
 	@Column
     private String image;
 
@@ -63,7 +66,7 @@ public class AirLine {
 
 	public AirLine(Integer airLineID, String airLineName, String airLineAddress, String airLineDescription,
 			Set<Destination> airLineDestinations, Set<Flight> airLineFlights, Set<Ticket> offers,
-			Double airLineAverageGrade, Double airlineEarning) {
+			Double airLineAverageGrade, Double airlineEarning, String city) {
 		super();
 		this.airLineID = airLineID;
 		this.airLineName = airLineName;
@@ -72,6 +75,7 @@ public class AirLine {
 		this.airLineDestinations = airLineDestinations;
 		this.airLineFlights = airLineFlights;
 		this.offers = offers;
+		this.city = city;
 	}
 
 	public Integer getAirLineID() {
@@ -84,6 +88,14 @@ public class AirLine {
 
 	public String getAirLineName() {
 		return airLineName;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	public void setAirLineName(String airLineName) {

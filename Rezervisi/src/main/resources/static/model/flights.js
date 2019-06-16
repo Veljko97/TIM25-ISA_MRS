@@ -34,7 +34,7 @@ Flights.prototype.addCallback = function(e) {
 
 Flights.prototype.showAll = function(data) {
   var table = $("#flightsTable").first();
-  table.html("<tr><th>Start Destination</th><th>End Destination</th><th>Take off Date</th><th>Landing Date</th><th>Flight Length</th></tr>");
+  table.html("<tr><th>Start Destination</th><th>End Destination</th><th>Take off Date</th><th>Landing Date</th><th>Flight Length</th><th colspan=\"3\">Options</th></tr>");
   this.list = [];
 
   this.numberOfPages = data.totalPages || 0;
@@ -45,7 +45,7 @@ Flights.prototype.showAll = function(data) {
     this.list.push(flight);
     table.html(table.html() + "<tr><td>"+ (flight.startDestinationName ? flight.startDestinationName : 'No destination')  + "</td><td>" + (flight.finalDestinationName ? flight.finalDestinationName : 'No destination')
      + "</td><td>" + (new Date(flight.takeOffDate)).toDateString() + "</td><td>" + (new Date(flight.landingDate)).toDateString() + "</td><td>" + flight.flightLength + "</td><td><a class=\"btn btn-info\" href=\"edit-flight.html?id=" + 
-    flight.idFlight + "\">Edit</a></td></td><td><a class=\"btn btn-info\" href=\"addStopDestination.html?id=" + 
+    flight.idFlight + "\">Edit</a></td></td><td><a class=\"btn btn-info\" href=\"add-stop.html?id=" + 
     flight.idFlight + "\">Add stop destination</a></td></td><td><a class=\"btn btn-danger\" onclick=\"flights.deleteCallback(" + flight.idFlight +")\">Delete</a></td></tr>");
   }
 }

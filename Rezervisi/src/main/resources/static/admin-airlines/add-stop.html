@@ -8,24 +8,25 @@
     <script src="../js/main.js"></script>
     <script src="../service/ajaxService.js"></script>
     <script src="../model/model.js"></script>
-    <script src="../model/flights.js"></script>
+    <script src="../model/stops.js"></script>
     <script>
       $(document).ready(function(){
         checkUserPermission();
         showAdminNavbar();
-        flights.init();
+        stops.flightId = getParamFromUrl('id');
+        console.log(stops.flightId);
+        stops.render();
       });
     </script>
   </head>
   <body>
     <span id="message"></span>
     <ul id="navigationBar">
-      <li><a href="/admin-airlines/destinations.html">Destinations</a></li>
-      <li><a href="/admin-airlines/flights.html">Flights</a></li>
     </ul>
-      <form id="addStopDestinationForm">
-          <select class="form-control" id="finalDestinationName"></select>
-          <input type="submit" value="Add stop destination">
+      <form id="addStopDestinationForm" onsubmit="stops.addStopLocation(event)">
+        <label for="destination">Stop Location:</label>
+        <select class="form-control" id="destination"></select>
+        <input type="submit" class="btn btn-primary" value="Add"><br><br>
       </form>    
   </body>
 </html>

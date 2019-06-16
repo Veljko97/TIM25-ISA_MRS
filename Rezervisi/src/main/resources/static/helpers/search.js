@@ -78,6 +78,7 @@ Search.prototype.switchTab = function(evt, tabName) {
   }else{
     $(".results").first().html("");
   }
+  this.showSortOptions();
 }
 
 Search.prototype.switchMode = function(e, isAlreadyActive) {
@@ -122,6 +123,37 @@ Search.prototype.init = function() {
   this.render();
   this.bindEvents();
   this.showSearchOptions();
+  this.showSortOptions();
+}
+
+Search.prototype.showSortOptions = function() {
+  this.sortOption = "";
+  $("#sortselect").parent().show();
+  switch(this.activeTab) {
+  case 'Airlines':
+    $("#sortselect").html("<option value=\"airLineName\">Name</option><option value=\"city\">City</option>")
+    break;
+  case 'Hotels':
+    $("#sortselect").html("<option value=\"hotelName\">Name</option><option value=\"destination\">City</option>")
+    break;
+  case 'Rentacar':
+    $("#sortselect").html("<option value=\"rentACarName\">Name</option><option value=\"destination\">City</option>")
+    break;
+  case 'Flights':
+    $("#sortselect").parent().hide();
+    break;
+  case 'Users':
+    $("#sortselect").html("<option value=\"firstName\">First Name</option><option value=\"lastName\">Last Name</option>");
+    break;
+  }
+}
+
+Search.prototype.sortResults = function(e) {
+  this.sortOption = e.target.value;
+  this.showCallback(this.data.sort(function(a, b) {
+    return a[e.target.value] > b[e.target.value] ? 1 : -1;
+  }));
+  // this.showCallback(_.sortBy(this.data, [e.target.value]));
 }
 
 Search.prototype.render = function(url = null) {
@@ -208,6 +240,7 @@ Search.prototype.showCallback = function(data) {
   resultsTable.html("");
   this.numberOfPages = data.totalPages || 0;
   data = data.content || data;
+  this.data = data;
 
   data.forEach(function(item) {
     resultsTable.html(resultsTable.html() + this.getEntityTableRowHtml(item));
@@ -326,4 +359,4 @@ var search = new Search({
   'Rentacar': {'showAll': '/app/rentacar/showRentACars', 'search': '/app/rentacar/search'},
   'Airlines': {'showAll': '/app/airlines/showAirLines', 'search': '/app/airlines/search'},
   'Users': {'showAll': '', 'search': '/app/users/findUser'}
-}, 'Airlines');
+  }, 'Airlines');

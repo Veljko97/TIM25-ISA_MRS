@@ -49,8 +49,6 @@ public class Flight {
 	@Column
 	private String flightLength;
 	
-	@Column
-	private int numberOfStops;
 	
 	@Column
 	private FlightType type;
@@ -86,7 +84,7 @@ public class Flight {
 	}
 
 	public Flight(Destination startDestination, Destination finalDestination, Date takeOffDate, Date landingDate,
-			String flightLength, int numberOfStops, FlightClass fClass, FlightType type, AirPlane airplane, Double ticketPrice, Set<Destination> stopLocations,
+			String flightLength, FlightClass fClass, FlightType type, AirPlane airplane, Double ticketPrice, Set<Destination> stopLocations,
 			Set<Ticket> flightTickets, Double flightAverageGrade) {
 		super();
 		this.startDestination = startDestination;
@@ -94,7 +92,6 @@ public class Flight {
 		this.takeOffDate = takeOffDate;
 		this.landingDate = landingDate;
 		this.flightLength = flightLength;
-		this.numberOfStops = numberOfStops;
 		this.type = type;
 		this.flightClass = fClass;
 		this.airplane = airplane;
@@ -192,12 +189,7 @@ public class Flight {
 	public void setFlightLength(String flightLength) {
 		this.flightLength = flightLength;
 	}
-	public int getNumberOfStops() {
-		return numberOfStops;
-	}
-	public void setNumberOfStops(int numberOfStops) {
-		this.numberOfStops = numberOfStops;
-	}
+	
 	public AirPlane getAirplane() {
 		return airplane;
 	}
@@ -226,7 +218,7 @@ public class Flight {
 	public String toString() {
 		return "Flight [startDestination=" + startDestination + ", finalDestination=" + finalDestination
 				+ ", takeOffDate=" + takeOffDate + ", landingDate=" + landingDate + ", flightLength=" + flightLength
-				+ ", numberOfStops=" + numberOfStops + ", stopLocations=" + stopLocations + ", flightAverageGrade=" + averageGrade + "]";
+				 + ", stopLocations=" + stopLocations + ", flightAverageGrade=" + averageGrade + "]";
 	}
 	
 	@Override
@@ -249,8 +241,7 @@ public class Flight {
 	}
 	
 	public FlightDTO convert() {
-		System.out.println(this);
-		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.getNumberOfStops(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
+		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.stopLocations.size(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
 	}
 	
 }

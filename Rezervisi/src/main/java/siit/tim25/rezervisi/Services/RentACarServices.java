@@ -45,6 +45,9 @@ public class RentACarServices {
 	@Lazy
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private ProducerServices producerServices;
+	
 	public RentACar save(RentACar rnt) {
 		return rentACarRepository.save(rnt);
 	}
@@ -124,7 +127,8 @@ public class RentACarServices {
 		rentACar = this.save(rentACar);
 		
 		imageServices.saveUserImg(image, admin.getUsername());
-		
+		producerServices.sendAdminRegister(admin.getEmail(), admin.getUsername(), rentACar.getRentACarName());
+
 		return true;
 	}
 }

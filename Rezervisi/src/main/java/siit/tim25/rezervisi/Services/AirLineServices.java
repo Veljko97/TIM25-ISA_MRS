@@ -44,6 +44,9 @@ public class AirLineServices {
 	@Autowired
 	private AuthorityServices authorityServices;
 	
+	@Autowired
+	private ProducerServices producerServices;
+	
 	public AirLine save(AirLine airline) {
 		return airLineRepository.save(airline);
 	}
@@ -126,6 +129,7 @@ public class AirLineServices {
 		airline = airLineServices.save(airline);
 		
 		imageServices.saveUserImg(image, admin.getUsername());
+		producerServices.sendAdminRegister(admin.getEmail(), admin.getUsername(), airline.getAirLineName());
 	}
 	
 }

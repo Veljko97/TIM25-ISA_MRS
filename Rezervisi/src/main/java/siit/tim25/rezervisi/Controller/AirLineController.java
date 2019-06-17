@@ -239,6 +239,7 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/{airlineId}/buyticket/{flightId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Integer> buyTicket(@PathVariable Integer airlineId, @PathVariable Integer flightId, HttpServletRequest request, @RequestBody ReservationUserDTO user) throws UnknownHostException
 	{
 		String token = tokenUtils.getToken(request);
@@ -249,6 +250,7 @@ public class AirLineController {
 	}
 	
 	@DeleteMapping(path="/{airlineId}/cancelReservation/{flightId}")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Integer> cancelReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, @RequestBody List<Integer> ids){
 		for(Integer id: ids) {
 			this.ticketServices.deleteTicket(flightId, id);
@@ -257,6 +259,7 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/{airlineId}/continueReservation/{flightId}")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Integer> continueReservation(@PathVariable Integer airlineId, @PathVariable Integer flightId, HttpServletRequest request, @RequestBody List<Integer> ids){
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
@@ -267,6 +270,7 @@ public class AirLineController {
 	}
 	
 	@PostMapping(path="/finishReservation")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Integer> finishReservation(@RequestBody ReservationIdsDTO ids, HttpServletRequest request) {
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
@@ -277,6 +281,7 @@ public class AirLineController {
 	}
 	
 	@GetMapping(path="/getTicket/{ticketId}")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<TicketDTO> getTicket(@PathVariable Integer ticketId) {
 		return new ResponseEntity<TicketDTO>(this.ticketServices.findOne(ticketId).convert(), HttpStatus.OK);
 	}

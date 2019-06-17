@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -92,7 +93,9 @@ public class StandardUserController {
 	
 	@Autowired
 	private GradingServices gradingServices;
+	
 	@RequestMapping(method = RequestMethod.POST, path = "/sendRequest/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
 	private ResponseEntity<Void> sendRequest(@PathVariable Integer userId, HttpServletRequest request) {
 		StandardUser reciver = userServices.findOne(userId);
 		if(reciver == null) {
@@ -116,10 +119,12 @@ public class StandardUserController {
 		Friends fr = friendsServices.save(fRequest);
 		
 		producer.sendRequestTo(userId.toString(), new FriendsDTO(fr.getId(), fr.getSender()));
+		producer.sendFriendRequestTo(reciver.getUsername(), sending.getUsername());
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping(path = "/myFriends", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<FriendsListsDTO> findFrends(HttpServletRequest request){
 		String token = tokenUtils.getToken(request);
 		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
@@ -127,6 +132,7 @@ public class StandardUserController {
 	}
 	
 	@PutMapping(path = "/confirmeRequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<FriendsDTO> confirme(@PathVariable Integer requestId, HttpServletRequest request){
 		Friends fr = friendsServices.findOne(requestId);
 		String token = tokenUtils.getToken(request);
@@ -141,6 +147,7 @@ public class StandardUserController {
 	}
 	
 	@DeleteMapping(path = "/removeFriend/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Integer> refuse(@PathVariable Integer requestId, HttpServletRequest request){
 		Friends fr = friendsServices.findOne(requestId);
 		String token = tokenUtils.getToken(request);
@@ -158,6 +165,7 @@ public class StandardUserController {
 	}
 	
 	@DeleteMapping(path = "/deleteFriend/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Integer> delete(@PathVariable Integer requestId, HttpServletRequest request){
 		Friends fr = friendsServices.findOne(requestId);
 		String token = tokenUtils.getToken(request);

@@ -43,6 +43,7 @@
   </head>
   <script>
     $(document).ready(function() {
+      checkUserPermission();
       getMainPageNavBar();
       nextreserve.ticketId = getParamFromUrl('ticketId');
       nextreserve.init();

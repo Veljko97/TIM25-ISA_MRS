@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import siit.tim25.rezervisi.security.model.User;
@@ -71,7 +72,7 @@ public class TokenUtils {
 	public String refreshToken(String token, Device device) {
 		String refreshedToken;
 		try {
-			final Claims claims = this.getAllClaimsFromToken(token);
+			final Claims claims = this.getAllClaimsFromTokenIgnorExp(token);
 			claims.setIssuedAt(now());
 			refreshedToken = Jwts.builder()
 					.setClaims(claims)
@@ -85,8 +86,7 @@ public class TokenUtils {
 	
 	public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
 		final Date created = this.getIssuedAtDateFromToken(token);
-		return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset))
-				&& (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token)));
+		return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset)));
 	}
 	
 	public Boolean validateToken(String token, UserDetails userDetails) {
@@ -102,15 +102,14 @@ public class TokenUtils {
 		return (lastPasswordReset != null && created.before(lastPasswordReset));
 	}
 
-	private Boolean isTokenExpired(String token) {
-		final Date expiration = this.getExpirationDateFromToken(token);
-		return expiration.before(now());
-	}
-
-	private Boolean ignoreTokenExpiration(String token) {
-		String audience = this.getAudienceFromToken(token);
-		return (audience.equals(AUDIENCE_MOBILE));
-	}
+//	private Boolean isTokenExpired(String token) {
+//		final Date expiration = this.getExpirationDateFromToken(token);
+//		return expiration.before(now());
+//	}
+//
+//	private Boolean ignoreTokenExpiration(String token) {
+//		return true;
+//	}
 	
 	private Claims getAllClaimsFromToken(String token) {
 		Claims claims;
@@ -120,6 +119,21 @@ public class TokenUtils {
 					.parseClaimsJws(token)
 					.getBody();
 		} catch (Exception e) {
+			claims = null;
+		}
+		return claims;
+	}
+	
+	private Claims getAllClaimsFromTokenIgnorExp(String token) {
+		Claims claims;
+		try {
+			claims = Jwts.parser()
+					.setSigningKey(SECRET)
+					.parseClaimsJws(token)
+					.getBody();
+		}catch(ExpiredJwtException e) {
+			claims = e.getClaims();
+		}catch (Exception e) {
 			claims = null;
 		}
 		return claims;
@@ -136,6 +150,17 @@ public class TokenUtils {
 		return username;
 	}
 
+	public String getUsernameFromTokenIgnorExp(String token) {
+		String username;
+		try {
+			final Claims claims = this.getAllClaimsFromTokenIgnorExp(token);
+			username = claims.getSubject();
+		} catch (Exception e) {
+			username = null;
+		}
+		return username;
+	}
+	
 	public Date getIssuedAtDateFromToken(String token) {
 		Date issueAt;
 		try {

@@ -1,3 +1,18 @@
+$(document).ready(function() {
+  $(document).ajaxError(function(event,req, settings){
+    if(req.status == '403' && settings.url != "/auth/refresh") {
+      ajaxService.POST('/auth/refresh',"", 
+      function(token){
+        var user = JSON.parse( localStorage.getItem("user"));
+        user.token = token;
+        localStorage.user = JSON.stringify(user);
+        window.location.reload();
+      });
+      // window.location.replace("/LoginPage.html"));
+    }
+  });
+});
+
 function getParamFromUrl(param) {
   var search = window.location.search.substring(1);
   var vars = search.split("&");

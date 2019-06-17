@@ -196,12 +196,12 @@ public class AuthenticationController {
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK);
 	}
 		
-	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
+	@RequestMapping(value = "/refresh", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
 
 		String token = tokenUtils.getToken(request);
-		String username = this.tokenUtils.getUsernameFromToken(token);
-	    User user = (User) this.userDetailsService.loadUserByUsername(username);
+		String username = this.tokenUtils.getUsernameFromTokenIgnorExp(token);
+	    User user = this.userServices.findByUsername(username);
 
 		Device device = tokenUtils.getCurrentDevice(request);
 

@@ -265,7 +265,10 @@ public class AirLineController {
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		User loggedUser = this.userServices.findByUsername(username);
 
-		ticketServices.sendEmailInvitations(ids, loggedUser);
+	 	String[] paths = request.getRequestURL().toString().split("/");
+	 	String host = paths[0] + "//" + paths[2];
+	 	
+		ticketServices.sendEmailInvitations(ids, loggedUser, host);
 		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
 	}
 	
@@ -275,8 +278,11 @@ public class AirLineController {
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = this.stdUserServices.findByUsername(username);
-		
-		ticketServices.sendFinishReservationEmail(ids, loggedUser);
+
+	 	String[] paths = request.getRequestURL().toString().split("/");
+	 	String host = paths[0] + "//" + paths[2];
+	 	
+		ticketServices.sendFinishReservationEmail(ids, loggedUser, host);
 		return new ResponseEntity<Integer>(1, HttpStatus.NO_CONTENT);
 	}
 	

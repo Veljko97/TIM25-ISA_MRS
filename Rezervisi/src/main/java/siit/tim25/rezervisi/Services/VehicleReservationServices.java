@@ -98,7 +98,7 @@ public class VehicleReservationServices {
 	@Transactional
 	public VehicleReservation reserveVehicle(Integer ticketId, Integer vehicleId, FastReservationDTO res, StandardUser loggedUser) {
 		Ticket t = ticketServices.findOne(ticketId);
-		vehicleServices.lockVehicle(vehicleId);
+		Vehicle vh = vehicleServices.lockVehicle(vehicleId);
 		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
 		Date end = null;
 		if (res.getEnd() == 0) {
@@ -109,8 +109,20 @@ public class VehicleReservationServices {
 		} else {
 			end = new Date(res.getEnd());
 		}
-		
-		return this.reserveVehicle(vehicleId, loggedUser, start, end);
+		for(VehicleReservation vr : vh.getReservation()) {
+			if(vr.getReservationStart().compareTo(start) <= 0 && vr.getReservationEnd().compareTo(start) >= 0) {
+				return null;
+			}
+			if(vr.getReservationStart().compareTo(end)<= 0 && vr.getReservationEnd().compareTo(end) >= 0) {
+				return null;
+			}
+			if(vr.getReservationStart().compareTo(start) >= 0 && vr.getReservationEnd().compareTo(end) <= 0) {
+				return null;
+			}
+		}
+		VehicleReservation vr = new VehicleReservation(vh, loggedUser, start, end, vh.getPrice(), TicketStatus.ACCEPTED, new Date());
+		loggedUser.getVehicleReservation().add(vr);
+		return this.save(vr);
 	}
 	
 	@Transactional

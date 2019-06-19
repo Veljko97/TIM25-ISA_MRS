@@ -28,7 +28,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
 	@Query("Select ve FROM Vehicle ve WHERE ve.idVehicle IN (SELECT vr.vehicle.idVehicle FROM ve.reservation vr WHERE vr.user.id = :userId AND vr.reservationEnd < :dateNow)")
 	public Page<Vehicle> findPastVehicleReservations(@Param("userId") Integer userId, @Param("dateNow") Date dateNow , Pageable pageable);
 
-	@Query("SELECT v FROM Vehicle v WHERE v.branch.service.destination.idDestination = :destinationId AND 0 = (SELECT count(vr) FROM VehicleReservation vr WHERE vr.vehicle.idVehicle = v.idVehicle AND ((vr.reservationStart <= :startDate AND vr.reservationEnd >= :startDate) OR (vr.reservationStart <= :endDate AND vr.reservationEnd >= :endDate) OR (vr.reservationStart >= :startDate AND vr.reservationEnd <= :endDate)))")
+	@Query("SELECT v FROM Vehicle v WHERE v.branch.destination.idDestination = :destinationId AND 0 = (SELECT count(vr) FROM VehicleReservation vr WHERE vr.vehicle.idVehicle = v.idVehicle AND ((vr.reservationStart <= :startDate AND vr.reservationEnd >= :startDate) OR (vr.reservationStart <= :endDate AND vr.reservationEnd >= :endDate) OR (vr.reservationStart >= :startDate AND vr.reservationEnd <= :endDate)))")
 	public Page<Vehicle> findByDestination(@Param("destinationId") Integer destinationId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
 
 }

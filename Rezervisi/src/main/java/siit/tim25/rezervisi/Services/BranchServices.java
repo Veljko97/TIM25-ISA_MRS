@@ -9,10 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.RentACar;
 import siit.tim25.rezervisi.Beans.RentACarBranch;
 import siit.tim25.rezervisi.DTO.RentACarBranchDTO;
 import siit.tim25.rezervisi.Repository.BranchRepository;
+import siit.tim25.rezervisi.Repository.DestinationRepository;
 import siit.tim25.rezervisi.Repository.RentACarRepository;
 
 @Component
@@ -23,9 +25,14 @@ public class BranchServices {
 	@Autowired
 	private BranchRepository branchRepository;
 	
+	@Autowired
+	private DestinationRepository destinationRepository;
+	
 	public RentACarBranch save(Integer serviceId, RentACarBranch b) {
 		RentACar r = rentacarRepository.findOne(serviceId);
+		Destination d = destinationRepository.findOneByDestinationName(b.getDestination().getDestinationName());
 		b.setService(r);
+		b.setDestination(d);
 		r.getRentACarBranches().add(b);
 		rentacarRepository.save(r);
 		return b;

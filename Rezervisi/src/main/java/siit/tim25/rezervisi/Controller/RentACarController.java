@@ -228,7 +228,11 @@ public class RentACarController {
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
-		VehicleReservationDTO vr = new VehicleReservationDTO(vrServices.reserveVehicle(ticketId, vehicleId, res, loggedUser));
+		VehicleReservation v = vrServices.reserveVehicle(ticketId, vehicleId, res, loggedUser);
+		if(v == null) {
+			return new ResponseEntity<VehicleReservationDTO>(HttpStatus.BAD_REQUEST);
+		}
+		VehicleReservationDTO vr = new VehicleReservationDTO(v);
 		return new ResponseEntity<VehicleReservationDTO> (vr, HttpStatus.OK);
 	}
 	

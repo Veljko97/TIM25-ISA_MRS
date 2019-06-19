@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ public class ImageServices {
 		return "/"+name;
 	}
 	
+	@Async
 	public String saveUserImg(MultipartFile img, String id) {
 		return this.saveImg(img, id, "users");
 	}

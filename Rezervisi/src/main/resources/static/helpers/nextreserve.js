@@ -35,6 +35,12 @@ NextReserve.prototype.showAllRooms = function(data) {
       <a class=\"see-more-link\" onclick=\"nextreserve.reserveRoom(event, " + data.roomID + ")\" href=\"#\">Reserve</a>\
     </div>\
     ");
+    $("#Rogr"+data.roomID).rateYo({
+      starSize: 25,
+      readOnly:true,
+      totalStars: 5,
+      rating: data.averageGrade || 0,
+    });
   }
 }
 
@@ -62,15 +68,21 @@ NextReserve.prototype.showAllVehicles = function(data) {
     let data = allData[i];
     resultsTable.html(resultsTable.html() + 
     "<div class=\"row search-result\">\
-        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\">\
-        <div class=\"search-content\">\
+        <img class=\"row-image\" src=\""+(data.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+        <span class=\"search-content\">\
           <div class=\"search-group\">\
             <h4>"+data.vehicleName+"</h4>\
-            <span>Grade: "+data.averageGrade+"</span>\
+            <span class='my-rating' id='Vgr"+data.idVehicle+"'></span>\
           </div>\
           <a class=\"see-more-link\" onclick=\"nextreserve.reserveVehicle(event, " + data.idVehicle + ")\" href=\"#\">Reserve</a>\
-        </div>\
+        </span>\
       </div>");
+    $("#Vgr"+data.idVehicle).rateYo({
+      starSize: 25,
+      readOnly:true,
+      totalStars: 5,
+      rating: data.averageGrade || 0,
+    });
   }
 }
 

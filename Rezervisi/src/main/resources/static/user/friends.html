@@ -49,9 +49,9 @@
 <script src="../assets/js/main.js"></script>
 
 <script type="text/javascript">
-	checkUserPermission();
 	var friends = new Friends("friends");
 	$(document).ready(function(){
+		checkUserPermission();
 		getMainPageNavBar();
 		friends.loadFriends();
 		friendLisener(friends.arivedCallback.bind(friends), friends.responseCallback.bind(friends), friends.deleteCallback.bind(friends));

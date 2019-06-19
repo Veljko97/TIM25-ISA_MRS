@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,6 +46,7 @@ import siit.tim25.rezervisi.DTO.RentACarAdminDTO;
 import siit.tim25.rezervisi.DTO.StandardUserDTO;
 import siit.tim25.rezervisi.DTO.UserDTO;
 import siit.tim25.rezervisi.Services.ImageServices;
+import siit.tim25.rezervisi.Services.ProducerServices;
 import siit.tim25.rezervisi.Services.users.AirLineAdminServices;
 import siit.tim25.rezervisi.Services.users.AuthorityServices;
 import siit.tim25.rezervisi.Services.users.HotelAdminServices;
@@ -101,6 +103,9 @@ public class AuthenticationController {
 	@Autowired
 	private ObjectMapper mapper;
 	
+	@Autowired
+	private ProducerServices producerServices;
+	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public ResponseEntity logOut(HttpServletRequest request) {
@@ -144,9 +149,11 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping(value="/registration", consumes= {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StandardUserDTO> register(@RequestParam("image") MultipartFile image, @RequestParam("model") String a) {
+    public ResponseEntity<StandardUserDTO> register(@RequestParam("image") MultipartFile image, @RequestParam("model") String a, HttpServletRequest request) {
 	 	StandardUser user = new StandardUser();
 	 	UserDTO userData;
+	 	String[] paths = request.getRequestURL().toString().split("/");
+	 	String host = paths[0] + "//" + paths[2];
 		try {
 			userData = mapper.readValue(a, UserDTO.class);
 		} catch (IOException e) {
@@ -159,15 +166,26 @@ public class AuthenticationController {
 	 	user.setFirstName(userData.getFirstName());
 	 	user.setLastName(userData.getLastName());
 	 	user.setEmail(userData.getEmail());
-	 	user.setEnabled(true);
+	 	user.setEnabled(false);
 	 	user.setConfirmed(false);
 	 	user.setAuthorities(Arrays.asList(authorityServices.findOne(5)));
 	 	user.setImage(imageServices.getUserPath(image, user.getUsername()));
 	 	standardUserServices.save(user);
 	 	imageServices.saveUserImg(image, user.getUsername());
+	 	producerServices.sendUserRegister(user.getEmail(), user.getUsername(), 
+	 										host, tokenUtils.generateToken(user.getUsername(), tokenUtils.getCurrentDevice(request)));
 		return new ResponseEntity<>(new StandardUserDTO(user, new TokenState()),HttpStatus.CREATED);
 	 }
 
+	@GetMapping(value="/confirmAccount", params = {"token"})
+    public RedirectView register(@RequestParam("token") String token) {
+		String username = this.tokenUtils.getUsernameFromTokenIgnorExp(token);
+		User user = this.userServices.findByUsername(username);
+		user.setConfirmed(true);
+		user.setEnabled(true);
+		userServices.save(user);
+		return new RedirectView("/LoginPage.html");
+	 }
 	
 	@PutMapping(path="/editUserProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO modifiedUser,HttpServletRequest request, Device device) //prima izmenjenog korisnika kojeg saljem sa fronta
@@ -270,7 +288,7 @@ public class AuthenticationController {
 		admin.setImage(imageServices.getUserPath(image, admin.getUsername()));
 		admin = userServices.save(admin);
 		imageServices.saveUserImg(image, admin.getUsername()); 
-		
+		producerServices.sendAdminRegister(admin.getEmail(), admin.getUsername(), "Reservify System");
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	

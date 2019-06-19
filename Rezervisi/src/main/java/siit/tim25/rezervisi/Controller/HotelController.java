@@ -182,7 +182,13 @@ public class HotelController {
 		String username = this.tokenUtils.getUsernameFromToken(token);
 		StandardUser loggedUser = stdUserServices.findByUsername(username);
 		
-		RoomReservationDTO rr = new RoomReservationDTO(rrServices.reserveRoom(ticketId, roomId, loggedUser, res));
+		RoomReservation r = rrServices.reserveRoom(ticketId, roomId, loggedUser, res);
+		
+		if(r == null) {
+			return new ResponseEntity<RoomReservationDTO>(HttpStatus.BAD_REQUEST);
+		}
+		
+		RoomReservationDTO rr = new RoomReservationDTO(r);
 		return new ResponseEntity<RoomReservationDTO> (rr, HttpStatus.OK);
 	}
 	

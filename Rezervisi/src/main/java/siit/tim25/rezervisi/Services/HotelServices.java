@@ -48,6 +48,9 @@ public class HotelServices {
 	@Lazy
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private ProducerServices producerServices;
+	
 	public Hotel save(Hotel hotel) {
 		return hotelRepository.save(hotel);
 	}
@@ -142,6 +145,7 @@ public class HotelServices {
 		hotel = this.save(hotel);
 		
 		imageServices.saveUserImg(image, admin.getUsername());
+		producerServices.sendAdminRegister(admin.getEmail(), admin.getUsername(), hotel.getHotelName());
 		return true;
 	}
 	

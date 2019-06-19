@@ -87,7 +87,7 @@ public class RoomReservationServices {
 	@Transactional
 	public RoomReservation reserveRoom(Integer ticketId, Integer roomId, StandardUser u, FastReservationDTO res) {
 		Ticket t = ticketServices.findOne(ticketId);
-		roomServices.lockRoom(roomId);
+		Room r = roomServices.lockRoom(roomId);
 		Date start = res.getStart() == 0 ?  t.getFlight().getLandingDate() : new Date(res.getStart());
 		Date end = null;
 		if (res.getEnd() == 0) {
@@ -98,8 +98,20 @@ public class RoomReservationServices {
 		} else {
 			end = new Date(res.getEnd());
 		}
-  
-		Room r = roomRepository.findOne(roomId);
+		
+		for(RoomReservation rr : r.getReservation()) {
+			if(rr.getReservationStart().compareTo(start) <= 0 && rr.getReservationEnd().compareTo(start) >= 0) {
+				return null;
+			}
+			if(rr.getReservationStart().compareTo(end) <= 0 && rr.getReservationEnd().compareTo(end) >= 0) {
+				return null;
+			}
+			
+			if(rr.getReservationStart().compareTo(start) >= 0 && rr.getReservationEnd().compareTo(end) <= 0) {
+				return null;
+			}
+		}
+		
 		RoomReservation rr = new RoomReservation(r, u, start, end, r.getPrice(), TicketStatus.ACCEPTED, new Date());
 		u.getRoomReservation().add(rr);
 		return this.save(rr);

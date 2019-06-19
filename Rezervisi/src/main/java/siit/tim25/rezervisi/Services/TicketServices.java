@@ -179,18 +179,19 @@ public class TicketServices {
 		}
 	}
 	
-	public void sendEmailInvitations(List<Integer> ids, User loggedUser) {
+	public void sendEmailInvitations(List<Integer> ids, User loggedUser, String host) {
 		for(Integer id: ids) {
 			Ticket t = this.findOne(id);
 			if (!t.getEmail().equals(loggedUser.getEmail())) {
 				String text = "You have a new invitation for a trip with your friend " + 
-						loggedUser.getFirstName() + " " + loggedUser.getLastName() + " on Reservify platform. Please follow this link to proceed: http://localhost:8888/invitation/flight.html?ticketId=" + t.getIdTicket();
+						loggedUser.getFirstName() + " " + loggedUser.getLastName() + " on Reservify platform. Please follow this link to proceed: "+
+						host+"/invitation/flight.html?ticketId=" + t.getIdTicket();
 				this.producerServices.sendEmailTo("Invitation for trip on Reservify!", t.getEmail(), text);
 			}
 		}
 	}
 	
-	public void sendFinishReservationEmail(ReservationIdsDTO ids, StandardUser loggedUser) {
+	public void sendFinishReservationEmail(ReservationIdsDTO ids, StandardUser loggedUser, String host) {
 		DiscountPoint dp = this.dpServices.findByMyPoints(loggedUser.getDiscauntPoints());
 		
 		if(dp.getId().equals(-1)) {
@@ -210,9 +211,11 @@ public class TicketServices {
 			text += "Also, you made some additional reservations: ";
 			for(Integer id: ids.getRoomIds()) {
 				RoomReservation rr = rrServices.findOne(id);
-				Double pr = rr.getPrice();
-				rr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
-				rrServices.save(rr);
+				if(ids.getUsePoints()) {
+					Double pr = rr.getPrice();
+					rr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+					rrServices.save(rr);
+				}
 				Room r = rr.getRoom();
 				countPoints += 1;
 				text += "Room in " + r.getHotel().getHotelName() + " hotel, room capacity: " + r.getRoomCapacity() + ". \n";
@@ -220,9 +223,11 @@ public class TicketServices {
 			
 			for(Integer id: ids.getVehicleIds()) {
 				VehicleReservation vr = vrServices.findOne(id);
-				Double pr = vr.getPrice();
-				vr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
-				vrServices.save(vr);
+				if(ids.getUsePoints()) {
+					Double pr = vr.getPrice();
+					vr.setPrice(pr - (pr * (dp.getDiscountPercent() / 100)));
+					vrServices.save(vr);
+				}
 				Vehicle v = vr.getVehicle();
 				countPoints += 1;
 				text += "Vehicle " + v.getVehicleName() + " from " + v.getBranch().getService().getRentACarName() + " rent-a-car service.\n";
@@ -236,6 +241,8 @@ public class TicketServices {
 		}
 		stdUserServices.save(loggedUser);
 		text += "\n You Have: "+ loggedUser.getDiscauntPoints()+" discount points on Reservify ";
+		text += "\n Please follow this link to confirem your flight ticket: \n" + 
+		host +"/invitation/flight.html?ticketId=" + t.getIdTicket();
 		this.producerServices.sendEmailTo("Successful reservation on Reservify!", loggedUser.getEmail(), text);
 	}
 	

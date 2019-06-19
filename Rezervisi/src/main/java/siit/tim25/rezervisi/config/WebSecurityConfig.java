@@ -56,15 +56,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 			.authorizeRequests()
 			.antMatchers("/index", "reservations/seats.html", "/guest/**", "/auth/**").permitAll()
-			.antMatchers("/admin-hotels/index","/admin-hotels/edit-room", "/admin-hotels/rooms").hasRole("HOTEL_ADMIN")
+			.antMatchers("/admin-hotels/index","/admin-hotels/edit-room", "/admin-hotels/rooms"
+					,"/admin-hotels/report","/admin-hotels/fastReservation").hasRole("HOTEL_ADMIN")
 			.antMatchers("/admin-airlines/index","/admin-airlines/edit-destination", "/admin-airlines/destinations", 
-					"/admin-airlines/edit-flight", "/admin-airlines/flights").hasRole("AIRLINE_ADMIN")
+					"/admin-airlines/edit-flight", "/admin-airlines/flights","/admin-airlines/add-stop"
+					,"/admin-airlines/fastReservation","/admin-airlines/report").hasRole("AIRLINE_ADMIN")
 			.antMatchers("/admin/airlines", "/admin/edit-airline", "/admin/edit-hotel", 
 					"/admin/hotels","/admin/rentacars", "/admin/edit-rentacar", 
-					"/admin/add-admin-airline","/admin/add-admin-hotel","/admin/add-admin-rentACar").hasRole("SYS_ADMIN")
-			.antMatchers("/admin-rentacars/index","/admin-rentacars/branches", "/admin-rentacars/edit-branch").hasRole("RENTACAR_ADMIN")
+					"/admin/add-admin-airline","/admin/add-admin-hotel","/admin/add-admin-rentACar","/admin/discount").hasRole("SYS_ADMIN")
+			.antMatchers("/admin-rentacars/index","/admin-rentacars/branches", "/admin-rentacars/edit-branch",
+					"/admin-rentacars/vehicles","/admin-rentacars/edit-vehicle","/admin-rentacars/fastReservation"
+					,"/admin-rentacars/report").hasRole("RENTACAR_ADMIN")
 
-			.antMatchers("/app/friends/**", "/user/friends").hasRole("USER")
+			.antMatchers("/app/friends/**", "/user/friends", "/reserve/fast/flight", "/reserve/fast/room"
+					,"/reserve/fast/vehicle","/reserve/flight","/reserve/continue","/reserve/flight"
+					,"/reservations","/grading").hasRole("USER")
 			.and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 

@@ -12,6 +12,10 @@
     $(document).ready(function(){
       checkUserPermission();
       showAdminNavbar();
+      var user = JSON.parse( localStorage.getItem('user'));
+      if(!user.confirmed){
+          location.replace("/admin/paswordChange.html");
+      }
     });
   </script>
 </head>

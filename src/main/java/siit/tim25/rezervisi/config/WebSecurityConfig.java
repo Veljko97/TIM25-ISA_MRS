@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/admin-rentacars/vehicles","/admin-rentacars/edit-vehicle","/admin-rentacars/fastReservation"
 					,"/admin-rentacars/report").hasRole("RENTACAR_ADMIN")
 
-			.antMatchers("/app/friends/**", "/user/friends", "/reserve/fast/flight", "/reserve/fast/room"
+			.antMatchers("/user/friends", "/reserve/fast/flight", "/reserve/fast/room"
 					,"/reserve/fast/vehicle","/reserve/flight","/reserve/continue","/reserve/flight"
 					,"/reservations","/grading").hasRole("USER")
 			.and()

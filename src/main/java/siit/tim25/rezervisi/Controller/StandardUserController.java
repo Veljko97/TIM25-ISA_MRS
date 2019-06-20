@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,7 +64,7 @@ public class StandardUserController {
 	private ProducerServices producer;
 	
 	@Autowired
-	private StandardUserServices userServices;
+	private StandardUserServices stdServices;
 	
 	@Autowired
 	private FriendsServices friendsServices;
@@ -94,15 +93,15 @@ public class StandardUserController {
 	@Autowired
 	private GradingServices gradingServices;
 	
-	@RequestMapping(method = RequestMethod.POST, path = "/sendRequest/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/sendRequest/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER')")
-	private ResponseEntity<Void> sendRequest(@PathVariable Integer userId, HttpServletRequest request) {
-		StandardUser reciver = userServices.findOne(userId);
+	public ResponseEntity<Void> sendRequest(@PathVariable Integer userId, HttpServletRequest request) {
+		StandardUser reciver = stdServices.findOne(userId);
 		if(reciver == null) {
 			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		String token = tokenUtils.getToken(request);
-		StandardUser sending = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser sending = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		if(sending.getId().equals(userId)) {
 			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -127,7 +126,7 @@ public class StandardUserController {
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<FriendsListsDTO> findFrends(HttpServletRequest request){
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		return new ResponseEntity<FriendsListsDTO>(new FriendsListsDTO(user), HttpStatus.OK);
 	}
 	
@@ -136,7 +135,7 @@ public class StandardUserController {
 	public ResponseEntity<FriendsDTO> confirme(@PathVariable Integer requestId, HttpServletRequest request){
 		Friends fr = friendsServices.findOne(requestId);
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		if(!user.getId().equals(fr.getReceiver().getId())) {
 			return new ResponseEntity<FriendsDTO>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -151,7 +150,7 @@ public class StandardUserController {
 	public ResponseEntity<Integer> refuse(@PathVariable Integer requestId, HttpServletRequest request){
 		Friends fr = friendsServices.findOne(requestId);
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		if(!user.getId().equals(fr.getReceiver().getId())) {
 			return new ResponseEntity<Integer>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -169,7 +168,7 @@ public class StandardUserController {
 	public ResponseEntity<Integer> delete(@PathVariable Integer requestId, HttpServletRequest request){
 		Friends fr = friendsServices.findOne(requestId);
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		StandardUser other = null;
 		if(user.getId().equals(fr.getReceiver().getId())){
 			other = fr.getSender();
@@ -193,13 +192,13 @@ public class StandardUserController {
 		String token = tokenUtils.getToken(request);
 		Integer myId;
 		if(token != null) {
-			StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+			StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 			myId = user.getId();
 		}else {
 			myId = -1;
 		}
 		
-		Page<StandardUser> page = userServices.findMatch(serchParam, myId, pageable);
+		Page<StandardUser> page = stdServices.findMatch(serchParam, myId, pageable);
 		List<StandardUserDTO> listDTO = new ArrayList<StandardUserDTO>();
 		for(StandardUser userr : page.getContent()) {
 			listDTO.add(new StandardUserDTO(userr, new TokenState()));
@@ -213,7 +212,7 @@ public class StandardUserController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		AirLine air = airLineServices.findOne(id);
 		AirLineGrade grade = null;
 		for(AirLineGrade airline : user.getAirLineGrades()) {
@@ -238,7 +237,7 @@ public class StandardUserController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		Hotel hotel = hotelServices.findOne(id);
 		HotelGrade grade = null;
 		for(HotelGrade ht : user.getHotelGrades()) {
@@ -263,7 +262,7 @@ public class StandardUserController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		RentACar rent = rentACarServices.findOne(id);
 		RentACarGrade grade = null;
 		for(RentACarGrade ra : user.getRentACarGrades()) {
@@ -288,7 +287,7 @@ public class StandardUserController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		for(RoomReservation res : user.getRoomReservation()) {
 			if(res.getRoom().getRoomID().equals(id)) {
 				if(res.getReservationEnd().after(new Date())) {
@@ -321,7 +320,7 @@ public class StandardUserController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		Flight flight = flightServices.findOne(id);
 		if(flight.getLandingDate().after(new Date())) {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
@@ -349,7 +348,7 @@ public class StandardUserController {
 			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 		String token = tokenUtils.getToken(request);
-		StandardUser user = userServices.findByUsername(tokenUtils.getUsernameFromToken(token));
+		StandardUser user = stdServices.findByUsername(tokenUtils.getUsernameFromToken(token));
 		for(VehicleReservation res : user.getVehicleReservation()) {
 			if(res.getVehicle().getId().equals(id)) {
 				if(res.getReservationEnd().after(new Date())) {

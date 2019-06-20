@@ -76,18 +76,22 @@ Friends.prototype.renderTable = function(tableId, collection) {
     }
     for(var i = page; i < page+this.pageSize; i++){
         var item = collection[i];
-        var div = "\
-        <div class=\"row search-result\" style=\"background-color: steelblue;\">\
-            <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
-            <div class=\"search-content\">\
-            <h4>"+item.other.username+"</h4>\
-            <h4>First Name: "+item.other.firstName+"</h4>\
-            <h4>Last Name: "+item.other.lastName+"</h4>\
-            <h4>E-mail: "+item.other.email+"</h4>\
-            <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.other.id+"\">See more</a>";
-        div +=    "</div>\
-                </div>";
-        res.append(div);
+        try {
+            var div = "\
+            <div class=\"row search-result\" style=\"background-color: steelblue;\">\
+                <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+                <div class=\"search-content\">\
+                <h4>"+item.other.username+"</h4>\
+                <h4>First Name: "+item.other.firstName+"</h4>\
+                <h4>Last Name: "+item.other.lastName+"</h4>\
+                <h4>E-mail: "+item.other.email+"</h4>\
+                <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.other.id+"\">See more</a>";
+            div +=    "</div>\
+                    </div>";
+            res.append(div);
+        }catch(e){
+            
+        }
     }
 }
 
@@ -100,19 +104,23 @@ Friends.prototype.renderAcceptedTable = function(collection) {
     }
     for(var i = page; i < page+this.pageSize; i++){
         var item = collection[i];
-        var div = "\
-        <div class=\"row search-result\">\
-            <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
-            <div class=\"search-content\">\
-            <h4>"+item.other.username+"</h4>\
-            <h4>First Name: "+item.other.firstName+"</h4>\
-            <h4>Last Name: "+item.other.lastName+"</h4>\
-            <h4>E-mail: "+item.other.email+"</h4>\
-            <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.other.id+"\">See more</a>";
-        div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".deleteFriend("+item.id+")\">Remove</a>";
-        div +=    "</div>\
-                </div>";
-        res.append(div);
+        try{
+            var div = "\
+            <div class=\"row search-result\">\
+                <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+                <div class=\"search-content\">\
+                <h4>"+item.other.username+"</h4>\
+                <h4>First Name: "+item.other.firstName+"</h4>\
+                <h4>Last Name: "+item.other.lastName+"</h4>\
+                <h4>E-mail: "+item.other.email+"</h4>\
+                <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.other.id+"\">See more</a>";
+            div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".deleteFriend("+item.id+")\">Remove</a>";
+            div +=    "</div>\
+                    </div>";
+            res.append(div);
+        }catch(e){
+            
+        }
     }
 }
 
@@ -126,20 +134,24 @@ Friends.prototype.renderConfirmationTable = function(collection) {
     }
     for(var i = page; i < page+this.pageSize; i++){
         var item = collection[i];
-        var div = "\
-        <div class=\"row search-result\">\
-            <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
-            <div class=\"search-content\">\
-            <h4>"+item.other.username+"</h4>\
-            <h4>First Name: "+item.other.firstName+"</h4>\
-            <h4>Last Name: "+item.other.lastName+"</h4>\
-            <h4>E-mail: "+item.other.email+"</h4>\
-            <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.id+"\">See more</a>";
-        div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".acceptRequest("+item.id+")\">Accept</a>";
-        div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".refuseRequest("+item.id+")\">Refuse</a>";
-        div +=    "</div>\
-                </div>";
-        res.append(div);
+        try{
+            var div = "\
+            <div class=\"row search-result\">\
+                <img class=\"row-image\" src=\""+(item.other.image || "../assets/images/no-image.png")+"\"onerror=\"errorImage(this)\">\
+                <div class=\"search-content\">\
+                <h4>"+item.other.username+"</h4>\
+                <h4>First Name: "+item.other.firstName+"</h4>\
+                <h4>Last Name: "+item.other.lastName+"</h4>\
+                <h4>E-mail: "+item.other.email+"</h4>\
+                <a class=\"see-more-link\" href=\"/guest/user.html?id="+item.id+"\">See more</a>";
+            div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".acceptRequest("+item.id+")\">Accept</a>";
+            div += "<a class=\"see-more-link\" href=\"#\" onclick=\"" + friends.varName + ".refuseRequest("+item.id+")\">Refuse</a>";
+            div +=    "</div>\
+                    </div>";
+            res.append(div);
+        }catch(e){
+                
+        }
     }
 }
 

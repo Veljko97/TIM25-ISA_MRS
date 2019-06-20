@@ -3,12 +3,12 @@ package siit.tim25.rezervisi.Services.users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 
 import siit.tim25.rezervisi.Beans.users.StandardUser;
 import siit.tim25.rezervisi.Repository.users.StandardUserRepository;
 
-@Service
+@Controller("StandardUserServices")
 public class StandardUserServices {
 	@Autowired
 	private StandardUserRepository userRepository;

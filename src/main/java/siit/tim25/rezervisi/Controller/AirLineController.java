@@ -245,7 +245,7 @@ public class AirLineController {
 	{
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
-		User loggedUser = this.userServices.findByUsername(username);
+		StandardUser loggedUser = this.stdUserServices.findByUsername(username);
 
 		return ticketServices.buyTicket(user, loggedUser, airlineId, flightId, username);
 	}

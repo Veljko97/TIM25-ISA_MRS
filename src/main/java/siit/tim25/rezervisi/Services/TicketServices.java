@@ -159,7 +159,9 @@ public class TicketServices {
 	}
 	
 	@Transactional
-	public ResponseEntity<Integer> buyTicket(ReservationUserDTO user, User loggedUser, Integer airlineId, Integer flightId, String username) {
+	public ResponseEntity<Integer> buyTicket(ReservationUserDTO user, StandardUser loggedUser, Integer airlineId, Integer flightId, String username) {
+		loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() + 1);
+		stdUserServices.save(loggedUser);
 		switch(user.getUserType()) {
 		case CURRENT:		    
 			return new ResponseEntity<Integer>(this.addTicket(airlineId, flightId, user, loggedUser), HttpStatus.OK);
@@ -206,7 +208,7 @@ public class TicketServices {
 		Ticket t = this.findOne(ids.getTicketId());
 		String text = "Your reservation is successful on Reservify platform. You reserved flight from " 
 				+ t.getFlight().getStartDestination().getDestinationName() + " to " + t.getFlight().getFinalDestination().getDestinationName() + ".";
-		Integer countPoints = 1;
+		Integer countPoints = 0;
 		if(ids.getUsePoints()) {
 			Double pr = t.getTicketPrice();
 			t.setTicketPrice(pr - (pr * (dp.getDiscountPercent() / 100)));

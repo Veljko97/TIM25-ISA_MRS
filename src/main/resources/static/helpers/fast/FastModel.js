@@ -41,7 +41,7 @@ FastModel.prototype.switchPage = function(dir) {
 }
 
 FastModel.prototype.reserv = function(ticketId, obj = "") {
-  ajaxService.PUT(this.urlApi.reserv + ticketId, obj, function(){window.location.replace("/index.html");});
+  ajaxService.PUT(this.urlApi.reserv + ticketId, obj, window.location.replace("/"));
 }
 
 FastModel.prototype.getSubEntityTableRowHtml = function(data){return ""};

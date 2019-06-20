@@ -114,6 +114,15 @@ public class TicketServices {
 				ticket = t;
 			}
 		}
+		StandardUser user = ticket.getUser();
+		if(user != null) {
+			if(user.getDiscauntPoints() >= 1) {
+				user.setDiscauntPoints(user.getDiscauntPoints() - 1);
+			}else {
+				user.setDiscauntPoints(0);
+			}
+			stdUserServices.save(user);
+		}
 		ticket.setFlight(null);
 		ticket.setAirLine(null);
 		ticket.setUser(null);
@@ -154,7 +163,9 @@ public class TicketServices {
 	}
 	
 	@Transactional
-	public ResponseEntity<Integer> buyTicket(ReservationUserDTO user, User loggedUser, Integer airlineId, Integer flightId, String username) {
+	public ResponseEntity<Integer> buyTicket(ReservationUserDTO user, StandardUser loggedUser, Integer airlineId, Integer flightId, String username) {
+		loggedUser.setDiscauntPoints(loggedUser.getDiscauntPoints() + 1);
+		stdUserServices.save(loggedUser);
 		switch(user.getUserType()) {
 		case CURRENT:		    
 			return new ResponseEntity<Integer>(this.addTicket(airlineId, flightId, user, loggedUser), HttpStatus.OK);

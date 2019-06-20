@@ -3,9 +3,10 @@ function Modal() {
   this.id = "";
 }
 
-Modal.prototype.show = function(e, seat, id = 'modal') {
+Modal.prototype.show = function(e, seat, id = 'modal', type = null) {
   if (e) { e.preventDefault(); }
   this.seat = seat;
+  this.type = type;
   this.id = id;
   document.getElementById(id).style.display = 'block';
 }

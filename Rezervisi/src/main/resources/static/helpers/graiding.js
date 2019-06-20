@@ -188,9 +188,9 @@ Grade.prototype.getEntityTableRowHtml = function(data) {
             <div class=\"search-group\">\
               <h4>"+data.startDestinationName+"<->"+data.finalDestinationName+"</h4>\
               <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
-              <span>Price: "+data.ticketPrice+"$</span>\
+              <span>Price: "+data.economyClassPrice+"$</span>\
             </div>\
-            <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
+            <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and is " + data.flightLength + " km long.</span>\
             <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"&airlineId=" + data.airLineId +"\">See more</a>\
           </div>\
         </div>";

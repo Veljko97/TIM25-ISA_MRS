@@ -49,15 +49,17 @@ public class Flight {
 	@Column
 	private String flightLength;
 	
-	
 	@Column
 	private FlightType type;
 	
 	@Column
-	private FlightClass flightClass;
+	private Double firstClassPrice;
 	
 	@Column
-	private Double ticketPrice;
+	private Double businessClassPrice;
+	
+	@Column
+	private Double economyClassPrice;
 	
 	@OneToMany
 	private Set<Destination> stopLocations = new HashSet<Destination>();
@@ -77,28 +79,38 @@ public class Flight {
 	@JsonIgnore
 	private AirLine airLine;
 	
+	@Column
+	private String additionalServices;
+	
 	
 	public Flight() {
 		super();
 		this.averageGrade = 0.0;
 	}
+	
+	
 
-	public Flight(Destination startDestination, Destination finalDestination, Date takeOffDate, Date landingDate,
-			String flightLength, FlightClass fClass, FlightType type, AirPlane airplane, Double ticketPrice, Set<Destination> stopLocations,
-			Set<Ticket> flightTickets, Double flightAverageGrade) {
+	public Flight(Destination startDestination, Destination finalDestination, AirPlane airplane, Date takeOffDate,
+			Date landingDate, String flightLength, FlightType type, Double firstClassPrice, Double businessClassPrice,
+			Double economyClassPrice, Set<Destination> stopLocations, Set<Ticket> flightTickets,
+			Set<FlightGrade> grades, Double averageGrade, AirLine airLine, String additionalServices) {
 		super();
 		this.startDestination = startDestination;
 		this.finalDestination = finalDestination;
+		this.airplane = airplane;
 		this.takeOffDate = takeOffDate;
 		this.landingDate = landingDate;
 		this.flightLength = flightLength;
 		this.type = type;
-		this.flightClass = fClass;
-		this.airplane = airplane;
-		this.ticketPrice = ticketPrice;
+		this.firstClassPrice = firstClassPrice;
+		this.businessClassPrice = businessClassPrice;
+		this.economyClassPrice = economyClassPrice;
+		this.additionalServices = additionalServices;
 		this.stopLocations = stopLocations;
 		this.flightTickets = flightTickets;
-		this.averageGrade = flightAverageGrade;
+		this.grades = grades;
+		this.averageGrade = averageGrade;
+		this.airLine = airLine;
 	}
 
 	public Integer getIdFlight() {
@@ -107,14 +119,6 @@ public class Flight {
 
 	public void setIdFlight(Integer idFlight) {
 		this.idFlight = idFlight;
-	}
-
-	public FlightClass getFlightClass() {
-		return flightClass;
-	}
-
-	public void setFlightClass(FlightClass flightClass) {
-		this.flightClass = flightClass;
 	}
 
 	public Set<Destination> getStopLocations() {
@@ -132,15 +136,41 @@ public class Flight {
 	public void setFlightTickets(Set<Ticket> flightTickets) {
 		this.flightTickets = flightTickets;
 	}
-	
-	
 
-	public Double getTicketPrice() {
-		return ticketPrice;
+	public Double getFirstClassPrice() {
+		return firstClassPrice;
 	}
 
-	public void setTicketPrice(Double ticketPrice) {
-		this.ticketPrice = ticketPrice;
+	public void setFirstClassPrice(Double firstClassPrice) {
+		this.firstClassPrice = firstClassPrice;
+	}
+
+	public String getAdditionalServices() {
+		return additionalServices;
+	}
+
+
+
+	public void setAdditionalServices(String additionalServices) {
+		this.additionalServices = additionalServices;
+	}
+
+
+
+	public Double getBusinessClassPrice() {
+		return businessClassPrice;
+	}
+
+	public void setBusinessClassPrice(Double businessClassPrice) {
+		this.businessClassPrice = businessClassPrice;
+	}
+
+	public Double getEconomyClassPrice() {
+		return economyClassPrice;
+	}
+
+	public void setEconomyClassPrice(Double economyClassPrice) {
+		this.economyClassPrice = economyClassPrice;
 	}
 
 	public AirLine getAirLine() {
@@ -240,8 +270,26 @@ public class Flight {
 		return seats;
 	}
 	
+	public double getPrice(FlightClass fClass) {
+		double price = 0;
+		switch(fClass) {
+		case FIRST:
+			price = this.getFirstClassPrice();
+			break;
+		case ECONOMY:
+			price = this.getEconomyClassPrice();
+			break;
+		case BUSINESS:
+			price = this.getBusinessClassPrice();
+			break;
+		default:
+			price = this.getEconomyClassPrice();
+		}
+		return price;
+	}
+	
 	public FlightDTO convert() {
-		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.stopLocations.size(), this.getAirplane().getNumberOfSeats(), this.flightClass.toString(), this.type.toString(), this.getAirplane().getName(), this.getTicketPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
+		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.stopLocations.size(), this.getAirplane().getNumberOfEconomyClassSeats(), this.getAirplane().getNumberOfBusinessClassSeats(), this.getAirplane().getNumberOfFirstClassSeats(), this.type.toString(), this.getAirplane().getName(), this.getFirstClassPrice(), this.getBusinessClassPrice(), this.getEconomyClassPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames(), this.additionalServices);
 	}
 	
 }

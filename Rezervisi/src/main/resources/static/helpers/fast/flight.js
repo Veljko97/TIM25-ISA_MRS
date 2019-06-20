@@ -30,7 +30,7 @@ FastFlight.prototype.getSubEntityTableRowHtml = function(data){
         <h6> Flight Class: "+data.seat+"</h6>\
         <h6> Flight starts: "+ (new Date(data.flight.takeOffDate)).toLocaleString()+"</h6> \
         <h6> Flight ends: "+ (new Date(data.flight.landingDate)).toLocaleString()+"</h6> \
-        <h6> Price: "+ data.ticketPrice +"</h6> \
+        <h6> Price: "+ data.economyClassPrice +"</h6> \
         <div class=\"search-group\">\
           <span class='my-rating' id='Fgr"+data.flight.idFlight+"'></span>\
         </div>\

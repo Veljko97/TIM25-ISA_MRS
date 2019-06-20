@@ -95,12 +95,24 @@ ol {
   font-weight: bold;
   line-height: 1.5rem;
   padding: 4px 0;
-  background: blue;
   color: white;
   border-radius: 5px;
   animation-duration: 300ms;
   animation-fill-mode: both;
 }
+
+.label-FIRST {
+  background: grey;
+}
+
+.label-ECONOMY {
+  background: blue;
+}
+
+.label-BUSINESS {
+  background: purple;
+}
+
 .seat label:before {
   content: "";
   position: absolute;

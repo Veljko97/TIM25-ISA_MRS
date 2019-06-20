@@ -208,8 +208,8 @@ var report = new Report({
 }, {
     'Airlines': {
       'xAxis': 'idFlight',
-      'yAxis': 'flightAverageGrade',
-      'rate': [{ name: 'idFlight', type: 'int' }, { name: 'flightAverageGrade', type: 'float' }],
+      'yAxis': 'averageGrade',
+      'rate': [{ name: 'idFlight', type: 'int' }, { name: 'averageGrade', type: 'float' }],
       'daily': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
       'week': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }],
       'month': [{ name: 'created', type: 'date' }, { name: 'totalPrice', type: 'float' }]

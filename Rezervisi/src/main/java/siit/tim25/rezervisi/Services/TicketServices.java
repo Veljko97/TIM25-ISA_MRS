@@ -125,7 +125,10 @@ public class TicketServices {
 	public Integer addTicket(Integer airlineId, Integer flightId, ReservationUserDTO userDto, User user) {
 		Flight f = this.flightRepository.findFlight(flightId);
 		boolean hasEmail = userDto.getEmail() != null && !userDto.getEmail().equals("");
-		Ticket t = new Ticket(f.getTicketPrice(), userDto.getSeat(), user.getFirstName(), user.getLastName(), userDto.getPassport(), userDto.getStatus(), f, hasEmail ? userDto.getEmail() : user.getEmail(), f.getAirLine());
+		System.out.println("1");
+		System.out.println(userDto);
+		System.out.println(user);
+		Ticket t = new Ticket(f.getPrice(userDto.getFlightClass()), userDto.getSeat(), user.getFirstName(), user.getLastName(), userDto.getPassport(), userDto.getStatus(), f, hasEmail ? userDto.getEmail() : user.getEmail(), f.getAirLine(), userDto.getFlightClass());
 		t.setUser(userRepository.getOne(user.getId()));
 		f.getFlightTickets().add(t);
 		Ticket newTicket = ticketRepository.save(t);
@@ -134,7 +137,9 @@ public class TicketServices {
 	
 	public Integer addTicket(Integer airlineId, Integer flightId, ReservationUserDTO user) {
 		Flight f = this.flightRepository.findFlight(flightId);
-		Ticket t = new Ticket(f.getTicketPrice(), user.getSeat(), user.getFirstName(), user.getLastName(), user.getPassport(), user.getStatus(), f, user.getEmail(), f.getAirLine());
+		System.out.println("2");
+		System.out.println(user);
+		Ticket t = new Ticket(f.getPrice(user.getFlightClass()), user.getSeat(), user.getFirstName(), user.getLastName(), user.getPassport(), user.getStatus(), f, user.getEmail(), f.getAirLine(), user.getFlightClass());
 		f.getFlightTickets().add(t);
 		Ticket newTicket = ticketRepository.save(t);
 		return newTicket.getIdTicket();

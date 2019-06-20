@@ -196,7 +196,8 @@ Search.prototype.searchFlightCallback = function(e) {
   var to = $("#finalDestinationName").first().val();
   var takeOff = Date.parse($("#takeOffDate").first().val()) || 0;
   var landing = Date.parse($("#landingDate").first().val()) || 0;
-  var numberOfPeople = $("#numberOfPeople").first().val();
+  var numberOfPeople = $("#numberOfPeople").first().val() || 0;
+  var luggage = $("#luggage").first().val() || 0;
 
   var airLineName = $("#flAirlineName").first().val() || '';
   var flightLength = $("#flightLength").first().val() || '';
@@ -205,7 +206,7 @@ Search.prototype.searchFlightCallback = function(e) {
   var priceTo = $("#priceTo").first().val();
   this.lastSearch = this.urlApis[this.activeTab].search+ '?type=' + type +
   '&flightClass=' + flightClass + '&from=' + from + '&to=' + to + '&takeOff=' + takeOff + '&landing=' + landing +
-  '&numberOfPeople=' + numberOfPeople + '&airLineName=' + airLineName + '&flightLength=' + flightLength + '&priceFrom=' +
+  '&numberOfPeople=' + numberOfPeople + '&luggage=' + luggage + '&airLineName=' + airLineName + '&flightLength=' + flightLength + '&priceFrom=' +
   priceFrom + '&priceTo=' + priceTo;
   ajaxService.GET(this.lastSearch + '&page=0&size='+this.pageSize, this.showCallback.bind(this));
 
@@ -297,10 +298,10 @@ Search.prototype.getEntityTableRowHtml = function(data) {
               <h4>"+data.startDestinationName+"<->"+data.finalDestinationName+"</h4>\
               <div>\
                 <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
-                <span>Price: "+data.ticketPrice+"$</span>\
+                <span>Price: "+data.economyClassPrice+"$</span>\
               </div>\
             </div>\
-            <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and lasts " + data.flightLength + " minutes.</span>\
+            <span class=\"text-overflow\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " + (new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and is " + data.flightLength + " long.</span>\
             <a class=\"see-more-link\" href=\"/guest/flight.html?id="+data.idFlight +"&airlineId=" + data.airLineId +"\">See more</a>\
           </div>\
         </div>";

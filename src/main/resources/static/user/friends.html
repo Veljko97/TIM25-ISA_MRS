@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Friends</title>
+<meta charset="utf-8">
+
+<link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/bootstrap/bootstrap.css">
+<link rel="stylesheet" href="../assets/fonts/ionicons/css/ionicons.min.css">
+
+<link rel="stylesheet" href="../assets/fonts/fontawesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="../assets/css/slick.css">
+<link rel="stylesheet" href="../assets/css/slick-theme.css">
+
+<link rel="stylesheet" href="../assets/css/helpers.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/landing-2.css">
+<link rel="stylesheet" href="../assets/css/tabs.css">
+<link rel="stylesheet" href="../assets/css/checkbox.css">
+<link rel="stylesheet" href="../assets/css/friends.css">
+<link rel="stylesheet" href="../assets/css/pagination.css">
+
+<!-- WebSocket -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.2.0/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/sockjs/1.0.3/sockjs.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script type="text/javascript" src="../service/friends.js"></script>
+<!-- End -->
+
+<script type="text/javascript" src="../service/ajaxService.js"></script>
+<script type="text/javascript" src="../model/friends.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../helpers/main-nav.js"></script>
+
+<script src="../assets/js/jquery.min.js"></script>
+
+<script src="../assets/js/popper.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/slick.min.js"></script>
+<script src="../assets/js/jquery.mb.YTPlayer.min.js"></script>
+
+<script src="../assets/js/jquery.waypoints.min.js"></script>
+<script src="../assets/js/jquery.easing.1.3.js"></script>
+
+<script src="../assets/js/main.js"></script>
+
+<script type="text/javascript">
+	var friends = new Friends("friends");
+	$(document).ready(function(){
+		checkUserPermission();
+		getMainPageNavBar();
+		friends.loadFriends();
+		friendLisener(friends.arivedCallback.bind(friends), friends.responseCallback.bind(friends), friends.deleteCallback.bind(friends));
+	})
+</script>
+</head>
+<body data-spy="scroll" data-target="#pb-navbar" data-offset="200">
+	<nav class="navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar">
+		<div class="container">
+			<a class="navbar-brand" href="/index.html">Reservify</a>
+			<button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar" aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">
+			<span><i class="ion-navicon"></i></span>
+			</button>
+			<div class="collapse navbar-collapse" id="probootstrap-navbar">
+			<ul id="navBar" class="navbar-nav ml-auto" >
+				<li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="/about-us.html">About us</a></li>
+				<li class="nav-item"><a class="nav-link" href="/guest/search.html">Search</a></li>
+				<li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" href="/LoginPage.html"><span class="pb_rounded-4 px-4">Get Started</span></a></li>
+			</ul>
+			</div>
+		</div>
+	</nav>
+	<section class=" pb_cover_v4 overflow-hidden cover-bg-indigo cover-bg-opacity text-left pb_gradient_v1 pb_slant-light" id="section-features">
+		<div class="container" style="margin-top: 7em;">
+			<div class="row justify-content-center" style="height: 60px;">
+				<div class="col-md-6 text-center mb-5">
+					<h2>Pending:</h2>
+				</div>
+			</div>
+			<div class="pagination justify-content-end mb-3">
+				<span onclick="friends.switchPagePanding(-1)">❮</span>
+				<span onclick="friends.switchPagePanding(1)">❯</span>
+			</div>
+			<div class="results" id="pendingTable">
+
+			</div>
+			
+		</div>
+	</section>
+	<section class="pb_section bg-light pb_slant-white pb_pb-250 overflow-hidden" id="section-features">
+		<div class="container">
+			<div class="row justify-content-center" style="height: 60px;">
+			<div class="col-md-6 text-center mb-5">
+				<h2>Confirmation:</h2>
+			</div>
+			</div>
+			<div class="pagination justify-content-end mb-3">
+			<span onclick="friends.switchPageConf(-1)">❮</span>
+			<span onclick="friends.switchPageConf(1)">❯</span>
+			</div>
+			<div class="results" id="confirmationTable">
+
+			</div>
+			
+		</div>
+	</section>
+	<section class="pb_section pb_slant-light overflow-hidden" id="section-features">
+		<div class="container" >
+			<div class="row justify-content-center" style="height: 60px;">
+			<div class="col-md-6 text-center mb-5">
+				<h2>Accepted:</h2>
+			</div>
+			</div>
+			<div class="pagination justify-content-end mb-3">
+			<span onclick="friends.switchPageAcept(-1)">❮</span>
+			<span onclick="friends.switchPageAcept(1)">❯</span>
+			</div>
+			<div class="results" id="acceptedTable">
+
+			</div>
+			
+		</div>
+	</section>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>Manage Flights</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/modal.css">
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../service/ajaxService.js"></script>
+    <script src="../model/model.js"></script>
+    <script src="../model/flights.js"></script>
+    <script src="/helpers/modal.js"></script>
+    <script>
+      $(document).ready(function(){
+        checkUserPermission();
+        showAdminNavbar();
+        flights.bindEvents();
+        flights.showFast();
+      });
+    </script>
+  </head>
+  <body>
+    <span id="message"></span>
+    <ul id="navigationBar">
+    </ul>
+    <div class="alert" id="warning-message">
+    </div>
+    <div class="container">
+      <div class="table-header">
+        <h2>Flights:</h2>
+        <div class="pagination">
+          <a onclick="rooms.switchPage(-1)">&laquo;</a>
+          <a onclick="rooms.switchPage(1)">&raquo;</a>
+        </div>
+      </div>
+      <table class="table table-hover table-bordered" style="width:100%" id="flightsTable">
+      </table>
+    </div>
+
+    <div id="modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="closeBtn" onclick="modal.close()">&times;</span>
+          
+          <form id="makeFastForm" onsubmit="flights.makeFast(event, modal.seat)" action="#" class="bg-white rounded">
+            <h2 class="mb-4 mt-0 text-center">Price for Offer:</h2>
+            <div class="form-group">
+              <input type="text" list="seats" class="form-control" id="seatTaken" placeholder="Pick seat from list">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="newPrice" placeholder="Price for Fast Offer">
+              </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Add">
+            </div>
+          </form>
+          <datalist id="seats">
+
+          </datalist>
+        </div>
+      </div>
+
+  </body>
+</html>

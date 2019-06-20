@@ -20,6 +20,7 @@ import siit.tim25.rezervisi.DTO.RoomReportDTO;
 import siit.tim25.rezervisi.DTO.RoomReservationDTO;
 import siit.tim25.rezervisi.Repository.RoomRepository;
 import siit.tim25.rezervisi.Repository.RoomReservationRepository;
+import siit.tim25.rezervisi.Repository.users.StandardUserRepository;
 
 @Service
 public class RoomReservationServices {
@@ -32,6 +33,9 @@ public class RoomReservationServices {
 	private TicketServices ticketServices;
 	@Autowired
 	private RoomServices roomServices;
+	
+	@Autowired
+	private StandardUserRepository stdUserRepository;
 	
 	public RoomReservation save(RoomReservation rr) {
 		return rrRepository.save(rr);
@@ -76,6 +80,15 @@ public class RoomReservationServices {
 			if (rReservation.getId() == reservationId) {
 				rr = rReservation;
 			}
+		}
+		StandardUser user = rr.getUser();
+		if(user != null) {
+			if(user.getDiscauntPoints() >= 1) {
+				user.setDiscauntPoints(user.getDiscauntPoints() - 1);
+			}else {
+				user.setDiscauntPoints(0);
+			}
+			stdUserRepository.save(user);
 		}
 		rr.setRoom(null);
 		rr.setUser(null);

@@ -20,6 +20,7 @@ import siit.tim25.rezervisi.DTO.VehicleReportDTO;
 import siit.tim25.rezervisi.DTO.VehicleReservationDTO;
 import siit.tim25.rezervisi.Repository.VehicleRepository;
 import siit.tim25.rezervisi.Repository.VehicleReservationRepository;
+import siit.tim25.rezervisi.Repository.users.StandardUserRepository;
 
 @Service
 public class VehicleReservationServices {
@@ -34,6 +35,9 @@ public class VehicleReservationServices {
 	
 	@Autowired
 	private TicketServices ticketServices;
+	
+	@Autowired
+	private StandardUserRepository stdUserRepository;
 	
 	public VehicleReservation save(VehicleReservation vr) {
 		return vrRepository.save(vr);
@@ -79,6 +83,15 @@ public class VehicleReservationServices {
 			if (vReservation.getId() == reservationId) {
 				vr = vReservation;
 			}
+		}
+		StandardUser user = vr.getUser();
+		if(user != null) {
+			if(user.getDiscauntPoints() >= 1) {
+				user.setDiscauntPoints(user.getDiscauntPoints() - 1);
+			}else {
+				user.setDiscauntPoints(0);
+			}
+			stdUserRepository.save(user);
 		}
 		vr.setVehicle(null);
 		vr.setUser(null);

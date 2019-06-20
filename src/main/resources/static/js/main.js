@@ -44,6 +44,7 @@ function handleWrongInput() {
   $('#warning-message').html('Wrong input. Fill all of the required fields and check the input!');
   $('#warning-message').attr('style', 'display: block;');
   $('#warning-message').addClass('alert-danger');
+  $('#warning-message').show();
 
   window.scrollTo(0, 0);
 
@@ -58,6 +59,7 @@ function handleWrongInput() {
   setTimeout(function() {
     $('#warning-message').attr('style', 'display: none;');
     $('#warning-message').removeClass('alert-danger');
+    $('#warning-message').hide();
     var inputs = $("input");
     for(var i = 0; i < inputs.length - 1; i++) {
       var input = inputs.eq(i);

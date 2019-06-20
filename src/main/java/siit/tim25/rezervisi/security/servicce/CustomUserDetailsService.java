@@ -22,6 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private UserRepository userRepository;
 
 	@Autowired
+	@Lazy
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired

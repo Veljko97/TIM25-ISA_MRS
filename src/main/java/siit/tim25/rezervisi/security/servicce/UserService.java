@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ public class UserService  {
 	private UserRepository userRepository;
 	
 	@Autowired
+	@Lazy
 	private PasswordEncoder pwEnc;
 	
 	public User findByUsername(String username) throws UsernameNotFoundException {

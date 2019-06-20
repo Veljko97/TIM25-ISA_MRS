@@ -138,42 +138,51 @@ Flights.prototype.showAirplanes = function(data) {
 Flights.prototype.showSeats = function(airlineId, flightId) {
   ajaxService.GET('/app/airlines/'+airlineId+'/getFlight/' + flightId, function(flight) {
     $("h1").first().html(flight.airplane);
-    let numberOfSeats = flight.numberOfSeats;
-    var cockpit = $("#cockpit").first();
-    var numberOfRows = numberOfSeats / 6;
+    let numberOfBusinessClassSeats = flight.numberOfBusinessClassSeats;
+    let numberOfFirstClassSeats = flight.numberOfFirstClassSeats;
+    let numberOfEconomyClassSeats = flight.numberOfEconomyClassSeats;
 
-    for(let i = 1; i <= numberOfRows; i++) {
-      cockpit.html(cockpit.html() + "\
-        <li class=\"row row--"+i+"\">\
-          <ol class=\"seats\" type=\"A\">\
-            <li class=\"seat\">\
-              <input onclick=\"modal.show(event, '"+i+"A');\" " + (flight.seats.includes(i + 'A') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"A\"/>\
-              <label for=\""+i+"A\">"+i+"A</label>\
-            </li>\
-            <li class=\"seat\">\
-              <input onclick=\"modal.show(event, '"+i+"B');\" " + (flight.seats.includes(i + 'B') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"B\"/>\
-              <label for=\""+i+"B\">"+i+"B</label>\
-            </li>\
-            <li class=\"seat\">\
-              <input onclick=\"modal.show(event, '"+i+"C');\" " + (flight.seats.includes(i + 'C') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"C\"/>\
-              <label for=\""+i+"C\">"+i+"C</label>\
-            </li>\
-            <li class=\"seat\">\
-              <input onclick=\"modal.show(event, '"+i+"D');\" " + (flight.seats.includes(i + 'D') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"D\"/>\
-              <label for=\""+i+"D\">"+i+"D</label>\
-            </li>\
-            <li class=\"seat\">\
-              <input onclick=\"modal.show(event, '"+i+"E');\" " + (flight.seats.includes(i + 'E') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"E\"/>\
-              <label for=\""+i+"E\">"+i+"E</label>\
-            </li>\
-            <li class=\"seat\">\
-              <input onclick=\"modal.show(event, '"+i+"F');\" " + (flight.seats.includes(i + 'F') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"F\"/>\
-              <label for=\""+i+"F\">"+i+"F</label>\
-            </li>\
-          </ol>\
-        </li>")
-    }
-  });
+    this.showAirplaneWithSeats('FIRST', numberOfFirstClassSeats, flight, 0);
+    this.showAirplaneWithSeats('BUSINESS', numberOfBusinessClassSeats, flight, numberOfFirstClassSeats / 6);
+    this.showAirplaneWithSeats('ECONOMY', numberOfEconomyClassSeats, flight, (numberOfFirstClassSeats + numberOfBusinessClassSeats) / 6);
+  }.bind(this));
+}
+
+Flights.prototype.showAirplaneWithSeats = function(type, numberOfSeats, flight, start) {
+  var cockpit = $("#cockpit").first();
+  var numberOfRows = (numberOfSeats) / 6;
+
+  for(let i = start; i < start + numberOfRows; i++) {
+    cockpit.html(cockpit.html() + "\
+      <li class=\"row row--"+i+"\">\
+        <ol class=\"seats\" type=\"A\">\
+          <li class=\"seat\">\
+            <input onclick=\"modal.show(event, '"+i+"A', 'modal', '"+type+"');\" " + (flight.seats.includes(i + 'A') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"A\"/>\
+            <label class=\"label-" + type + "\" for=\""+i+"A\">"+i+"A</label>\
+          </li>\
+          <li class=\"seat\">\
+            <input onclick=\"modal.show(event, '"+i+"B','modal', '"+type+"');\" " + (flight.seats.includes(i + 'B') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"B\"/>\
+            <label class=\"label-" + type + "\" for=\""+i+"B\">"+i+"B</label>\
+          </li>\
+          <li class=\"seat\">\
+            <input onclick=\"modal.show(event, '"+i+"C', 'modal', '"+type+"');\" " + (flight.seats.includes(i + 'C') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"C\"/>\
+            <label class=\"label-" + type + "\" for=\""+i+"C\">"+i+"C</label>\
+          </li>\
+          <li class=\"seat\">\
+            <input onclick=\"modal.show(event, '"+i+"D', 'modal', '"+type+"');\" " + (flight.seats.includes(i + 'D') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"D\"/>\
+            <label class=\"label-" + type + "\" for=\""+i+"D\">"+i+"D</label>\
+          </li>\
+          <li class=\"seat\">\
+            <input onclick=\"modal.show(event, '"+i+"E', 'modal', '"+type+"');\" " + (flight.seats.includes(i + 'E') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"E\"/>\
+            <label class=\"label-" + type + "\" for=\""+i+"E\">"+i+"E</label>\
+          </li>\
+          <li class=\"seat\">\
+            <input onclick=\"modal.show(event, '"+i+"F', 'modal', '"+type+"');\" " + (flight.seats.includes(i + 'F') ? 'disabled' : '') +" type=\"checkbox\" id=\""+i+"F\"/>\
+            <label class=\"label-" + type + "\" for=\""+i+"F\">"+i+"F</label>\
+          </li>\
+        </ol>\
+      </li>");
+  }
 }
 
 Flights.prototype.showFastCallback = function(data) {
@@ -197,9 +206,12 @@ Flights.prototype.getSeats = function(event, flightId){
   event.preventDefault();
   ajaxService.GET('/app/airlines/'+getUserServiceId()+'/getFlight/' + flightId, function(flight) {
     var seatOptions = $("#seats");
-    let numberOfSeats = flight.numberOfSeats;
-    var numberOfRows = numberOfSeats / 6;
-    for(var i = 1; i <= numberOfRows; i++){
+    let numberOfBusinessClassSeats = flight.numberOfBusinessClassSeats;
+    let numberOfFirstClassSeats = flight.numberOfFirstClassSeats;
+    let numberOfEconomyClassSeats = flight.numberOfEconomyClassSeats;
+
+    var numberOfRows = (numberOfBusinessClassSeats + numberOfFirstClassSeats + numberOfEconomyClassSeats) / 6;
+    for(var i = 0; i < numberOfRows; i++){
       if(!flight.seats.includes(i + 'A')){
         seatOptions.html(seatOptions.html() + '<option>' + i + 'A </option>');
       }
@@ -237,7 +249,7 @@ Flights.prototype.makeFast = function(event, flightId){
 }
 
 var flights = new Flights(
-  ['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightClass', 'type', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'ticketPrice'],
+  ['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightClass', 'type', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'firstClassPrice', 'economyClassPrice', 'businessClassPrice'],
   {
     'add': '/app/airlines/'+getUserServiceId()+'/addFlight',
     'showAll': '/app/airlines/'+getUserServiceId()+'/showFlights',

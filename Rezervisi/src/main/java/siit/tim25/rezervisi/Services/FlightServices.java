@@ -98,7 +98,7 @@ public class FlightServices {
 	}
 	
 	public Set<FlightDTO> search(String type, String flightClass, String from, String to, Long takeOff, Long landing, 
-			String numberOfPeople, String airLineName, String flightLength, String priceFrom, String priceTo, Pageable pageable) throws ParseException {
+			String numberOfPeople, String airLineName, String flightLength, String priceFrom, String priceTo, String luggage,Pageable pageable) throws ParseException {
 		Date date1 = null;
 		Date date2 = null;
 		if(!takeOff.equals(new Long(0))) {
@@ -107,7 +107,23 @@ public class FlightServices {
 		if(!landing.equals(new Long(0))) {
 			date2 = new Date(landing);
 		}
-		Page<Flight> flist = flightRepository.search(type.equals("")? null : FlightType.valueOf(type), flightClass.equals("")? null : FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, pageable);
+		Page <Flight> flist = null;
+		if (flightClass.equals("")) {
+			flist = flightRepository.searchEconomyClass(type.equals("")? null : FlightType.valueOf(type), flightClass.equals("")? null : FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, Integer.parseInt(numberOfPeople), Double.parseDouble(luggage), pageable);
+		} else {
+			switch(FlightClass.valueOf(flightClass)) {
+			case FIRST:
+				flist = flightRepository.searchFirstClass(type.equals("")? null : FlightType.valueOf(type), flightClass.equals("")? null : FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, Integer.parseInt(numberOfPeople), Double.parseDouble(luggage), pageable);
+				break;
+			case BUSINESS:
+				flist = flightRepository.searchBusinessClass(type.equals("")? null : FlightType.valueOf(type), flightClass.equals("")? null : FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, Integer.parseInt(numberOfPeople), Double.parseDouble(luggage), pageable);
+				break;
+			case ECONOMY:
+				flist = flightRepository.searchEconomyClass(type.equals("")? null : FlightType.valueOf(type), flightClass.equals("")? null : FlightClass.valueOf(flightClass), from, to, date1, date2,  priceFrom.equals("") ? null : Double.parseDouble(priceFrom), priceTo.equals("") ? null : Double.parseDouble(priceTo), airLineName, flightLength.equals("") ? null : flightLength, Integer.parseInt(numberOfPeople), Double.parseDouble(luggage), pageable);
+				break;
+			}
+		}
+		
 		Set<FlightDTO> listConvertedFlights = new HashSet<FlightDTO>();
 		for(Flight f: flist) {
 			listConvertedFlights.add(f.convert());
@@ -146,9 +162,10 @@ public class FlightServices {
 				flight.setLandingDate(f.getLandingDate());
 				flight.setFlightLength(f.getFlightLength());
 				flight.setAirplane(f.getAirplane());
-				flight.setTicketPrice(f.getTicketPrice());
+				flight.setFirstClassPrice(f.getFirstClassPrice());
+				flight.setEconomyClassPrice(f.getEconomyClassPrice());
+				flight.setBusinessClassPrice(f.getBusinessClassPrice());
 				flight.setType(f.getType());
-				flight.setFlightClass(f.getFlightClass());
 				fl = flight;
 			}
 		}
@@ -191,6 +208,8 @@ public class FlightServices {
 	public Flight editFlight(Integer airlineId, Integer flightId, FlightDTO modifiedFlight) throws ParseException {
 		Flight f = modifiedFlight.convert(destinationServices.findAll(), airplaneServices.findAll());
 		f.setIdFlight(flightId);
+		Flight existingFlight = this.findOne(flightId);
+		f.setAirplane(existingFlight.getAirplane());
 		f.setAirLine(airLineServices.findOne(airlineId));
 		this.update(airlineId, f);
 		return f;

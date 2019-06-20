@@ -121,7 +121,8 @@ Reserve.prototype.makeJSONFlightObject = function(userType) {
       "passport": $("#passport1").val(),
       "status": 'PENDING',
       "seat": modal.seat,
-      "userType": userType
+      "userType": userType,
+      "flightClass": modal.type
     });
   case 'UNREGISTERED':
     return JSON.stringify({
@@ -131,14 +132,16 @@ Reserve.prototype.makeJSONFlightObject = function(userType) {
       "passport": $("#passport2").val(),
       "status": 'PENDING',
       "seat": modal.seat,
-      "userType": userType
+      "userType": userType,
+      "flightClass": modal.type
     });
   case 'CURRENT':
     return JSON.stringify({
       "passport": $("#passport3").val(),
       "status": 'PENDING',
       "seat": modal.seat,
-      "userType": userType
+      "userType": userType,
+      "flightClass": modal.type
     });
   }
 }

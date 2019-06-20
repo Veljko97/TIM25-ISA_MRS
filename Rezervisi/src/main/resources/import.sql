@@ -55,20 +55,20 @@ INSERT INTO standard_user (id, discaunt_points) values (8, 0);
 INSERT INTO standard_user (id, discaunt_points) values (9, 0);
 INSERT INTO standard_user (id, discaunt_points) values (10, 0);
 
-INSERT INTO air_plane (id, name, number_of_seats) VALUES ('1', 'Boeing 787', '30');
-INSERT INTO air_plane (id, name, number_of_seats) VALUES ('2', 'Airbus A220', '42');
-INSERT INTO air_plane (id, name, number_of_seats) VALUES ('3', 'Boeing 777', '48');
-INSERT INTO air_plane (id, name, number_of_seats) VALUES ('4', 'Comac C919', '54');
-INSERT INTO air_plane (id, name, number_of_seats) VALUES ('5', 'Airbus A330', '60');
-INSERT INTO air_plane (id, name, number_of_seats) VALUES ('6', 'Douglas DC-8', '66');
-INSERT INTO air_plane (id, name, number_of_seats) VALUES ('7', 'Convair 880', '72');
+INSERT INTO air_plane (id, name, number_of_business_class_seats, number_of_economy_class_seats, number_of_first_class_seats, luggage) VALUES ('1', 'Boeing 787', '30', '18', '24', '5.2');
+INSERT INTO air_plane (id, name, number_of_business_class_seats, number_of_economy_class_seats, number_of_first_class_seats, luggage) VALUES ('2', 'Airbus A220', '42', '12', '6', '6.4');
+INSERT INTO air_plane (id, name, number_of_business_class_seats, number_of_economy_class_seats, number_of_first_class_seats, luggage) VALUES ('3', 'Boeing 777', '48', '18', '6', '7.8');
+INSERT INTO air_plane (id, name, number_of_business_class_seats, number_of_economy_class_seats, number_of_first_class_seats, luggage) VALUES ('4', 'Comac C919', '54', '12', '21', '10.2');
+INSERT INTO air_plane (id, name, number_of_business_class_seats, number_of_economy_class_seats, number_of_first_class_seats, luggage) VALUES ('5', 'Airbus A330', '60', '18', '6', '12.2');
+INSERT INTO air_plane (id, name, number_of_business_class_seats, number_of_economy_class_seats, number_of_first_class_seats, luggage) VALUES ('6', 'Douglas DC-8', '30', '24', '6', '12.1');
+INSERT INTO air_plane (id, name, number_of_business_class_seats, number_of_economy_class_seats, number_of_first_class_seats, luggage) VALUES ('7', 'Convair 880', '72', '30', '24', '24.2');
 
-INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('1','5.00','1','1200','19.6.2319', '1340','1','1','19.6.2119', '1', '2', '1');
-INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('2','4.00','2','1200','19.6.1919', '240','1','1','19.6.1818', '2', '3', '1');
-INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('3','3.50','1','1200','19.6.2719', '820','1','1','19.6.2617', '1', '6', '3');
-INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('4','4.40','1','1200','19.6.2919', '430','1','1','19.6.2816', '1', '7', '5');
-INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('5','2.20','2','1200','19.6.3019', '680','1','1','19.6.2915', '1', '2', '4');
-INSERT INTO flight (id_flight,average_grade,flight_class,flight_length,landing_date, ticket_price,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination) VALUES ('6','4.20','1','1200','19.6.2519', '1120','1','1','19.6.2414', '2', '5', '3');
+INSERT INTO flight (id_flight,average_grade,flight_length,landing_date,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination, first_class_price, economy_class_price, business_class_price) VALUES ('1','5.00','1200','19.6.2319','1','1','19.6.2119', '1', '2', '1', '1300', '1000', '1100');
+INSERT INTO flight (id_flight,average_grade,flight_length,landing_date,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination, first_class_price, economy_class_price, business_class_price) VALUES ('2','4.00','1200','19.6.1919','1','1','19.6.1818', '2', '3', '1', '500', '300', '400');
+INSERT INTO flight (id_flight,average_grade,flight_length,landing_date,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination, first_class_price, economy_class_price, business_class_price) VALUES ('3','3.50','1200','19.6.2719','1','1','19.6.2617', '1', '6', '3', '600', '500', '500');
+INSERT INTO flight (id_flight,average_grade,flight_length,landing_date,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination, first_class_price, economy_class_price, business_class_price) VALUES ('4','4.40','1200','19.6.2919','1','1','19.6.2816', '1', '7', '5', '200', '200', '200');
+INSERT INTO flight (id_flight,average_grade,flight_length,landing_date,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination, first_class_price, economy_class_price, business_class_price) VALUES ('5','2.20','1200','19.6.3019','1','1','19.6.2915', '1', '2', '4', '300', '150', '250');
+INSERT INTO flight (id_flight,average_grade,flight_length,landing_date,air_line_air_lineid,airplane_id,take_off_date,type,final_destination_id_destination,start_destination_id_destination, first_class_price, economy_class_price, business_class_price) VALUES ('6','4.20','1200','19.6.2519','1','1','19.6.2414', '2', '5', '3', '800', '600', '700');
 
 
 

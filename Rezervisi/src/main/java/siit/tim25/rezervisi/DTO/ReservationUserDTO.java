@@ -1,5 +1,6 @@
 package siit.tim25.rezervisi.DTO;
 
+import siit.tim25.rezervisi.Beans.FlightClass;
 import siit.tim25.rezervisi.Beans.ReservationUserType;
 import siit.tim25.rezervisi.Beans.TicketStatus;
 
@@ -11,6 +12,7 @@ public class ReservationUserDTO {
 	private TicketStatus status;
 	private ReservationUserType userType;
 	private String seat;
+	private FlightClass flightClass;
 	
 	public ReservationUserDTO() {
 		
@@ -80,6 +82,14 @@ public class ReservationUserDTO {
 		return userType;
 	}
 
+	public FlightClass getFlightClass() {
+		return flightClass;
+	}
+
+	public void setFlightClass(FlightClass flightClass) {
+		this.flightClass = flightClass;
+	}
+
 	public void setUserType(ReservationUserType userType) {
 		this.userType = userType;
 	}
@@ -87,8 +97,11 @@ public class ReservationUserDTO {
 	@Override
 	public String toString() {
 		return "ReservationUserDTO [firstName=" + firstName + ", lastName=" + lastName + ", passport=" + passport
-				+ ", email=" + email + ", status=" + status + ", userType=" + userType + ", seat=" + seat + "]";
+				+ ", email=" + email + ", status=" + status + ", userType=" + userType + ", seat=" + seat
+				+ ", flightClass=" + flightClass + "]";
 	}
+	
+	
 	
 	
 }

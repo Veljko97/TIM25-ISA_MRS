@@ -49,6 +49,10 @@ public class Ticket {
 	@Column
 	private String passport;
 	
+	@Column
+	private FlightClass flightClass;
+	
+	
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
@@ -68,7 +72,7 @@ public class Ticket {
 	
 	
 	public Ticket(Double ticketPrice, String seat, String firstName, String lastName, String passport,
-			TicketStatus status, Flight flight, String email, AirLine a) {
+			TicketStatus status, Flight flight, String email, AirLine a, FlightClass flightClass) {
 		super();
 		this.ticketPrice = ticketPrice;
 		this.seat = seat;
@@ -80,6 +84,7 @@ public class Ticket {
 		this.email = email;
 		this.created = new Date();
 		this.airLine = a;
+		this.flightClass = flightClass;
 	}
 
 

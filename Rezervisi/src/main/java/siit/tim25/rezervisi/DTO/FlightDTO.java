@@ -8,7 +8,6 @@ import java.util.Set;
 import siit.tim25.rezervisi.Beans.AirPlane;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
-import siit.tim25.rezervisi.Beans.FlightClass;
 import siit.tim25.rezervisi.Beans.FlightType;
 
 public class FlightDTO {
@@ -18,13 +17,16 @@ public class FlightDTO {
 	private Long landingDate;
 	private String flightLength;
 	private int numberOfStops;
-	private int numberOfSeats;
+	private int numberOfEconomyClassSeats;
+	private int numberOfFirstClassSeats;
+	private int numberOfBusinessClassSeats;
 	private String airplane;
-	private Double ticketPrice;
+	private Double firstClassPrice;
+	private Double businessClassPrice;
+	private Double economyClassPrice;
 	private Double averageGrade;
 	private Integer idFlight;
 	private String type;
-	private String flightClass;
 	private int airLineId;
 	private List<String> seats;
 
@@ -35,8 +37,8 @@ public class FlightDTO {
 	
 	
 	public FlightDTO(Integer idFlight, String startDestinationName, String finalDestinationName, Long takeOffDate, Long landingDate,
-			String flightLength, int numberOfStops, int numberOfSeats, String flightClass, String type, String airplane, Double ticketPrice,
-			Double averageGrade, int airLineId, List<String> seats) {
+			String flightLength, int numberOfStops, int numberOfEconomyClassSeats, int numberOfBusinessClassSeats, int numberOfFirstClassSeats, String type, String airplane,  Double firstClassPrice, Double businessClassPrice,
+			Double economyClassPrice, Double averageGrade, int airLineId, List<String> seats) {
 		super();
 		this.idFlight = idFlight;
 		this.startDestinationName = startDestinationName;
@@ -45,16 +47,19 @@ public class FlightDTO {
 		this.landingDate = landingDate;
 		this.flightLength = flightLength;
 		this.numberOfStops = numberOfStops;
-		this.numberOfSeats = numberOfSeats;
+		this.numberOfEconomyClassSeats = numberOfEconomyClassSeats;
+		this.numberOfBusinessClassSeats = numberOfBusinessClassSeats;
+		this.numberOfFirstClassSeats = numberOfFirstClassSeats;
 		this.airplane = airplane;
-		this.ticketPrice = ticketPrice;
-		this.averageGrade = averageGrade;
+		this.firstClassPrice = firstClassPrice;
+		this.businessClassPrice = businessClassPrice;
+		this.economyClassPrice = economyClassPrice;		this.averageGrade = averageGrade;
 		this.type = type;
-		this.flightClass = flightClass;
 		this.airLineId = airLineId;
 		this.seats = seats;
 	}
-	
+
+
 	public FlightDTO(Flight fl) {
 		super();
 		this.idFlight = fl.getIdFlight();
@@ -64,12 +69,15 @@ public class FlightDTO {
 		this.landingDate = fl.getLandingDate().getTime();
 		this.flightLength = fl.getFlightLength();
 		this.numberOfStops = fl.getStopLocations().size();
-		this.numberOfSeats = fl.getAirplane().getNumberOfSeats();
+		this.numberOfBusinessClassSeats = fl.getAirplane().getNumberOfBusinessClassSeats();
+		this.numberOfEconomyClassSeats = fl.getAirplane().getNumberOfEconomyClassSeats();
+		this.numberOfFirstClassSeats = fl.getAirplane().getNumberOfFirstClassSeats();
 		this.airplane = fl.getAirplane().getName();
-		this.ticketPrice = fl.getTicketPrice();
+		this.firstClassPrice = fl.getFirstClassPrice();
+		this.businessClassPrice = fl.getBusinessClassPrice();
+		this.economyClassPrice = fl.getEconomyClassPrice();
 		this.averageGrade = fl.getAverageGrade();
 		this.type = fl.getType().name();
-		this.flightClass = fl.getFlightClass().name();
 		this.airLineId = fl.getAirLine().getAirLineID();
 		this.seats = fl.getTakenSeatNames();
 	}
@@ -116,10 +124,6 @@ public class FlightDTO {
 	public void setNumberOfStops(int numberOfStops) {
 		this.numberOfStops = numberOfStops;
 	}
-	
-	public Double getTicketPrice() {
-		return ticketPrice;
-	}
 
 	public String getAirplane() {
 		return airplane;
@@ -129,9 +133,42 @@ public class FlightDTO {
 		this.airplane = airplane;
 	}
 
-	public void setTicketPrice(Double ticketPrice) {
-		this.ticketPrice = ticketPrice;
+
+	public Double getFirstClassPrice() {
+		return firstClassPrice;
 	}
+
+
+
+	public void setFirstClassPrice(Double firstClassPrice) {
+		this.firstClassPrice = firstClassPrice;
+	}
+
+
+
+	public Double getBusinessClassPrice() {
+		return businessClassPrice;
+	}
+
+
+
+	public void setBusinessClassPrice(Double businessClassPrice) {
+		this.businessClassPrice = businessClassPrice;
+	}
+
+
+
+	public Double getEconomyClassPrice() {
+		return economyClassPrice;
+	}
+
+
+
+	public void setEconomyClassPrice(Double economyClassPrice) {
+		this.economyClassPrice = economyClassPrice;
+	}
+
+
 
 	public Integer getIdFlight() {
 		return idFlight;
@@ -147,14 +184,37 @@ public class FlightDTO {
 	public void setAverageGrade(Double averageGrade) {
 		this.averageGrade = averageGrade;
 	}
+	
 
-	public int getNumberOfSeats() {
-		return numberOfSeats;
+	public int getNumberOfEconomyClassSeats() {
+		return numberOfEconomyClassSeats;
 	}
 
-	public void setNumberOfSeats(int numberOfSeats) {
-		this.numberOfSeats = numberOfSeats;
+
+	public void setNumberOfEconomyClassSeats(int numberOfEconomyClassSeats) {
+		this.numberOfEconomyClassSeats = numberOfEconomyClassSeats;
 	}
+
+
+	public int getNumberOfFirstClassSeats() {
+		return numberOfFirstClassSeats;
+	}
+
+
+	public void setNumberOfFirstClassSeats(int numberOfFirstClassSeats) {
+		this.numberOfFirstClassSeats = numberOfFirstClassSeats;
+	}
+
+
+	public int getNumberOfBusinessClassSeats() {
+		return numberOfBusinessClassSeats;
+	}
+
+
+	public void setNumberOfBusinessClassSeats(int numberOfBusinessClassSeats) {
+		this.numberOfBusinessClassSeats = numberOfBusinessClassSeats;
+	}
+
 
 	public String getType() {
 		return type;
@@ -176,22 +236,12 @@ public class FlightDTO {
 	}
 
 
-	public String getFlightClass() {
-		return flightClass;
-	}
-
-
-	public void setFlightClass(String flightClass) {
-		this.flightClass = flightClass;
-	}
-
-
 	@Override
 	public String toString() {
 		return "NewFlight [startDestinationName=" + startDestinationName + ", finalDestinationName="
 				+ finalDestinationName + ", takeOffDate=" + takeOffDate + ", landingDate=" + landingDate
 				+ ", flightLength=" + flightLength + ", numberOfStops=" + numberOfStops
-			    + ", ticketPrice=" + ticketPrice + ", averageGrade=" + averageGrade + "]";
+			    + ", averageGrade=" + averageGrade + "]";
 	}
 	
 	public Flight convert(Set<Destination> destinations, List<AirPlane> airplanes) throws ParseException {
@@ -214,10 +264,11 @@ public class FlightDTO {
 		f.setTakeOffDate(new Date(this.takeOffDate));
 		f.setLandingDate(new Date(this.landingDate));
 		f.setFlightLength(this.flightLength);
-		f.setTicketPrice(this.getTicketPrice());
+		f.setFirstClassPrice(this.firstClassPrice);
+		f.setBusinessClassPrice(this.businessClassPrice);
+		f.setEconomyClassPrice(this.economyClassPrice);
 		f.setAverageGrade(this.averageGrade);
 		f.setType(FlightType.valueOf(this.type));
-		f.setFlightClass(FlightClass.valueOf(this.flightClass));
 		return f;
 	}
 	
@@ -241,10 +292,11 @@ public class FlightDTO {
 		f.setTakeOffDate(new Date(this.takeOffDate));
 		f.setLandingDate(new Date(this.landingDate));
 		f.setFlightLength(this.flightLength);
-		f.setTicketPrice(this.getTicketPrice());
+		f.setFirstClassPrice(this.firstClassPrice);
+		f.setBusinessClassPrice(this.businessClassPrice);
+		f.setEconomyClassPrice(this.economyClassPrice);
 		f.setAverageGrade(this.averageGrade);
 		f.setType(FlightType.valueOf(this.type));
-		f.setFlightClass(FlightClass.valueOf(this.flightClass));
 		return f;
 	}
 }

@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import siit.tim25.rezervisi.Beans.AirLine;
 import siit.tim25.rezervisi.Beans.Destination;
 import siit.tim25.rezervisi.Beans.Flight;
+import siit.tim25.rezervisi.Beans.FlightClass;
 import siit.tim25.rezervisi.Beans.InvitationResponseType;
 import siit.tim25.rezervisi.Beans.Ticket;
 import siit.tim25.rezervisi.Beans.TicketStatus;
@@ -184,8 +185,8 @@ public class AirLineController {
 	@GetMapping(path="/searchFlights", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Set<FlightDTO>> searchFlights(Pageable pageable, @RequestParam String type, @RequestParam String flightClass, 
 			@RequestParam String from, @RequestParam String to, @RequestParam Long takeOff, @RequestParam Long landing, @RequestParam String numberOfPeople,
-			@RequestParam String airLineName, @RequestParam String flightLength, @RequestParam String priceFrom, @RequestParam String priceTo) throws ParseException {
-		return new ResponseEntity<Set<FlightDTO>>(flightServices.search(type, flightClass, from, to, takeOff, landing, numberOfPeople, airLineName, flightLength, priceFrom, priceTo, pageable), HttpStatus.OK);
+			@RequestParam String airLineName, @RequestParam String luggage, @RequestParam String flightLength, @RequestParam String priceFrom, @RequestParam String priceTo) throws ParseException {
+		return new ResponseEntity<Set<FlightDTO>>(flightServices.search(type, flightClass, from, to, takeOff, landing, numberOfPeople, airLineName, flightLength, priceFrom, priceTo, luggage, pageable), HttpStatus.OK);
 	}
 	
 	@GetMapping(path="/{airlineId}/showFlights", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -337,7 +338,7 @@ public class AirLineController {
 	public ResponseEntity<Void> makeFastTicket(@PathVariable Integer flightId, @RequestBody TicketDTO ticket){
 		Flight flight = flightServices.lockFlight(flightId);
 		Ticket t = new Ticket(Double.parseDouble(ticket.getTicketPrice()), ticket.getSeat(), "",
-							"", "", TicketStatus.FAST, flight, "", flight.getAirLine());
+							"", "", TicketStatus.FAST, flight, "", flight.getAirLine(), FlightClass.ECONOMY);
 		ticketServices.save(t);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

@@ -249,7 +249,7 @@ Flights.prototype.makeFast = function(event, flightId){
 }
 
 var flights = new Flights(
-  ['startDestinationName', 'finalDestinationName', 'takeOffDate', 'landingDate', 'flightClass', 'type', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'firstClassPrice', 'economyClassPrice', 'businessClassPrice'],
+  ['startDestinationName', 'finalDestinationName', 'additionalServices', 'takeOffDate', 'landingDate', 'flightClass', 'type', 'flightLength', 'numberOfStops', 'airplane', 'stopLocation', 'firstClassPrice', 'economyClassPrice', 'businessClassPrice'],
   {
     'add': '/app/airlines/'+getUserServiceId()+'/addFlight',
     'showAll': '/app/airlines/'+getUserServiceId()+'/showFlights',

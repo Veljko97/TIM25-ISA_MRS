@@ -79,6 +79,9 @@ public class Flight {
 	@JsonIgnore
 	private AirLine airLine;
 	
+	@Column
+	private String additionalServices;
+	
 	
 	public Flight() {
 		super();
@@ -90,7 +93,7 @@ public class Flight {
 	public Flight(Destination startDestination, Destination finalDestination, AirPlane airplane, Date takeOffDate,
 			Date landingDate, String flightLength, FlightType type, Double firstClassPrice, Double businessClassPrice,
 			Double economyClassPrice, Set<Destination> stopLocations, Set<Ticket> flightTickets,
-			Set<FlightGrade> grades, Double averageGrade, AirLine airLine) {
+			Set<FlightGrade> grades, Double averageGrade, AirLine airLine, String additionalServices) {
 		super();
 		this.startDestination = startDestination;
 		this.finalDestination = finalDestination;
@@ -102,6 +105,7 @@ public class Flight {
 		this.firstClassPrice = firstClassPrice;
 		this.businessClassPrice = businessClassPrice;
 		this.economyClassPrice = economyClassPrice;
+		this.additionalServices = additionalServices;
 		this.stopLocations = stopLocations;
 		this.flightTickets = flightTickets;
 		this.grades = grades;
@@ -132,8 +136,6 @@ public class Flight {
 	public void setFlightTickets(Set<Ticket> flightTickets) {
 		this.flightTickets = flightTickets;
 	}
-	
-	
 
 	public Double getFirstClassPrice() {
 		return firstClassPrice;
@@ -142,6 +144,18 @@ public class Flight {
 	public void setFirstClassPrice(Double firstClassPrice) {
 		this.firstClassPrice = firstClassPrice;
 	}
+
+	public String getAdditionalServices() {
+		return additionalServices;
+	}
+
+
+
+	public void setAdditionalServices(String additionalServices) {
+		this.additionalServices = additionalServices;
+	}
+
+
 
 	public Double getBusinessClassPrice() {
 		return businessClassPrice;
@@ -275,7 +289,7 @@ public class Flight {
 	}
 	
 	public FlightDTO convert() {
-		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.stopLocations.size(), this.getAirplane().getNumberOfEconomyClassSeats(), this.getAirplane().getNumberOfBusinessClassSeats(), this.getAirplane().getNumberOfFirstClassSeats(), this.type.toString(), this.getAirplane().getName(), this.getFirstClassPrice(), this.getBusinessClassPrice(), this.getEconomyClassPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames());
+		return new FlightDTO(this.idFlight, this.getStartDestination().getDestinationName(), this.getFinalDestination().getDestinationName(), this.takeOffDate.getTime(), this.landingDate.getTime(), this.getFlightLength(), this.stopLocations.size(), this.getAirplane().getNumberOfEconomyClassSeats(), this.getAirplane().getNumberOfBusinessClassSeats(), this.getAirplane().getNumberOfFirstClassSeats(), this.type.toString(), this.getAirplane().getName(), this.getFirstClassPrice(), this.getBusinessClassPrice(), this.getEconomyClassPrice(), this.getAverageGrade(), this.airLine.getAirLineID(), this.getTakenSeatNames(), this.additionalServices);
 	}
 	
 }

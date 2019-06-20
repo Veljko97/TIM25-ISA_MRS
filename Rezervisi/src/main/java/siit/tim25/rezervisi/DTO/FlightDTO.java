@@ -21,6 +21,7 @@ public class FlightDTO {
 	private int numberOfFirstClassSeats;
 	private int numberOfBusinessClassSeats;
 	private String airplane;
+	private String additionalServices;
 	private Double firstClassPrice;
 	private Double businessClassPrice;
 	private Double economyClassPrice;
@@ -38,7 +39,7 @@ public class FlightDTO {
 	
 	public FlightDTO(Integer idFlight, String startDestinationName, String finalDestinationName, Long takeOffDate, Long landingDate,
 			String flightLength, int numberOfStops, int numberOfEconomyClassSeats, int numberOfBusinessClassSeats, int numberOfFirstClassSeats, String type, String airplane,  Double firstClassPrice, Double businessClassPrice,
-			Double economyClassPrice, Double averageGrade, int airLineId, List<String> seats) {
+			Double economyClassPrice, Double averageGrade, int airLineId, List<String> seats, String additionalServices) {
 		super();
 		this.idFlight = idFlight;
 		this.startDestinationName = startDestinationName;
@@ -57,6 +58,7 @@ public class FlightDTO {
 		this.type = type;
 		this.airLineId = airLineId;
 		this.seats = seats;
+		this.additionalServices = additionalServices;
 	}
 
 
@@ -170,6 +172,16 @@ public class FlightDTO {
 
 
 
+	public String getAdditionalServices() {
+		return additionalServices;
+	}
+
+
+	public void setAdditionalServices(String additionalServices) {
+		this.additionalServices = additionalServices;
+	}
+
+
 	public Integer getIdFlight() {
 		return idFlight;
 	}
@@ -236,14 +248,21 @@ public class FlightDTO {
 	}
 
 
+	
 	@Override
 	public String toString() {
-		return "NewFlight [startDestinationName=" + startDestinationName + ", finalDestinationName="
+		return "FlightDTO [startDestinationName=" + startDestinationName + ", finalDestinationName="
 				+ finalDestinationName + ", takeOffDate=" + takeOffDate + ", landingDate=" + landingDate
-				+ ", flightLength=" + flightLength + ", numberOfStops=" + numberOfStops
-			    + ", averageGrade=" + averageGrade + "]";
+				+ ", flightLength=" + flightLength + ", numberOfStops=" + numberOfStops + ", numberOfEconomyClassSeats="
+				+ numberOfEconomyClassSeats + ", numberOfFirstClassSeats=" + numberOfFirstClassSeats
+				+ ", numberOfBusinessClassSeats=" + numberOfBusinessClassSeats + ", airplane=" + airplane
+				+ ", additionalServices=" + additionalServices + ", firstClassPrice=" + firstClassPrice
+				+ ", businessClassPrice=" + businessClassPrice + ", economyClassPrice=" + economyClassPrice
+				+ ", averageGrade=" + averageGrade + ", idFlight=" + idFlight + ", type=" + type + ", airLineId="
+				+ airLineId + ", seats=" + seats + "]";
 	}
-	
+
+
 	public Flight convert(Set<Destination> destinations, List<AirPlane> airplanes) throws ParseException {
 		Flight f = new Flight();
 		for(Destination d: destinations) {
@@ -269,6 +288,7 @@ public class FlightDTO {
 		f.setEconomyClassPrice(this.economyClassPrice);
 		f.setAverageGrade(this.averageGrade);
 		f.setType(FlightType.valueOf(this.type));
+		f.setAdditionalServices(this.additionalServices);
 		return f;
 	}
 	
@@ -297,6 +317,7 @@ public class FlightDTO {
 		f.setEconomyClassPrice(this.economyClassPrice);
 		f.setAverageGrade(this.averageGrade);
 		f.setType(FlightType.valueOf(this.type));
+		f.setAdditionalServices(this.additionalServices);
 		return f;
 	}
 }

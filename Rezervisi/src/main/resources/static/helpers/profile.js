@@ -165,7 +165,7 @@ Profile.prototype.getEntityHtml = function(data) {
       <h2 class=\"profile-headline\">"+data.startDestinationName+"<->"+data.finalDestinationName+"</h2>\
       <div class=\"about\">\
         <span>Price: "+data.economyClassPrice+"$</span>\
-        <span class=\"description\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " +(new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and is " + data.flightLength + " km long.</span>\
+        <span class=\"description\">This flight takes off at "+ (new Date(data.takeOffDate)).toLocaleString() +" and lands at " +(new Date(data.landingDate)).toLocaleString()+". It has " + data.numberOfStops + " stops and is " + data.flightLength + " km long. It has following additional services: " + data.additionalServices +".</span>\
       </div>\
       <span class='my-rating' id='Fgr"+data.idFlight+"'></span>\
       <p class=\"mb-5 mt-3\"><a class=\"btn btn-success btn-lg pb_btn-pill\" href=\"/reserve/flight.html?id="+data.idFlight+"&airlineId="+data.airLineId+"\"><span class=\"pb_font-14 text-uppercase pb_letter-spacing-1\">Reserve</span></a></p>\

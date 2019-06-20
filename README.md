@@ -16,3 +16,5 @@ Team mebers are students of Faculty of Technical Sciences, Novi Sad.
 
 To run this project, you will need Maven to build it after cloning.
 
+Project is deployed on Heroku platform, visit it here: https://reservify.herokuapp.com
+

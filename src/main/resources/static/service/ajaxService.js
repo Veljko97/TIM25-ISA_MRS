@@ -10,7 +10,7 @@ var ajaxService = {
       { "Authorization": "Bearer "+token}
     });
   },
-  GET: function(apiUrl, successCallback = function() {}, errorCallback = function() {}) {
+  GET: function(apiUrl, successCallback = function() {}, errorCallback = function() {handleWrongInput()}) {
     this.SETTOKEN();
     $.ajax({
       method:"GET",
@@ -22,7 +22,7 @@ var ajaxService = {
       error: errorCallback
     })
   },
-  POST: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
+  POST: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {handleWrongInput()}) {
     this.SETTOKEN();
     console.log(dataObj);
     console.log(apiUrl);
@@ -36,7 +36,7 @@ var ajaxService = {
       error: errorCallback
     })
   },
-  DELETE: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
+  DELETE: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {handleWrongInput()}) {
     this.SETTOKEN();
     $.ajax({
       method: "DELETE",
@@ -48,7 +48,7 @@ var ajaxService = {
       error: errorCallback
     })
   },
-  PUT: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}) {
+  PUT: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {handleWrongInput()}) {
     this.SETTOKEN();
     $.ajax({
       method: "PUT",
@@ -60,7 +60,7 @@ var ajaxService = {
       error: errorCallback
     })
   },
-  GETPAGE: function(apiUrl, page, successCallback = function() {}, errorCallback = function() {}) {
+  GETPAGE: function(apiUrl, page, successCallback = function() {}, errorCallback = function() {handleWrongInput()}) {
     this.SETTOKEN();
     $.ajax({
       method:"GET",
@@ -72,7 +72,7 @@ var ajaxService = {
       error: errorCallback
     })
   },
-  POSTFORM: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {}){
+  POSTFORM: function(apiUrl, dataObj, successCallback = function() {}, errorCallback = function() {handleWrongInput()}){
     this.SETTOKEN();
     $.ajax({
       method: "POST",
